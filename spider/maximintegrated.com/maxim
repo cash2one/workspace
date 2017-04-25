@@ -1,0 +1,62 @@
+查询库存和价格
+Request URL:https://www.maximintegrated.com/bin/mySearchServlet?input=single&query=MAX16992ATCD%2FV%2B&userType=anonymous
+Request Method:POST
+input:single
+query:MAX16992ATCD/V+
+userType:anonymous
+
+首页
+https://www.maximintegrated.com/en.html
+目录通配
+二级目录
+/en/products/[^/<>"]+/[^.<>"]+\.html
+三级目录
+/en/products/[^/<>"]+/[^/<>"]+/[^.<>"]+\.html
+产品列表
+/en/results\.mvp\?fam=
+PN\s*=\s*\[.*\];
+PB\s*=\s*\[.*\];
+DN\s*=\s*\[.*\];
+DB\s*=\s*\[.*\];
+
+
+
+产品线索引
+https://para.maximintegrated.com/en/index.mvp?tree=master
+产品线汇总
+
+
+part_number查询
+GET
+https://www.maximintegrated.com/bin/ProductCatalogSearchServlet?canSearch=true&product_info_root_part=MAX1797
+GET
+https://www.maximintegrated.com/bin/ProductCatalogSearchServlet?canSearch=true&part=MAX1797
+
+库存查询
+https://www.maximintegrated.com/bin/mySearchServlet?input=single&query=MAX17112ETB%2BT&userType=anonymous
+
+https://www.maximintegrated.com/bin/mySearchServlet?input=single&query=MAX15036ATE%2BT&userType=anonymous
+
+# volumePrices
+_price = displayVolumePrices
+
+_stock = stock['atpInv']
+
+_increament = mult
+
+_qty = min
+
+搜索框
+https://www.maximintegrated.com/en/pst/run.mvp?q=MAX894L&site=_products
+https://www.maximintegrated.com/en/search/wsi/parts.ajax?pn=MAX5&page=1
+|&nbsp;1-7 of 877&nbsp;|
+td#BLOG01
+
+BUG处理
+1、异常访问链接-提示已出售业务
+https://www.maximintegrated.com/en/products/71M6541DT
+跳转至该链接
+https://www.maximintegrated.com/en/products/all-products/archive/products-sold-to-silergy.html
+
+2、全局更新程序搜索异常-特殊符号未编码-已解决
+MAX96708GTJ/V+

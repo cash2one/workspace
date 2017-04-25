@@ -1,0 +1,782 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta content="IE=8;IE=9;IE=edge" http-equiv="x-ua-compatible"><title>Operational Amplifiers (Op Amps) | Overview | Amplifiers | TI.com</title><!--ls:begin[stylesheet]--><link href="/lsds/iwov-resources/fixed-layout/Analog_Three_Column_Hybrid.css" type="text/css" rel="stylesheet"><!--ls:end[stylesheet]--><!--ls:begin[meta-keywords]--><meta name="keywords" content=""><!--ls:end[meta-keywords]--><!--ls:begin[meta-description]--><meta name="description" content="TI has a broad portfolio of operational amplifiers (op amps) to meet your design needs, including high precision, high-speed, general-purpose, ultra-low-power, audio, power and fully differential amplifiers."><!--ls:end[meta-description]--><!--ls:begin[meta-vpath]--><meta name="vpath" content=""><!--ls:end[meta-vpath]--><!--ls:begin[meta-page-locale-name]--><meta name="page-locale-name" content=""><!--ls:end[meta-page-locale-name]--><!--ls:begin[stylesheet]--><link type="text/css" href="/lsds/iwov-resources/css/ticom3-livesite.css" rel="stylesheet"><!--ls:end[stylesheet]--><!--ls:begin[script]--><script type="text/javascript" src="/lsds/iwov-resources/js/liveSiteCommon.js"></script><!--ls:end[script]--><!--ls:begin[script]--><script type="text/javascript" src="/lsds/iwov-resources/js/menu.js"></script><!--ls:end[script]--><!--ls:begin[script]--><script type="text/javascript" src="/lsds/iwov-resources/js/wz_tooltip_insertion.js"></script><!--ls:end[script]--><!--ls:begin[script]--><script type="text/javascript" src="/lsds/iwov-resources/js/hash.js"></script><!--ls:end[script]--><!--ls:begin[script]--><script type="text/javascript" src="/lsds/iwov-resources/js/jquery-1.7.2.min.js"></script><!--ls:end[script]--><!--ls:begin[head-injection]--><link rel="canonical" href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-overview.page"/>
+		<link rel="alternate" hreflang="zh-Hans-cn" href="http://www.ti.com.cn/lsds/ti_zh/amplifiers/op-amps/op-amps-overview.page"/>
+		<link rel="alternate" hreflang="ja-jp" href="http://www.tij.co.jp/lsds/ti_ja/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="ko-kr" href="http://www.ti.com/lsds/ti_ko/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="de-de" href="http://www.ti.com/lsds/ti_de/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="en" href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-overview.page"/>	
+		
+<!--ls:end[head-injection]--><!--ls:begin[script]--><!--ls:end[script]--></head><body><!--ls:begin[body]--><div class="ls-canvas InteriorThreeCol5Hybrid" id="ls-canvas"><div class="ls-row" id="ls-row-1"><div class="ls-lqr" id="ls-gen1-ls-lqr"><div class="ls-area" id="ls-row-1-area-1"><div class="ls-area-body" id="ls-gen2-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1474046164493"><div class="iw_component" id="1474046164493"><div><script language="JavaScript">
+        	    	var tiPageName;
+        	    	tiPageName = "Operational Amplifiers (Op Amps) Overview Tab-EN";
+        </script>
+<script language="JavaScript">
+        	    	var tiContentGroup;
+            		tiContentGroup = "/Analog & Mixed-Signal/amplifiers/operational amplifiers (op amps)/";
+        </script>
+<script language="JavaScript">
+        	    	var tiProductPathID;
+        	    	tiProductPathID = "/57/1293/";
+        </script>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098227"><div class="iw_component" id="1463892098227"><div>
+<div class=""></div>
+<div class=""><script type="text/javascript">
+
+    function urlRedirect(href)
+    {   
+        window.location.replace(href);
+    }
+    function readPrefLangCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+    var prefLangValue = readPrefLangCookie('ST_TOGGLE_PREFERENCE');
+var map = {};
+map["KR"] = "/lsds/ti_ko/";
+map["DE"] = "/lsds/ti_de/";
+var href = window.location.href;
+if (prefLangValue != null && prefLangValue != '' && typeof prefLangValue !== 'undefined') {
+	for (var lang in map) {
+		if (prefLangValue === lang) {
+			if (href != null && href != '' && typeof href !== 'undefined') {
+				if (href.indexOf('.page')> -1 && href.indexOf('/lsds/ti/')> -1) {
+					href = href.replace('/lsds/ti/', map[lang]);
+					setTimeout(function () {
+						urlRedirect(href);
+					}, 1000);
+				}
+			}
+		}
+	}
+}
+ </script>  
+<script src="/assets/js/headerfooter/personalization.js" type="text/javascript"></script>
+<!-- Included as part of Header Footer Prototype Project -->
+<!--[if lt IE 9]><script src="/assets/js/common/html5shiv.js"></script><![endif]-->
+<link type="text/css" href="/assets/en/css/header.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="http://www.ti.com/assets/en/css/headerfooter/com.ti.webench.panel.css?versionNumber=1.1" />
+<header id="tiHeader">
+<!-- Upgraded jquery to 1.7 as part of Header Footer Prototype Project-->
+
+<!-- new js for Header Footer Prototype Project -->
+<script type="text/javascript" src="/assets/en/js/headerfooter/com.TI.header.js?versionNumber=1.1" charset="utf-8"></script>
+<!-- additional js assets for Header Footer Prototype Project -->
+<script type="text/javascript" src="/assets/en/js/homepage/jquery.hoverIntent.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/assets/en/js/homepage/com.ti.webench.panel.main-min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/lsds/iwov-resources/js/flashobject.js"  charset="utf-8"></script>
+
+
+<script type="text/javascript" src="/assets/en/js/headerfooter/header.js?versionNumber=1.1"></script>
+<script type="text/javascript" src="/en/js/shared/cartpreview.js?versionNumber=1.1"></script>
+
+<script type="text/javascript" src="/en/js/shared/commonjsproperties.js?versionNumber=1.2"></script>
+<script type="text/javascript" src="/js/shared/activitybar.js?versionNumber=1.2"></script> 
+
+<br />
+</header>
+<!-- New Header Ends  -->
+<!-- TI Header Ends --></div>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098214"><div class="iw_component" id="1463892098214"><div><div class="breadcrumbs">
+     
+        <a href="http://www.ti.com" >
+	            TI Home</a>
+        
+                        &gt; 
+                            <a href="http://www.ti.com/lsds/ti/amplifiers/amplifiers-overview.page">															
+                                
+								Amplifiers</a>
+                            
+                        &gt; 
+                        Operational Amplifiers (Op Amps)</div>
+    </td>
+    <td align="right" nowrap>
+        <div class="breadcrumbs">
+            </div>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098225"><div class="iw_component" id="1463892098225"><div><link rel="canonical" href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-overview.page"/>
+		<link rel="alternate" hreflang="zh-Hans-cn" href="http://www.ti.com.cn/lsds/ti_zh/amplifiers/op-amps/op-amps-overview.page"/>
+		<link rel="alternate" hreflang="ja-jp" href="http://www.tij.co.jp/lsds/ti_ja/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="ko-kr" href="http://www.ti.com/lsds/ti_ko/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="de-de" href="http://www.ti.com/lsds/ti_de/amplifiers/op-amps/op-amps-overview.page"/>	
+		<link rel="alternate" hreflang="en" href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-overview.page"/>	
+		
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row InteriorThreeCol5-ProductSilo" id="ls-row-2"><div class="ls-lqr" id="ls-gen3-ls-lqr"><div class="ls-area" id="ls-row-2-area-1"><div class="ls-area-body" id="ls-gen4-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098215"><div class="iw_component" id="1463892098215"><div class="portal"><table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+      
+        
+        <td style="background:url(http://focus.ti.com/graphics/shared/siloln.gif);">
+        
+	    <div style="float:right; position:absolute; right:10px;"> 
+         <script type="text/javascript" src='http://focus.ti.com/js/shared/com.TI.IMSDS.AddThis.TIComMainPages.js'></script></div>
+		
+        <table border="0" cellpadding="0" cellspacing="0">
+        
+            <tr>
+              <td nowrap class="silotitle">
+                <h2 class="silotitle">
+                    <a href='http://www.ti.com/lsds/ti/amplifiers/amplifiers-overview.page'>
+                        
+                        Amplifiers</a>
+                    </h2>
+                
+                </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098216"><div class="iw_component" id="1463892098216"><div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row InteriorThreeCol5-MidRow" id="ls-row-3"><div class="ls-lqr" id="ls-gen5-ls-lqr"><div class="ls-lqr-w" id="ls-gen6-ls-lqr-w"><div class="ls-lqr-w-fx" id="ls-gen7-ls-lqr-w-fx"><div class="ls-area InteriorThreeCol5-ProductTree" id="ls-row-3-area-1"><div class="ls-area-body" id="ls-gen8-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098217"><div class="iw_component" id="1463892098217"><div class="portal"><div class="cntboxS4" id="cmpntprodtree">
+    
+            <div class="cntboxhead">
+            
+             
+                <h6>Product Tree</h6>
+                </div>
+            <div class="cntboxbody">
+                <ul><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-overview.page' class="active">
+									                      
+						
+									
+                                Operational Amplifiers (Op Amps)
+                            &nbsp;<span class="paraStatLg">(1467)</span>
+                        </a>
+                        	</b>
+			 	 <ul><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/precision-op-amps-overview.page'>
+									
+	                   	
+                                Precision Op Amps
+                            &nbsp;<span class="paraStatLg">(846)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/high-speed-op-amps-overview.page'>
+									
+	                   	
+                                High-Speed Op Amps (&gt;=50MHz)
+                            &nbsp;<span class="paraStatLg">(320)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/general-purpose-op-amps-overview.page'>
+									
+	                   	
+                                General-Purpose Op Amps
+                            &nbsp;<span class="paraStatLg">(313)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/ultra-low-power-op-amps-overview.page'>
+									
+	                   	
+                                Ultra-Low-Power Op Amps (&lt;=250uA)
+                            &nbsp;<span class="paraStatLg">(269)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/audio-op-amps-overview.page'>
+									
+	                   	
+                                Audio Op Amps
+                            &nbsp;<span class="paraStatLg">(60)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/fully-differential-amplifiers-overview.page'>
+									
+	                   	
+                                Fully Differential Amplifiers
+                            &nbsp;<span class="paraStatLg">(59)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/op-amps/power-op-amps-overview.page'>
+									
+	                   	
+                                Power Op Amps
+                            &nbsp;<span class="paraStatLg">(69)</span>
+                        </a>
+                        	</li></ul>
+                            </li><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/comparators/comparators-overview.page'>
+									
+	                   	
+                                Comparators
+                            &nbsp;<span class="paraStatLg">(178)</span>
+                        </a>
+                        	</b>
+			 	 </li><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/instrumentation-amplifiers/instrumentation-amplifiers-overview.page'>
+									
+	                   	
+                                Instrumentation Amplifiers
+                            &nbsp;<span class="paraStatLg">(44)</span>
+                        </a>
+                        	</b>
+			 	 </li><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/current-sense-amplifiers/current-sense-amplifiers-overview.page'>
+									
+	                   	
+                                Current Sense Amplifiers
+                            &nbsp;<span class="paraStatLg">(71)</span>
+                        </a>
+                        	</b>
+			 	 <ul><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/current-sense-amplifiers/current-sense-analog-output-products.page'>
+									
+	                   	
+                                Current Sense Amplifiers Analog Output
+                            &nbsp;<span class="paraStatLg">(47)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/current-sense-amplifiers/current-sense-comparator-products.page'>
+									
+	                   	
+                                Current Sense Amplifiers with Comparator
+                            &nbsp;<span class="paraStatLg">(12)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/current-sense-amplifiers/current-sense-power-current-monitors-products.page'>
+									
+	                   	
+                                Current Sense Power / Current Monitors
+                            &nbsp;<span class="paraStatLg">(18)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/current-sense-amplifiers/current-sense-integrated-shunt-products.page'>
+									
+	                   	
+                                Current Sensing With Integrated Shunt
+                            &nbsp;<span class="paraStatLg">(3)</span>
+                        </a>
+                        	</li></ul>
+                            </li><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/pga-vga/pga-vga-overview.page'>
+									
+	                   	
+                                Programmable &amp; Variable Gain Amplifiers (PGA/VGA)
+                            &nbsp;<span class="paraStatLg">(52)</span>
+                        </a>
+                        	</b>
+			 	 </li><li>
+                        <b>
+			 	 <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/special-function-amplifiers-overview.page'>
+									
+	                   	
+                                Special Function Amplifiers
+                            &nbsp;<span class="paraStatLg">(137)</span>
+                        </a>
+                        	</b>
+			 	 <ul><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/difference-amplifiers-products.page'>
+									
+	                   	
+                                Difference Amplifiers
+                            &nbsp;<span class="paraStatLg">(24)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/isolated-amplifiers-overview.page'>
+									
+	                   	
+                                Isolated Amplifiers
+                            &nbsp;<span class="paraStatLg">(7)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/transimpedance-amplifiers-products.page'>
+									
+	                   	
+                                Transimpedance Amplifiers
+                            &nbsp;<span class="paraStatLg">(27)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/transconductance-amplifiers-products.page'>
+									
+	                   	
+                                Transconductance Amplifiers
+                            &nbsp;<span class="paraStatLg">(4)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/video-amplifiers-products.page'>
+									
+	                   	
+                                Video Amplifiers
+                            &nbsp;<span class="paraStatLg">(37)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/logarithmic-amplifiers-products.page'>
+									
+	                   	
+                                Logarithmic Amplifiers
+                            &nbsp;<span class="paraStatLg">(8)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/sample-hold-amplifiers-products.page'>
+									
+	                   	
+                                Sample &amp; Hold Amplifiers
+                            &nbsp;<span class="paraStatLg">(7)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/rf-gain-block-amplifiers-products.page'>
+									
+	                   	
+                                RF Gain Block Amplifiers
+                            &nbsp;<span class="paraStatLg">(10)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/tec-laser-pwm-power-amplifiers-products.page'>
+									
+	                   	
+                                TEC/Laser PWM Power Amplifiers
+                            &nbsp;<span class="paraStatLg">(5)</span>
+                        </a>
+                        	</li><li>
+                        <a href='http://www.ti.com/lsds/ti/amplifiers/special-function-amplifiers/frequency-converters-products.page'>
+									
+	                   	
+                                Frequency Converters
+                            &nbsp;<span class="paraStatLg">(8)</span>
+                        </a>
+                        	</li></ul>
+                        </li></ul>
+                        </div>
+        </div>
+    
+	
+</div>
+</div></div></div></div></div><div class="ls-col InteriorThreeCol5-RightColumn" id="ls-row-3-col-2"><div class="ls-area-body" id="ls-gen9-ls-area-body"><div class="ls-row" id="ls-row-3-col-2-row-1"><div class="ls-lqr" id="ls-gen10-ls-lqr"><div class="ls-area InteriorThreeCol5-TabNavigation" id="ls-row-3-col-2-row-1-area-1"><div class="ls-area-body" id="ls-gen11-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098218"><div class="iw_component" id="1463892098218"><div><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
+ <link href="http://www.ti.com/en/css/shared/subTabNav.styles.css" rel="stylesheet" type="text/css"></link>
+
+
+ <!--  Added for Perk 1490 Starts -->
+ <!--  Added for Perk 1490 Starts -->
+
+<div id="tab">
+     <ul> 
+         <li id="active">    
+                     <a href="#"><span>Overview</span></a>
+                 </li>
+                 <li>
+                     <a href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-products.page"><span>Products</span></a>
+                 </li>
+             <li>
+                     <a href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-tools-software.page"><span>Tools & software</span></a>
+                 </li>
+             <li>
+                     <a href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-technical-documents.page"><span>Technical documents</span></a>
+                 </li>
+             <li>
+                     <a href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-support-training.page"><span>Support & training</span></a>
+                 </li>
+             <li>
+                     <a href="http://www.ti.com/lsds/ti/amplifiers/op-amps/op-amps-cross-reference.page"><span>Cross reference</span></a>
+                 </li>
+             </ul>
+ </div>
+ <!--<input type="hidden" id="totalCountOfSubTab">
+ -->
+
+<div class="row">
+
+</div> 
+ <script>
+ $(window).bind("load", function() {
+ var hasSubTab=$('#hasSubTab').attr('value');
+ if (hasSubTab == "1")
+	 {
+	 $("#ls-canvas").addClass("collapsed");
+	 }
+ });
+ 
+ /*function openDropdown(){
+ if($("#subTabMore").hasClass("show")){
+ $("#subTabMore").removeClass("show");
+ }else{
+ $("#subTabMore").addClass("show");
+ }
+ }*/
+ </script>
+
+<script src="http://www.ti.com/en/js/shared/subTabNav.manager.js">
+ </script>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098224"><div class="iw_component" id="1463892098224"><div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row" id="ls-row-3-col-2-row-2"><div class="ls-fxr" id="ls-gen12-ls-fxr"><div class="ls-area InteriorThreeCol5-TabBody2" id="ls-row-3-col-2-row-2-area-1"><div class="ls-area-body" id="ls-gen13-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098228"><div class="iw_component" id="1463892098228"><div class="">
+<div>
+<div class=""></div>
+<div class=""><!-- VALPROP BANNER DIV START -->
+<div class="row overviewHeader amplifiers still">
+ <div class="c8">
+  <h1 class="valprop-header"><span class="valprop-emphasis">Differentiate &amp; innovate</span> <br>
+   using the industry's best op amps</h1>
+  <p class="valprop-sub-header">Products and systems expertise to solve your application needs</p>
+ </div>
+ <div class="c4">
+  <span class="bracket off"></span> 
+  <!-- class="bracket" shows bracket or class="bracket off" hides bracket -->
+ </div>
+ <!--background DIV-->
+ <div class="overviewHeaderFade">
+ </div>
+</div>
+<!-- VALPROP BANNER DIV END --> 
+
+<!-- Quick Search - Start 
+<link rel="stylesheet" type="text/css" href="/assets/js/opampquicksearch/com.TI.opAmpSearch.css">
+<div class="row">
+ <div class="c12">
+  <div id="opampsearchmount">
+  </div>
+  <script type="text/javascript" src="/assets/js/opampquicksearch/com.TI.opAmpSearch.js"></script>
+ </div>
+</div>
+<!-- Quick Search - End -->
+
+<!--<div class="row">
+ <div class="c12 divider-primary">
+
+ </div>
+</div>-->
+<!-- end row -->
+
+<div class="row same-height">
+ <div class="c4">
+  <div class="stack level1">
+   <h3><a class="Op amp families" name="&lid=en_us_op_amp_overview_precamp_title" href="/lsds/ti/amplifiers/op-amps/precision-op-amps-overview.page">Precision op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Achieve high DC accuracy and AC performance in your precision system</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_precamp_more" href="/lsds/ti/amplifiers/op-amps/precision-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+ <div class="c4">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_highspeedamp_title" href="/lsds/ti/amplifiers/op-amps/high-speed-op-amps-overview.page">High-speed op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Delivering the lowest power and highest performance from 50MHz to 8GHz</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_highspeedamp_more" href="/lsds/ti/amplifiers/op-amps/high-speed-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+ <div class="c4">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_genpurpamp_title" href="/lsds/ti/amplifiers/op-amps/general-purpose-op-amps-overview.page">General-purpose op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Broad op amp portfolio optimized for your system needs</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_genpurpamp_more" href="/lsds/ti/amplifiers/op-amps/general-purpose-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row same-height">
+ <div class="c3">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_ultralowpower_title" href="/lsds/ti/amplifiers/op-amps/ultra-low-power-op-amps-overview.page">Ultra-low-power<br>
+    op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Extend your system life with no battery change or charge</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_genpurpamp_more" href="/lsds/ti/amplifiers/op-amps/ultra-low-power-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+ <div class="c3">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_audioopamp_title" href="/lsds/ti/amplifiers/op-amps/audio-op-amps-overview.page">Audio<br>op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Op amps for the most discerning audio enthusiasts</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_audioopamp_more" href="/lsds/ti/amplifiers/op-amps/audio-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+ <div class="c3">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_fulldiffamp_title" href="/lsds/ti/amplifiers/op-amps/fully-differential-amplifiers-overview.page">Fully differential amplifiers</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>Find the right solution for the differential input on your ADC</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_fulldiffamp_more" href="/lsds/ti/amplifiers/op-amps/fully-differential-amplifiers-overview.page">Learn more</a></p>
+  </div>
+ </div>
+ <div class="c3">
+  <div class="stack level1">
+   <h3><a name="&lid=en_us_op_amp_overview_poweropamps_title" href="/lsds/ti/amplifiers/op-amps/power-op-amps-overview.page">Power<br>op amps</a></h3>
+  </div>
+  <div class="stack level2 stretch">
+   <p>High-voltage and high-current monolithic op amps to power your designs</p>
+  </div>
+  <div class="stack level2">
+   <p><a class="more" name="&lid=en_us_op_amp_overview_poweropamps_more" href="/lsds/ti/amplifiers/op-amps/power-op-amps-overview.page">Learn more</a></p>
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12">
+  <p><a class="cta-red-cir" href="/lsds/ti/amplifiers/op-amps/op-amps-products.page"><strong>Search all op amps</strong></a></p>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12 divider-primary">
+  <!-- primary divider line -->
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12">
+  <h2>Featured op amps</h2>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row same-height">
+ <div class="c4">
+  <div class="row featurebox">
+   <div class="c12 cEnd">
+    <div class="center">
+     <img src="/lsds/media/images/amplifiers/25663_OPA1622.png" alt="OPA1622 Highest-performance, low THD+N, bipolar input audio op amp"><br>
+     <br>
+    </div>
+    <h3><a name="&lid=en_us_op_amp_overview_opa1622_title" href="http://www.ti.com/product/opa1622">OPA1622</a></h3>
+    <h4>Highest-performance, low-THD+N, bipolar-input audio op&nbsp;amp</h4>
+    <ul class="lined icons">
+     <li class="html"><a name="&lid=en_us_op_amp_overview_opa1622_onlineds" href="http://www.ti.com/product/OPA1622/datasheet">Online datasheet</a></li>
+     <li class="dlDatasheet"><a name="&lid=en_us_op_amp_overview_opa1622_downloadds" href="http://www.ti.com/lit/gpn/OPA1622">Download datasheet</a></li>
+     <li class="cart"><a name="&lid=en_us_op_amp_overview_opa1622_order" href="http://www.ti.com/product/OPA1622/samplebuy">Order now</a></li>
+    </ul>
+   </div>
+  </div>
+ </div>
+ <div class="c4">
+  <div class="row featurebox">
+   <div class="c12 cEnd">
+    <div class="center">
+     <img src="/lsds/media/images/amplifiers/25663_OPA836.png" alt="OPA836 Lowest power, 205MHz, RRO op amp"><br>
+     <br>
+    </div>
+    <h3><a name="&lid=en_us_op_amp_overview_opa836_title" href="http://www.ti.com/product/OPA836">OPA836</a></h3>
+    <h4>Lowest-power, 250-MHz, RRO op&nbsp;amp</h4>
+    <ul class="lined icons">
+     <li class="html"><a name="&lid=en_us_op_amp_overview_opa836_onlineds" href="http://www.ti.com/product/OPA836/datasheet">Online datasheet</a></li>
+     <li class="dlDatasheet"><a name="&lid=en_us_op_amp_overview_opa836_downloadds" href="http://www.ti.com/lit/gpn/OPA836">Download datasheet</a></li>
+     <li class="cart"><a name="&lid=en_us_op_amp_overview_opa836_order" href="http://www.ti.com/product/OPA836/samplebuy">Order now</a></li>
+     <li class="refdesign"><a name="&lid=en_us_op_amp_overview_opa836_reference" href="http://www.ti.com/tool/TIPD149">Featured reference design</a></li>
+    </ul>
+   </div>
+  </div>
+ </div>
+ <div class="c4">
+  <div class="row featurebox">
+   <div class="c12 cEnd">
+    <div class="center">
+     <img src="/lsds/media/images/amplifiers/dc_dm_LPV802.png" alt="LPV802 Nanopower, 320 nA, 1.6V RRO Dual, CMOS input op amp"><br>
+     <br>
+    </div>
+    <h3><a name="&lid=en_us_op_amp_overview_lpv802_title" href="http://www.ti.com/product/LPV802">LPV802</a></h3>
+    <h4>Nanopower, 320 nA, 1.6V RRO Dual, CMOS input op amp</h4>
+    <ul class="lined icons">
+     <li class="html"><a name="&lid=en_us_op_amp_overview_lpv802_onlineds" href="http://www.ti.com/product/LPV802/datasheet">Online datasheet</a></li>
+     <li class="dlDatasheet"><a name="&lid=en_us_op_amp_overview_lpv802_downloadds" href="http://www.ti.com/lit/gpn/LPV802">Download datasheet</a></li>
+     <li class="cart"><a name="&lid=en_us_op_amp_overview_lpv802_order" href="http://www.ti.com/product/LPV802/samplebuy">Order now</a></li>
+     <li class="refdesign"><a name="&lid=en_us_op_amp_overview_lpv802_reference" href="http://www.ti.com/product/LPV802/toolssoftware">Featured reference design</a></li>
+    </ul>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12">
+  <h2 id="technicalresources">Technical resources</h2>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row same-height">
+ <div class="c4">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_titraining_title" href="https://training.ti.com/search-catalog/type/curriculum/categories/amplifiers/field_language/EN">TI training</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_titraining_img" href="https://training.ti.com/search-catalog/type/curriculum/categories/amplifiers/field_language/EN"><img src="/lsds/media/images/amplifiers/25663_techresources_titraining.png" alt=""></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>On-demand amplifier training, including TI Precision Labs - Op Amps, which includes more than 40 hands-on videos</p>
+    <a name="&lid=en_us_op_amp_overview_titraining_more" href="https://training.ti.com/search-catalog/type/curriculum/categories/amplifiers/field_language/EN" class="more">Watch and learn</a>
+   </div>
+  </div>
+ </div>
+ <div class="c4 borderLeft">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_tidesign_title" href="http://www.ti.com/general/docs/refdesignsearchresults.tsp?familyIds=57">TI Designs</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_tidesign_img" href="http://www.ti.com/general/docs/refdesignsearchresults.tsp?familyIds=57"><img src="/lsds/media/images/amplifiers/25663_techresources_tidesigner.png" alt=""></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>Complete board-and system-level reference design circuits to help you quickly evaluate and customize your precision system</p>
+    <a name="&lid=en_us_op_amp_overview_tidesign_search" href="http://www.ti.com/general/docs/refdesignsearchresults.tsp?familyIds=57" class="more">Search designs</a>
+   </div>
+  </div>
+ </div>
+ <div class="c4 borderLeft">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_analoguepocketref_title" href="/lsds/ti/amplifiers/op-amps/precision-op-amps-support-training.page#pocketref">Analog Pocket Reference</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_analoguepocketref_img" href="/lsds/ti/amplifiers/op-amps/precision-op-amps-support-training.page#pocketref"><img src="/lsds/media/images/amplifiers/slyw038-analog-pocket-refguide-cover.png" alt=""></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>E-book that puts commonly used analog formulas at your fingertips</p>
+    <a name="&lid=en_us_op_amp_overview_analoguepocketref_more" href="/lsds/ti/amplifiers/op-amps/precision-op-amps-support-training.page#pocketref" class="more">Download</a><br>
+    <em style="font-size: 0.8em;">(registration required)</em>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12 divider-secondary">
+  <!-- secondary divider -->
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row same-height">
+ <div class="c4">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_crossreference_title" href="/lsds/ti/amplifiers/op-amps/op-amps-cross-reference.page">Parametric cross-reference</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_crossreference_img" href="/lsds/ti/amplifiers/op-amps/op-amps-cross-reference.page"><img src="/lsds/media/images/amplifiers/25663_techresources_crossreference.png" alt=""></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>Search for any suppliers' op&nbsp;amps to find similar TI devices by parameter</p>
+    <a name="&lid=en_us_op_amp_overview_crossreference_more" href="/lsds/ti/amplifiers/op-amps/op-amps-cross-reference.page" class="more">Find op amps</a>
+   </div>
+  </div>
+ </div>
+ <div class="c4 borderLeft">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_filterdesigner_title" href="http://www.ti.com/lsds/ti/analog/webench/webench-filters.page">WEBENCH<sup>&reg;</sup> Filter Designer</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_filterdesigner_img" href="http://www.ti.com/lsds/ti/analog/webench/webench-filters.page"><img src="/lsds/media/images/amplifiers/25663_techresources_webench.png" alt=""></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>Design, optimize and simulate complete multi-stage active filter solutions in minutes</p>
+    <a name="&lid=en_us_op_amp_overview_filterdesigner_more" href="http://www.ti.com/lsds/ti/analog/webench/webench-filters.page" class="more">Start your design</a>
+   </div>
+  </div>
+ </div>
+ <div class="c4 borderLeft">
+  <div class="row">
+   <h3><a name="&lid=en_us_op_amp_overview_onlinesupport_title" href="http://e2e.ti.com/support/amplifiers/">Online support</a></h3>
+   <div class="c5">
+    <a name="&lid=en_us_op_amp_overview_onlinesupport_img" href="http://e2e.ti.com/support/amplifiers/"><img src="/lsds/media/images/amplifiers/e2e_Icon_Only.png" alt="Online support"></a>
+   </div>
+   <div class="c7 cEnd">
+    <p>Ask questions, share knowledge and help solve problems with fellow engineers in TI's E2E&trade; Community</p>
+    <a name="&lid=en_us_op_amp_overview_onlinesupport_more" href="http://e2e.ti.com/support/amplifiers/" class="more">Visit forum</a>
+   </div>
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12 divider-primary">
+  <!-- primary divider -->
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12">
+  <div class="prod-banner center" data-id="1921">
+  </div>
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12 divider-secondary">
+  <!-- secondary divider -->
+ </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+ <div class="c12">
+  <p>TI offers the industry's widest selection of operational amplifiers (op amps). From precision to high speed and everything in between, TI provides the highest precision and bandwidth, lowest power and smallest packages. We also provide industry-leading op amp technical expertise and support with TI Designs reference designs, TI E2E™ Community support forums, product selection tools and robust technical content, including calculators and SPICE models.</p>
+ </div>
+</div>
+<!-- end row --></div>
+</div>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098230"><div class="iw_component" id="1463892098230"><div class="ticom5">
+<div></div>
+</div>
+</div></div><div class="ls-cmp-wrap" id="w1463892098231"><div class="iw_component" id="1463892098231"><div class="ticom5">
+<div>
+<div class=""></div>
+<div class="">
+</div>
+</div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row" id="ls-row-3-col-2-row-3"><div class="ls-fxr" id="ls-gen14-ls-fxr"><div class="ls-col" id="ls-row-3-col-2-row-3-col-1"><div class="ls-col-body" id="ls-gen15-ls-col-body"><div class="ls-row" id="ls-row-3-col-2-row-3-col-1-row-1"><div class="ls-fxr" id="ls-gen16-ls-fxr"><div class="ls-area InteriorThreeCol5-TabBody2" id="ls-row-3-col-2-row-3-col-1-row-1-area-1"><div class="ls-area-body" id="ls-gen17-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098220"><div class="iw_component" id="1463892098220"><div class="">
+<div></div>
+</div>
+</div></div></div></div><div class="ls-area InteriorThreeCol5-TabBody2" id="ls-row-3-col-2-row-3-col-1-row-1-area-2"><div class="ls-area-body" id="ls-gen18-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098219"><div class="iw_component" id="1463892098219"><div class="">
+<div></div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row" id="ls-row-3-col-2-row-4"><div class="ls-fxr" id="ls-gen19-ls-fxr"><div class="ls-area InteriorThreeCol5-TabBody2" id="ls-row-3-col-2-row-4-area-1"><div class="ls-area-body" id="ls-gen20-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098221"><div class="iw_component" id="1463892098221"><div class="">
+<div></div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row" id="ls-row-3-col-2-row-5"><div class="ls-fxr" id="ls-gen21-ls-fxr"><div class="ls-area InteriorThreeCol5-TabBody2" id="ls-row-3-col-2-row-5-area-1"><div class="ls-area-body" id="ls-gen22-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098226"><div class="iw_component" id="1463892098226"><div class="">
+<div></div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div></div><div class="ls-lqa-fix">&nbsp;</div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row InteriorThreeCol5-Footer" id="ls-row-4"><div class="ls-lqr" id="ls-gen23-ls-lqr"><div class="ls-area" id="ls-row-4-area-1"><div class="ls-area-body" id="ls-gen24-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098222"><div class="iw_component" id="1463892098222"><div class="">
+<div></div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div><div class="ls-row InteriorThreeCol5-Footer" id="ls-row-5"><div class="ls-lqr" id="ls-gen25-ls-lqr"><div class="ls-area" id="ls-row-5-area-1"><div class="ls-area-body" id="ls-gen26-ls-area-body"><div class="ls-cmp-wrap ls-1st" id="w1463892098223"><div class="iw_component" id="1463892098223"><div>
+<div class=""></div>
+<div class=""><!-- Footer - Starts -->
+
+<div id="tiFooter"></div>
+<script src="http://www.ti.com/assets/en/js/headerfooter/footer.js?versionNumber=1.1" type="text/javascript"></script>
+<script src="http://www.ti.com/assets/en/js/homepage/sitesearch-header-min.js?versionNumber=1.2" type="text/javascript" charset="utf-8"></script>
+
+<script src="/assets/js/headerfooter/analytics.js" type="text/javascript"></script>
+
+<!-- Footer - Ends --></div>
+</div>
+</div></div></div></div><div class="ls-row-clr"></div></div></div></div><!--ls:end[body]--></body></html>

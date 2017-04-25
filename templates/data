@@ -1,0 +1,18 @@
+item = {
+    'goods_sn': '',  # 产品标识
+    'goods_name': '',  # 产品销售型号名
+    'url': '',  # URL
+    'goods_img': '',  # 产品图片
+    'goods_thumb': '',  # 缩略图
+    'goods_desc': '',  # 描述
+    'provider_name': '',  # 供应商/品牌
+    'provider_url': '',  # 供应商URL
+    'tiered': [[0, 0.00]],  # 价格阶梯
+    'stock': [0,1],  # 库存信息，库存和最小购买量
+    'increment': 1,  # 递增量
+    'doc': '',  # 文档
+    'attr': [[None,None]],  # 属性
+    'rohs': -1,  # rohs
+    'catlog': [],  # 分类
+    'goods_other_name': '',  # 其他商品名
+}

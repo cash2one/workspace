@@ -1,0 +1,1434 @@
+
+<!DOCTYPE html>
+<!--V10-->
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>Search Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href=/favicon.DELPHISAMPLES.ico rel="shortcut icon" type="image/x-icon" />
+    <link href="/Content/allcss?v=tuZzPGqfLweanSubymlqTEh1mM-HJ5JXx3KSqmrOFBw1" rel="stylesheet"/>
+
+
+
+    <!--BootStrap & Type Ahead Overrides-->
+    <style>
+        /*Type Ahead Override*/
+        .tt-hint {
+            font-size: 0px;
+        }
+
+        /*Nav Bar Override*/
+        .navbar {
+            margin-bottom: 0;
+        }
+    </style>
+
+        <link href=/Content/OverRidePowerAndSignals.css rel="stylesheet" />
+    <!--[if lte IE 8]>
+        <script type="text/javascript" src="/Scripts/IE8_JS_Library.js"></script>
+    <![endif]-->
+        <script type="text/javascript">
+            var secureCart = "True";
+        </script>
+        <script src="/Scripts/SSLRedirects.js"></script>
+
+            <script type="text/javascript">
+                (function (i, s, o, g, r, a, m) {
+                    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+                })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+                ga('create', 'UA-7068701-1', 'auto');
+
+                if ('TRUE' == 'TRUE'  && 0 > 0)
+                {
+                    // Set the user ID using signed-in user_id.
+                    ga('set', 'userId', '0'); 
+                }
+
+                ga('send', 'pageview');
+
+
+
+
+
+        </script>
+
+
+        
+</head>
+<body>
+    <div class="container" style="background-color:white">
+        <header>
+            
+            <!--V6-->
+<link href="/Templates/StyleSheet1A.css" rel="stylesheet" />
+<div style="padding-bottom:10px">
+    <form id="topsearchform" action="/Products/Search" method="get">
+        <div class="row" style="padding-top:10px">
+            <div class="col-sm-3">
+                <a href="/"><img alt="" id="MainLogo" src="/Images/Shared/logo.jpg" class="img-responsive" /></a>
+
+            </div>
+            <div class="col-sm-9" style="padding-bottom:10px">
+                <table width="100%" border="0">
+                    <tr>
+                        <td colspan="2" class="tdleft">
+                            <label><!--Enter Part # or Keyword E6-->Enter Part # or Keyword</label>
+                        </td>
+                            <td rowspan="3" class="tdright">
+                                <div class="hidden-xs">
+                                    <div style="padding-bottom:10px">
+                                        <div style="padding-left:10px; float:right; border-left: 1px solid #e3e3e3;">
+                                            <table cellspacing="2" style="font-size: small">
+    <tr>
+        <td>
+            <img src="/Images/Shared/topnav-cart.gif" />
+        </td>
+        <td class="text-left">
+            <strong>Shopping Cart</strong>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;
+        </td>
+        <td class="text-left">
+            <small>
+                    <a href="/Cart/DisplayCart/Order">Cart: 0, ($0.00)</a><br />
+
+                    <a href="/Cart/DisplayCart/Sample">Sample Cart: 0 </a><br />
+
+                    <a href="/Cart/DisplayCart/Quote">Quote Cart: 0 </a><br />
+            </small>
+        </td>
+    </tr>
+</table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="tdleft">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <input autocomplete="off" class="form-control" id="searchBox" name="searchBox" placeholder="Search" type="text" value="580" />
+                                    <input type="hidden" id="ProductSearch_SortExpression" name="SortExpression" />
+                                    <input type="hidden" id="ProductSearch_SortDirection" name="SortDirection" />
+                                </div>
+                                <div class="col-xs-3">
+                                    <button type="submit" class="btn btn-primary" id="ProductSearch_Submit" onclick="return false;"><!--Search E7-->Search</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <span class="field-validation-valid" data-valmsg-for="ProductSearch.SearchText" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="tdleft">
+                            <input id="instockonly" name="instockonly" type="checkbox" value="true" /><input name="instockonly" type="hidden" value="false" /> <span>In Stock Only</span>
+                        </td>
+                        <td class="tdleft">
+                                <span><a href="/Products/AdvanceSearch">Advanced Search!</a> | </span>
+                            <a href="#" id="PasteInSearch">Paste-In Search</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <nav class="navbar navbar-default" role="navigation">
+	<div class="navbar-header"><button class="navbar-toggle mobile-shopping-btn" style="height: 40px;" type="button"> <img src="/Images/Shared/topnav-cart.gif" /> </button> <button class="navbar-toggle" style="height: 40px;" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button></div>
+	<div class="collapse navbar-collapse nav navbar-nav navbar-right" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">About Us <strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+					<li><a href="../../pagecontent/AboutUs">About PSG</a></li>
+					<li><a href="../../ContactUs">Contact Us</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="../../pagecontent/ProductLines">Line Card</a>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Manufacturers<strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+                                        <li><a href="../../pagecontent/AmphenolSensors">Amphenol Advanced Sensors</a></li>
+					<li><a href="../../pagecontent/AmphenolIndustrial">Amphenol Industrial</a></li>
+					<li><a href="../../pagecontent/AmphenolSine">Amphenol Sine</a></li>
+					<li><a href="http://ity.vc/arcadia">Cadonix</a></li>
+					<li><a href="../../pagecontent/Cinch">Cinch</a></li>
+					<li><a href="../../pagecontent/Delfingen">Delfingen</a></li>
+					<li><a href="../../pagecontent/Delphi">Delphi</a></li>
+					<li><a href="../../pagecontent/GEP">GEP Power Products</a></li>
+					<li><a href="../../pagecontent/ITTCannon">ITT Cannon</a></li>
+					<li><a href="../../pagecontent/Molex">Molex</a></li>
+					<li><a href="http://www.powerandsignal.com/Images/New/Images/Pollak_Catalog.PDF">Pollak</a></li>
+					<li><a href="../../pagecontent/QuickCable">QuickCable</a></li>
+					<li><a href="../../pagecontent/RennsteigTools">Rennsteig</a></li>
+					<li><a href="../../pagecontent/SongChuan">Song Chuan</a></li>
+					<li><a href="../../pagecontent/Steinel">Steinel</a></li>
+					<li><a href="../../pagecontent/Sumitomo">Sumitomo</a></li>
+					<li><a href="../../pagecontent/Tyco">TE Connectivity</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Products<strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+					<li><a href="../../pagecontent/ProductsConnectionSystems">Connectors</a></li>
+					<li><a href="../../pagecontent/Delfingen">Convoluted Tubing</a></li>
+                                        <li><a href="../../pagecontent/LightingProducts">Lighting Products</a></li>
+					<li><a href="../../pagecontent/DelphiProductLinesMountingDevices">Mounting Devices</a></li>
+					<li><a href="../../pagecontent/Cinch">PCB Enclosures</a></li>
+					<li><a href="../../pagecontent/AmphenolSensors">Sensors</a></li>
+					<li><a href="../../pagecontent/ProductsConnectionSystems">Terminals</a></li>
+					<li><a href="../../pagecontent/Tooling">Tools</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Services <strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+                                        <li><a href="http://marketing.powerandsignal.com/Extranet/95792/forms.aspx?msgid=7ec71ff5-baf7-44e4-96a4-a5864876123f&LinkID=CH00095792eR00000777AD">Custom-Cut Heat Shrink</a></li>
+					<li><a href="../../pagecontent/Services">Services Offered</a></li>
+					<li><a href="../../pagecontent/EngineeringExpertise">Engineering Expertise</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Quick Links<strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+					<li><a href="../../pagecontent/Overstock"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Overstock Warehouse</a></li>
+					<li><a href="http://www.powerandsignal.com/images/pdfs/PSGNALineCardPRINT20160725V0001.pdf" target="_blank"><img alt="" src="../../Images/Shared/pdf.jpg" /> PSG North America Line Card</a></li>
+					<li><a href="http://www.powerandsignal.com/docs/DCS%20Global%20Catalog.pdf" target="_blank"><img alt="" src="../../Images/Shared/pdf.jpg" /> Delphi Connection Systems Catalog</a></li>
+					<li><a href="http://www.powerandsignal.com/docs/MX150L/ML150L_PS_brochure.pdf" target="_blank"><img alt="" src="../../Images/Shared/pdf.jpg" /> Molex Automotive Interconnects Brochure</a></li>
+					<li><a href="http://host.msgapp.com/Extranet/95792/forms.aspx?msgid=98d6200a-3f20-49ad-afb1-b6ae18aceabe&amp;LinkID=CH00095792eR00000070AD" target="_blank"><img alt="" src="../../Images/Shared/pdf.jpg" /> AT to DT Cross Refernces</a></li>
+					<li><a href="../../Images/PDFs/ISO2014Q-979ISOCertificate.pdf" target="_blank"><img alt="" src="../../Images/Shared/pdf.jpg" /> ISO 9001 Certificate</a></li>
+					<li><a href="../../GeneralRequest/PPAP">Request a PPAP</a></li>
+					<li><a href="../../GeneralRequest/IMDS">IMDS Request Form</a></li>
+					<li><a href="../../Products/Naftaform">Request NAFTA Cert</a></li>
+					<li><a href="../../pagecontent/ConflictMinerals">Conflict Minerals Statements</a></li>
+				</ul>
+			</li>
+			<li></li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Help<strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+					<li><a href="../../pagecontent/FAQ">General FAQs</a></li>
+					<li><a href="../../pagecontent/TechnicalFAQ">Technical FAQs</a></li>
+					<li><a href="../../ContactUs">Contact Us</a></li>
+				</ul>
+			</li>
+			<li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">My Account<strong>&nbsp;▾</strong></a>
+				<ul class="dropdown-menu">
+					<li><a href="../../MyAccount">My Account</a></li>
+					<li><a href="../../OrderHistory">Order History</a></li>
+					<li><a href="../../QuoteHistory">Quote History</a></li>
+					<li><a href="../../PartsList">My Parts List</a></li>
+					<li><a href="../../MyAccount/ChangeAddress">Addresses</a></li>
+					<li><a href="../../MyAccount/ChangePassword">Change Password</a></li>
+					<li><a href="../../MyAccount/LogOut">Log Out</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+        <!--Hidden Submit Button So It works with Ipad **Removed maybe causing issue with IE 10?-->
+        
+        <!--End Hidden Submit Button-->
+        <div style="height: 7px;">&nbsp;</div>
+    </form>
+    <form id="PasteInSearchForm" action=/Products/PasteInSearch method="post">
+        <input type="hidden" id="PasteInSearchForm_Instockonly" name="instockonly" />
+        <input type="hidden" id="PasteInSearchForm_Page" name="page" />
+        <input type="hidden" id="PasteInSearchForm_SortExpression" name="sortexpression" />
+        <input type="hidden" id="PasteInSearchForm_SortDirection" name="sortdirection" />
+        <div class="modal fade" id="PasteInSearchDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 300px">
+                <div class="modal-content">
+                    <div class="modal-caption">
+                        <h4>Paste-In Search</h4>
+                    </div>
+                    <div style="text-align:center">
+<small>Copy your list of part numbers from any document and paste them in the text box below.</small>
+</div>
+<div style="margin-left:20%">
+<li><small><b>Manufacturer part numbers only</b></small></li>
+<li><small><b>Only one part per line</b></small></li>
+<li><small><b>Limit 100 items</b></small></li>
+</div>
+                    <textarea name="PasteInSearchInput" style="width:70%;height:200px;margin-left:15%;margin-top:20px"></textarea>
+                    <div class="modal-buttons">
+                        <button class="btn btn-primary" id="PasteInSearchButton">Search</button>
+                        <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="mobileShoppingCartModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog " style="width: 200px;">
+        
+        <div class="modal-content">
+            
+            <div align="center" style="margin-top:30px">
+                <table cellspacing="2" style="font-size: small">
+    <tr>
+        <td>
+            <img src="/Images/Shared/topnav-cart.gif" />
+        </td>
+        <td class="text-left">
+            <strong>Shopping Cart</strong>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;
+        </td>
+        <td class="text-left">
+            <small>
+                    <a href="/Cart/DisplayCart/Order">Cart: 0, ($0.00)</a><br />
+
+                    <a href="/Cart/DisplayCart/Sample">Sample Cart: 0 </a><br />
+
+                    <a href="/Cart/DisplayCart/Quote">Quote Cart: 0 </a><br />
+            </small>
+        </td>
+    </tr>
+</table>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        </header>
+        <div class="row">
+
+            <div id="content">
+
+
+                <div id="middle" class="col-sm-12">
+                    <div>
+                        
+<!--V11-->
+<h3 class="text-center text-danger hide" id="ApplyingFilterText"><i class="fa fa-refresh fa-spin"></i> <span id="FilteringTextSpan">Applying Filter... </span></h3>
+<form method="get" action="/Products/Search" id="HiddenSearchForm">
+    <input type="hidden" value="580" name="searchBox" />
+    <input type="hidden" value="" name="attr" id="attr" />
+</form>
+<div class="validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+    <div id="SearchResultsDiv">
+        
+    <h4 class="text-warning">Search: 580   &nbsp;<small></small></h4>
+    <h4><small>13 results have been found.<span class="text-danger"></span></small></h4>
+
+    <br />
+        <div class="row">
+            <div class="col-md-5">
+                <style>
+    .scrollingcheckbox {
+        width: 99%;
+        height: 75px;
+        overflow-y: scroll;
+        background: white;
+    }
+</style>
+
+<form action="/Products/Search" id="FilterSearchResultsForm" method="get">
+
+    <input type="hidden" name="fromfilter" value="true" />
+    <input type="hidden" name="searchbox" value="580" />
+    <input type="hidden" name="attr" />
+
+    <input type="hidden" id="FilterForm_ProductSearch_SortExpression" name="SortExpression" />
+    <input type="hidden" id="FilterForm_ProductSearch_SortDirection" name="SortDirection" />
+    <input type="hidden" id="FilterForm_ResultsPerPage" name="SetPageSize" />
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-sm-5" style="border-right: 1px solid #ccc;">
+                        <strong>Filter:</strong>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="FilterFormInStockOnly" name="InStockOnly" value="true" > In Stock
+                            </label>
+                        </div>
+                        <p></p>
+                        <p><a href="#" onclick="SubmitFilterForm()" class="btn btn-primary btn-sm"> Apply Filters </a>&nbsp;&nbsp;&nbsp;<a href="#" onclick="UnCheckAll('FilterSearchResultsForm', false);">Clear All</a></p>
+                    </div>
+                    <div class="col-sm-7">
+                        <strong>Manufacturer:</strong>
+                        <div class="scrollingcheckbox">
+                            <small>
+
+
+                                    <span>
+                                        <input type="checkbox" name="filterAttributes" value="Manufacture~Cinch"  /> Cinch (1) <br />
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" name="filterAttributes" value="Manufacture~Molex"  /> Molex (1) <br />
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" name="filterAttributes" value="Manufacture~QuickCable"  /> QuickCable (4) <br />
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" name="filterAttributes" value="Manufacture~TE Connectivity"  /> TE Connectivity (9) <br />
+                                    </span>
+
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+            </div>
+
+            <div class="col-md-7">
+                    <div class="ProductAdDiv">
+                        <div style="text-align: left;" width="100%" class="well">
+<p>Need a smaller quantity? <a href="http://www.terminalsandconnectors.com">Click here</a> to buy from our low volume partner site <a href="http://www.TerminalsAndConnectors.com">www.TerminalsAndConnectors.com</a></p>
+<p><img src="/Images/PowerAndSignal.COM/TerminalsAndConnectorsLogoHalf.png" alt="" style="vertical-align: center; margin-right: 20px;" align="left" height="40px" /> Genuine OEM Parts at a <i style="color: red;">Fraction</i> of the Cost!</p>
+</div>
+                    </div>
+            </div>
+
+        </div>
+    <form method="post" action="/Cart/AddToCart" id="ProductSearchTableForm">
+        <input name="__RequestVerificationToken" type="hidden" value="KHYoI-N_sPklaFm_PQnv-eB81ETtWL6IsdMcjgk4qnh-8eXq65zUSJmAg5kbiEug9C0GVyj34mTP_o0amW-Dp06ND2i8tAPXxSHUPA7tF7U5URTO-0dvspreJGbOsMkOTaDgi3VxQU_g_ZsiSb1yPzfWOauR1mnchF1mqthFQTw1" />
+        <input id="ProductSearchOptionSelect" name="SelectedSortOption" type="hidden" value="" />
+        <!--V4-->
+
+
+<div class="table-responsive">
+
+    <table class="table table-bordered table-hover table-striped">
+        <tr>
+            <td colspan="7" class="text-left" style="border:0">
+                    <button class="btn btn-success cart-items-submit" value="true" name="AddSelectedItemsOrder" onclick="return false;" type="submit">Order Selected</button>
+                                        <button class="btn btn-primary cart-items-submit" value="true" name="AddSelectedItemsSample" onclick="return false;" type="submit">Sample Selected</button>
+                                        <button class="btn btn-primary cart-items-submit" value="true" name="AddSelectedItemsQuote" onclick="return false;" type="submit">Quote Selected</button>
+                                    <button class="btn btn-default parts-list-submit" value="true" name="AddSelectedItemsPartsList" onclick="return false;" type="submit">Add To Parts List</button>
+            </td>
+                <td colspan="3" class="text-center">
+                    <a href="/MyAccount/CustomerPricing"><strong>Login to MyAccount</strong><br /></a>
+                    <small>For your custom price</small>
+
+                </td>
+            
+
+
+                <td></td>
+                <td></td>
+
+
+
+        </tr>
+
+        <tr>
+            <th> </th>
+            <th><!--Image E1-->Image</th>
+            <th>
+                <a id="ProductSearch_Item" href="#">
+                    Item
+                    <span class="fa fa-"></span>
+                </a>
+            </th>
+            <th>
+                <a id="ProductSearch_Manufacturer" href="#">
+                    Mfg
+                    <span class="fa fa-"></span>
+                </a>
+            </th>
+            <th><!--Description E4-->Description</th>
+            <th><!--Datasheet E5-->Datasheet</th>
+            <th>
+                <a id="ProductSearch_Availability" href="#">
+                    Availability
+                    <span class="fa fa-"></span>
+                </a>
+            </th>
+                <th>
+                    Mult/Min
+                </th>
+                <th>
+                    Price
+                </th>
+                        <th>
+                
+                    <span>Quantity</span>
+                
+            </th>
+                            <th></th>
+            
+                <th class="hidden-sm">
+                    <small>Std. Lead Time</small>
+                </th>
+            
+
+        </tr>
+
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="0580030000" />
+
+    </td>
+    <td><a href="/Products/Product/0580030000"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/0580030000">0580030000</a>
+
+
+    </td>
+    <td><small>Molex</small></td>
+    <td class="text-left">
+        <small>CONNECTOR 580030000</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>2000</small></td>
+                <td>
+                        <small>Call PSG</small>
+                </td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="2000"
+                       style="width: 90px;"
+                       name="OrderQty-0580030000"
+                       id="OrderQty-0580030000" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="0580030000" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="0580030000" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="0580030000" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                58 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="1958178-1" />
+
+    </td>
+    <td><a href="/Products/Product/1958178-1"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=prsolring4.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/1958178-1">1958178-1</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>SOLIS,2,1-4,.580 WIDE,no bend</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>100</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="100"
+                       style="width: 90px;"
+                       name="OrderQty-1958178-1"
+                       id="OrderQty-1958178-1" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="1958178-1" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="1958178-1" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="1958178-1" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                37 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="5800400043" />
+
+    </td>
+    <td><a href="/Products/Product/5800400043"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/5800400043">5800400043</a>
+
+
+            <small>
+                <br />Cross Reference:
+            </small>
+                <small><br />580 04 00 043</small>
+                <small><br /> 580-04-00-043</small>
+    </td>
+    <td><small>Cinch</small></td>
+    <td class="text-left">
+        <small>Hand Crimper Tool</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+On Order
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+            <tr>
+                <td class="text-right">
+                    <a href="#"
+                       data-product="OrderQty-5800400043"
+                       data-product-quantity="1"
+                       class="product-quantity-click"
+                       onclick="return false;">1:</a>
+                </td>
+                <td>$423.3900</td>
+            </tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-5800400043"
+                       id="OrderQty-5800400043" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="5800400043" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5800400043" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5800400043" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                69 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="5802F" />
+
+    </td>
+    <td><a href="/Products/Product/5802F"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/5802F">5802F</a>
+
+
+    </td>
+    <td><small>QuickCable</small></td>
+    <td class="text-left">
+        <small>COMPRESSION PRECISION DIE CAST CONNECTORS, HEAVY WALL LUG 5802-000F</small>
+            </td>
+        <td><a class="fancybox" href="/docs/quickcable/5802F-INFO.pdf"><img src="../Images/Shared/drawing.GIF" alt="" /></a></td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>25</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+            <tr>
+                <td class="text-right">
+                    <a href="#"
+                       data-product="OrderQty-5802F"
+                       data-product-quantity="25"
+                       class="product-quantity-click"
+                       onclick="return false;">25:</a>
+                </td>
+                <td>$4.3558</td>
+            </tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="25"
+                       style="width: 90px;"
+                       name="OrderQty-5802F"
+                       id="OrderQty-5802F" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="5802F" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5802F" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5802F" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                20 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="5804F" />
+
+    </td>
+    <td><a href="/Products/Product/5804F"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/5804F">5804F</a>
+
+
+    </td>
+    <td><small>QuickCable</small></td>
+    <td class="text-left">
+        <small>COMPRESSION PRECISION DIE CAST CONNECTORS, HEAVY WALL LUG 5804-000F</small>
+            </td>
+        <td><a class="fancybox" href="/docs/quickcable/5804F-INFO.pdf"><img src="../Images/Shared/drawing.GIF" alt="" /></a></td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>25</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+            <tr>
+                <td class="text-right">
+                    <a href="#"
+                       data-product="OrderQty-5804F"
+                       data-product-quantity="25"
+                       class="product-quantity-click"
+                       onclick="return false;">25:</a>
+                </td>
+                <td>$4.2128</td>
+            </tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="25"
+                       style="width: 90px;"
+                       name="OrderQty-5804F"
+                       id="OrderQty-5804F" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="5804F" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5804F" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="5804F" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                20 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58062-1" />
+
+    </td>
+    <td><a href="/Products/Product/58062-1"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58062-1">58062-1</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>HEAD IDC MODU MT W/O TL</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58062-1"
+                       id="OrderQty-58062-1" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58062-1" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58062-1" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58062-1" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                37 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58063-2" />
+
+    </td>
+    <td><a href="/Products/Product/58063-2"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=prpistol-grip-ii.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58063-2">58063-2</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>HEAD (IDC) HDE-20 W/O TL</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58063-2"
+                       id="OrderQty-58063-2" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58063-2" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58063-2" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58063-2" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                37 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58074-1" />
+
+    </td>
+    <td><a href="/Products/Product/58074-1"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=58074-1-t1.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58074-1">58074-1</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>MANUAL HANDLE W/O HEAD</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58074-1"
+                       id="OrderQty-58074-1" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58074-1" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58074-1" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58074-1" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                22 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58078-3" />
+
+    </td>
+    <td><a href="/Products/Product/58078-3"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=58078-3-t1.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58078-3">58078-3</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>TOOL FRAME W/OUT DIES</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58078-3"
+                       id="OrderQty-58078-3" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58078-3" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58078-3" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58078-3" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                37 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58079-3" />
+
+    </td>
+    <td><a href="/Products/Product/58079-3"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=pr58079-x.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58079-3">58079-3</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>ULTRAFAST + DIE 22-18U/58078-3</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58079-3"
+                       id="OrderQty-58079-3" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58079-3" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58079-3" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58079-3" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                42 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="58082-1" />
+
+    </td>
+    <td><a href="/Products/Product/58082-1"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=en-no-img.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/58082-1">58082-1</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>HEAD IDC MTA 156 POSTED W/O TL</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-58082-1"
+                       id="OrderQty-58082-1" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="58082-1" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58082-1" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="58082-1" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                37 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="90390-3" />
+
+    </td>
+    <td><a href="/Products/Product/90390-3"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=90390-3-t1.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/90390-3">90390-3</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>DIE ULTRA FAST 22-18 U/58078-3</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-90390-3"
+                       id="OrderQty-90390-3" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="90390-3" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="90390-3" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="90390-3" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                47 Business Days
+            </small>
+        </td>
+
+</tr>
+<!--V3-->
+
+<tr>
+    <td>
+            <input type="checkbox" name="SelectItem" value="90391-3" />
+
+    </td>
+    <td><a href="/Products/Product/90391-3"><img src="/HttpRequest/ThumbNailesOnTheFly.ashx?image=90391-3-t1.jpg" class="center img-thumbnail" /></a></td>
+    <td>
+        <a href="/Products/Product/90391-3">90391-3</a>
+
+
+    </td>
+    <td><small>TE Connectivity</small></td>
+    <td class="text-left">
+        <small>DIE ULTRA FAST 16-14 U/58078-3</small>
+            </td>
+        <td>&nbsp;</td>
+
+        
+         <td>
+
+Call PSG
+
+        </td>
+        <td><small>1</small></td>
+                <td nowrap="nowrap"><small>
+<table>
+        <tr><td colspan="2">Call PSG</td></tr>
+</table>
+
+
+
+
+
+
+
+</small></td>
+        <td>
+            <p>
+                <input type="text"
+                       class="form-control input-sm"
+                       value="1"
+                       style="width: 90px;"
+                       name="OrderQty-90391-3"
+                       id="OrderQty-90391-3" />
+            </p>
+            <p><button class="btn btn-success btn-sm" type="submit" value="90391-3" name="AddToOrderCart">Add To Cart</button></p>
+        </td>
+        <td>
+                <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="90391-3" name="AddToSampleCart">Sample</button></p>
+                            <p><button class="btn btn-primary btn-sm btn-block" style="width: 65px;" type="submit" value="90391-3" name="AddToQuoteCart">Quote</button></p>
+        </td>
+        <td class="hidden-sm">
+            <small>
+                42 Business Days
+            </small>
+        </td>
+
+</tr>
+    </table>
+    
+</div>
+    </form>
+<p>
+    <br>
+
+</p>
+
+
+    </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="footer">
+            <!--V4-->
+<div style="width:100%">
+    <div>
+<p><a href="/">Home</a> |&nbsp;<a href="/pagecontent/AboutUs">About Us</a> |&nbsp;<a href="/pagecontent/ProductLines">Line Card</a> |&nbsp;<a href="/MyAccount">My Account</a> | <!--a href="#">Find Parts</a--> <a href="/ContactUs">Contact Us</a> | <a href="/pagecontent/Help">Help</a> |&nbsp;<a href="/pagecontent/PrivacyPolicy">Privacy Policy</a> |&nbsp;<a href="http://www.powerandsignal.de/docs/AGBEng.pdf" target="_blank">Terms &amp; Conditions</a> |&nbsp;<a href="/Products/AllProducts">All Parts</a> |</p>
+<p>Power &amp; Signal Group Phone Number: 1-800-722-5273 or 440-836-6600 <br />&copy; 2016 Power &amp; Signal Group</p>
+</div>
+
+</div>
+<div style="text-align:center;font-size:x-small;width:100%">
+    (2017 V 1.2.691.19653)
+</div>
+        </div>
+
+                <script> var RootPath = '/';</script>
+
+        <script src="/bundles/allscripts?v=vV_C0CAXlZdT9rXOr3Si6iYRBJURs5w1u6iijTP70Uc1"></script>
+
+
+
+
+        <script type="text/javascript">
+
+
+            $('#searchBox').typeahead({ remote: '/TypeAhead/ProductSearch?q=%QUERY', minLength: 3 }).on('typeahead:selected', function (event, datam) {
+                $('#topsearchform').submit();
+            });
+
+            $('#searchBoxMobile').typeahead({ remote: '/TypeAhead/ProductSearch?q=%QUERY', minLength: 3 }).on('typeahead:selected', function (event, datam) {
+                $('#topsearchformMobile').submit();
+            });
+            $(document).ready(function () {
+                $(".fancybox").fancybox({ type: 'iframe', 'closeBtn': true, preload: false });
+            });
+
+            $('.mobile-shopping-btn').on('click', function () {
+                $('#mobileShoppingCartModal').modal('show');
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('.carousel').carousel();
+                setTimeout(function () {
+                    $('.carousel-control').removeClass('carousel-start');
+                }, 3000)
+                $('img[usemap]').rwdImageMaps();
+            });
+        </script>
+
+        
+    <!--See the Scripts/Views for additional view related java scripts-->
+    <script>
+
+        $('.product-quantity-click').on('click', function () {
+            var link = $(this).attr('data-product');
+            var qty = $(this).attr('data-product-quantity');
+            $('#' + link).val(qty);
+        });
+
+        function SubmitFilterForm(text, isInStock) {
+            $('#ApplyingFilterText').removeClass('hide');
+            $('#SearchResultsDiv').fadeTo('slow', 0.22);
+
+            var sortExpression = $('#ProductSearch_SortExpression').val();
+            var sortDirection = $('#ProductSearch_SortDirection').val();
+
+            $('#FilterForm_ProductSearch_SortExpression').val(sortExpression);
+            $('#FilterForm_ProductSearch_SortDirection').val(sortDirection);
+
+            if (text != null) {
+                $('#FilteringTextSpan').html(text);
+            }
+            else {
+                $('#FilteringTextSpan').html('Applying Filter...');
+            }
+
+            var formData = $("#FilterSearchResultsForm").serialize();
+            $.ajax({
+                type: "GET",
+                url: "/Products/Search",
+                data: formData,
+                error: function (data) {
+                    alert("There was a problem");
+                },
+                success: function (data) {
+                    $('#SearchResultsDiv').html(data);
+                    $('#ApplyingFilterText').addClass('hide');
+                    $('#SearchResultsDiv').fadeTo('fast', 1);
+                }
+            });
+
+            //Submit to google analytics
+            var page = '/Products/Search' + '/?' + formData;
+            _gaq.push(['_trackPageview', page]);
+        }
+
+        function UnCheckAll(formname, checktoggle) {
+            $('input:checkbox').removeAttr('checked');
+            SubmitFilterForm();
+        }
+    </script>
+
+
+    </div>
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="/Scripts/html5shiv.js"></script>
+        <script type="text/javascript" src="/Scripts/respond.js"></script>
+    <![endif]-->
+    <!--
+    <script type="text/javascript">
+        setTimeout(function () {
+            var a = document.createElement("script");
+            var b = document.getElementsByTagName("script")[0];
+            a.src = document.location.protocol + "//dnn506yrbagrg.cloudfront.net/pages/scripts/0024/4230.js?" + Math.floor(new Date().getTime() / 3600000);
+            a.async = true; a.type = "text/javascript"; b.parentNode.insertBefore(a, b)
+        }, 1);
+    </script>
+    -->
+        <script src="/Scripts/SalesFusion/frs-app.js"></script>
+        <script type="text/javascript">
+            frt(95792);
+        </script>
+</body>
+</html>
