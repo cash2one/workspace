@@ -153,5 +153,4 @@ def get_pwd(file_path=__file__):
 
 if __name__ == "__main__":
     print get_pwd()
-    # no_space_in_filename(directory_path=r'E:\workspace\codewar')
     pass
