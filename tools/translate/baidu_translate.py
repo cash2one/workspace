@@ -9,7 +9,7 @@
 import re
 import json
 import random
-import conf
+import config
 import requests
 from hashlib import md5
 from requests import adapters
@@ -33,7 +33,7 @@ class Translate(object):
             'from': 'en',
             'to': 'zh',
         }
-        self.agents = conf.USER_AGENT_LIST
+        self.agents = config.USER_AGENT_LIST
         self.headers = {
             'Accept': '*/*',
             'Accept-Encoding': 'gzip, deflate, sdch',

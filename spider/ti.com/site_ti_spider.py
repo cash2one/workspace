@@ -44,14 +44,14 @@ import lxml.html
 from w3lib.html import remove_tags
 
 sys.__APP_LOG__ = False
-try:
-    import conf
-except ImportError:
-    sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
-    import conf
-import packages.Util as util
-from packages import hqchip
-from packages import rabbit as queue
+# try:
+#     import conf
+# except ImportError:
+#     sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
+#     import conf
+# import packages.Util as util
+# from packages import hqchip
+# from packages import rabbit as queue
 
 logger = logging.getLogger(__name__)
 
@@ -707,3 +707,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # print [sys.argv[0], sys.argv[0]]

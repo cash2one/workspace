@@ -23,10 +23,10 @@ import pika
 from bs4 import BeautifulSoup, SoupStrainer
 
 try:
-    import conf
+    import config
 except ImportError:
     sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
-    import conf
+    import config
 
 import packages.Util as util
 from packages.DB import db_mysql
@@ -180,7 +180,7 @@ class HQChipSupplier(object):
         '''
         tname = threading.current_thread().name
         if tname not in self.__hqchip_queue:
-            _db_config = conf.DATABASES['mysql'][0].copy()
+            _db_config = config.DATABASES['mysql'][0].copy()
             _db_config['db'] = 'hqchip'
             _db_config['tablepre'] = 'ecs_'
             _db_config['db_fields_cache'] = 0
@@ -195,7 +195,7 @@ class HQChipSupplier(object):
         '''
         tname = threading.current_thread().name
         if tname not in self.__supplier_queue:
-            _db_config = conf.DATABASES['mysql'][0].copy()
+            _db_config = config.DATABASES['mysql'][0].copy()
             _db_config['db'] = 'supplier'
             _db_config['tablepre'] = 'ic_'
             _db_config['db_fields_cache'] = 0
@@ -208,7 +208,7 @@ class HQChipSupplier(object):
     def mongo(self):
         tname = threading.current_thread().name
         if tname not in self.__mongo_queue:
-            conn = pymongo.MongoClient(conf.DATABASES['mongo'][1])
+            conn = pymongo.MongoClient(config.DATABASES['mongo'][1])
             self.__mongo_queue[tname] = conn.get_default_database()
         return self.__mongo_queue[tname]
 
@@ -373,7 +373,7 @@ class HQChipSupplier(object):
                 return
             if isinstance(message_list, dict):
                 message_list = [message_list]
-            connection = pika.BlockingConnection(pika.URLParameters(conf.AMQP_URL))
+            connection = pika.BlockingConnection(pika.URLParameters(config.AMQP_URL))
             channel = connection.channel()
             channel.queue_declare(queue=queue_name, durable=True)
             for message in message_list:
@@ -508,7 +508,7 @@ def exception_notice(etype=''):
     else:
         except_msg = '数据获取异常'
     body = "合作库存 %s 数据更新数据获取异常, 异常原因：%s,请注意检查！" % (PN2, except_msg)
-    util.sendmail(conf.EMAIL_NOTICE.get(
+    util.sendmail(config.EMAIL_NOTICE.get(
         'accept_list'), subject=subject, body=body)
 
 

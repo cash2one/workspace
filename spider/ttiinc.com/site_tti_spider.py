@@ -45,10 +45,10 @@ from w3lib.html import remove_tags
 
 sys.__APP_LOG__ = False
 try:
-    import conf
+    import config
 except ImportError:
     sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
-    import conf
+    import config
 import packages.Util as util
 from packages import hqchip
 from packages import rabbit as queue
@@ -166,7 +166,7 @@ class RandomUserAgentMiddleware(object):
         if 'USER_AGENT_LIST' in crawler.settings:
             agents = crawler.settings.getlist('USER_AGENT_LIST')
         else:
-            agents = conf.USER_AGENT_LIST
+            agents = config.USER_AGENT_LIST
         return cls(agents)
 
     def process_request(self, request, spider):
@@ -228,7 +228,7 @@ class ProxyRequestMiddleware(object):
         for rule in proxy_rules:
             self.filters.append(re.compile(rule))
         self.mongo = hqchip.db.mongo.proxys
-        self.queue = queue.RabbitMQ(name='spider.proxys', dsn=conf.AMQP_URL)
+        self.queue = queue.RabbitMQ(name='spider.proxys', dsn=config.AMQP_URL)
 
     @classmethod
     def from_crawler(cls, crawler):

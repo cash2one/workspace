@@ -1,6 +1,6 @@
 # coding=utf-8
 import requests
-from conf.config import DEFAULT_HEADERS
+from config import DEFAULT_HEADERS
 from tools.box import add_host_into_headers
 
 

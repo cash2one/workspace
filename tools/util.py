@@ -8,7 +8,7 @@ from make_email.mime.text import MIMEText
 from make_email.mime.multipart import MIMEMultipart
 import logging
 try:
-    import conf
+    import config
 except ImportError:
     pass
 
@@ -236,7 +236,7 @@ def sendmail(to_email, subject=None, body=None, attachment=None, **kwargs):
     if not to_email:
         return
     try:
-        kwargs.update(conf.EMAIL)
+        kwargs.update(config.EMAIL)
     except Exception:
         pass
     if attachment is None:
@@ -301,7 +301,7 @@ def file(name='', value='', path='', _cache={}):
     '''
     if not name:
         return None
-    filepath = os.path.join(conf.APP_ROOT, 'database', path, name)
+    filepath = os.path.join(config.APP_ROOT, 'database', path, name)
     if value != '':
         if value is None:
             try:

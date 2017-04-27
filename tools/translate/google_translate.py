@@ -1,7 +1,7 @@
 # coding=utf-8
 import re
 import math
-import conf
+import config
 import random
 import requests
 
@@ -16,7 +16,7 @@ class Translate(object):
             "tl": "zh-CN",
             "dt": "t",
         }
-        self.agents = conf.USER_AGENT_LIST
+        self.agents = config.USER_AGENT_LIST
         self.headers = {
             'Accept': '*/*',
             'Accept-Encoding': 'gzip, deflate, sdch',
