@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Created by Vin on 2017/4/27
 
+# 常见浏览器的User-Agent
 USER_AGENT_LIST = [
     'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36',
     'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.67 Safari/537.36',
@@ -31,10 +32,10 @@ USER_AGENT_LIST = [
     # 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',  # Bing蜘蛛
     # 'Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)',  # Yahoo蜘蛛
 ]
-
+# 默认的头部
 DEFAULT_HEADERS = {'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36'}
 
-"常用的正则"
+# 常用的正则
 COMMON_REGEX = {
     # Email的规则: name @ domain
     # name最长64，domain最长253，总长最长256

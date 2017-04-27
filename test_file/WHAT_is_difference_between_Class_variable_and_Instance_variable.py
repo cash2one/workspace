@@ -16,6 +16,7 @@ class fish(object):
 
     def set_species(self):
         self.species = "white fish"
+        species = "hello sb"
 
     def get_species(self):
         print fish.species
@@ -32,15 +33,22 @@ if __name__ == '__main__':
     import copy
     # 1、修改类变量的值会影响已经实例化的对象吗？
     fish_a = fish('joe')
-    fish_b = fish('mike')
     fish_c = copy.deepcopy(fish_a)
+    fish_b = fish('mike')
+    # 实例中的“类变量”地址
+    print "-" * 20
+    print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}". \
+        format(cl=id(fish.species), a=id(fish_a.species), b=id(fish_b.species), c=id(fish_c.species))
+    print "=" * 20
     print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}".\
-        format(cl=id(fish), a=id(fish_a), b=id(fish_a), c=id(fish_c))
+        format(cl=id(fish), a=id(fish_a), b=id(fish_b), c=id(fish_c))
     print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}".\
         format(cl=fish.species, a=fish_a.species, b=fish_b.species, c=fish_c.species)
     fish.species = "little river fish"
     print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}".\
         format(cl=fish.species, a=fish_a.species, b=fish_b.species, c=fish_c.species)
+    print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}". \
+        format(cl=id(fish), a=id(fish_a), b=id(fish_b), c=id(fish_c))
 
     # 2、在实例对象中修改类变量
     print "="*20
@@ -57,3 +65,8 @@ if __name__ == '__main__':
     # print fish_d.species
     fish_d.set_species()
     fish_d.get_species()
+
+    # 实例中的“类变量”地址
+    print "-"*20
+    print "fish_class:{cl}\nfish_a:{a}\nfish_b:{b}\nclone_a:{c}". \
+        format(cl=id(fish.species), a=id(fish_a.species), b=id(fish_b.species), c=id(fish_c.species))

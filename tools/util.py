@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-__author__ = 'qaulau'
-
 import re, sys, time, datetime, locale, traceback, subprocess, os, signal, smtplib,urllib
 from make_email.mime.text import MIMEText
 from make_email.mime.multipart import MIMEMultipart
