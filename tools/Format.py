@@ -63,6 +63,30 @@ def clear_text(text='', keep=True):
     return text
 
 
+def text_filter(text, *args, **kwargs):
+    '''
+    过滤特殊字符，获取纯文本字符串，默认过滤换行符 \n、\r、\t 以及多余的空格
+
+    @params
+        args : 为添加需要为过滤的字符
+
+    @return
+        返回过滤后的字符串，如果为非字符串类型则会被转换成字符串再过滤
+    '''
+    if isinstance(text, unicode):
+        text = text.encode('utf-8')
+    elif not isinstance(text, str):
+        text = str(text)
+    text = text.replace("\r", '')
+    text = text.replace("\n", '')
+    text = text.replace("\t", '')
+    text = text.rstrip()
+    text = text.lstrip()
+    for arg in args:
+        text = text.replace(arg, '')
+    return text
+
+
 def number_format(num=None, places=0, index=0, auto=True):
     """
     将字符串中的数字全部提取并按照index索引和规定places精度返回

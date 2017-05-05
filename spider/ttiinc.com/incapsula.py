@@ -131,9 +131,19 @@ var z="";var b="7472797B766172207868723B76617220743D6E6577204461746528292E676574
 </body></html>
     """
     # print translate(t)
+    # session = requests.Session()
+    # tti = session.get(url='https://www.ttiinc.com/content/ttiinc/en.html', headers=default_headers)
+    # print tti.text
+    # js_cookies = {}
+    # for vo in tti.cookies:
+    #     js_cookies[vo.name] = vo.value
+    # print js_cookies
     session = requests.Session()
-    tti = session.get(url='https://www.ttiinc.com/content/ttiinc/en.html', headers=default_headers)
+    tti = session.get(url='https://www.ttiinc.com/content/ttiinc/en.html', headers=default_headers, timeout=30)
+    print tti.text
     js_cookies = {}
     for vo in tti.cookies:
         js_cookies[vo.name] = vo.value
-    print js_cookies
+    tti = session.get(url='https://www.ttiinc.com/content/ttiinc/en.html', headers=default_headers, cookies=js_cookies, timeout=30)
+    print tti.text
+    js_cookies = _parse_incapsula_page(tti.text, cookies=js_cookies, headers=default_headers, session=session)

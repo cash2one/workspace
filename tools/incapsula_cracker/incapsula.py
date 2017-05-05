@@ -17,6 +17,7 @@ import logging
 import requests
 import urlparse
 from bs4 import BeautifulSoup
+from config import USER_AGENT_LIST
 
 # 在设置中设置默认的浏览器属性供脚本读取
 setting = {
@@ -42,7 +43,12 @@ setting = {
     'endpoints': {
         'cn.onlinecomponents.com': {
             'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
-        }
+            'ns': '2',
+        },
+        'www.ttiinc.com': {
+            'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
+            'ns': '2',
+        },
     }
 }
 
@@ -194,7 +200,8 @@ def set_incap_cookie(sess, response):
     digests = []
     for cookie in cookies:
         digests.append(simple_digest(",".join(extensions) + cookie))
-    res = ",".join(extensions) + ",digest=" + ",".join(str(digests))
+    digests = [str(x) for x in digests]
+    res = ",".join(extensions) + ",digest=" + ",".join(digests)
     cookie = create_cookie("___utmvc", res, 20, response.url)
     sess.cookies.set(**cookie)
 
@@ -225,16 +232,27 @@ def _load_encapsula_resource(sess, response):
 
     code = get_obfuscated_code(response.content)
     parsed = parse_obfuscated_code(code)
-    resource1, resource2 = get_resources(parsed, response.url)[1:]
-    sess.get(resource1)
+    # print parsed
+    resources_list = list(set(get_resources(parsed, response.url)))
+    for resources in resources_list:
+        time.sleep(0.02)
+        if '&d=' in resources:
+            timing.append('c:{}'.format(now_in_seconds() - start))
+            time.sleep(0.02)  # simulate page refresh time
+            timing.append('r:{}'.format(now_in_seconds() - start))
+            sess.get(resources + urllib.quote('complete ({})'.format(",".join(timing))))
+        else:
+            sess.get(resources)
+            # resource1, resource2 = get_resources(parsed, response.url)[1:]
+            # sess.get(resource1)
+            #
+            # timing.append('c:{}'.format(now_in_seconds() - start))
+            # time.sleep(0.02)  # simulate page refresh time
+            # timing.append('r:{}'.format(now_in_seconds() - start))
+            # sess.get(resource2 + urllib.quote('complete ({})'.format(",".join(timing))))
 
-    timing.append('c:{}'.format(now_in_seconds() - start))
-    time.sleep(0.02)  # simulate page refresh time
-    timing.append('r:{}'.format(now_in_seconds() - start))
-    sess.get(resource2 + urllib.quote('complete ({})'.format(",".join(timing))))
 
-
-def incapsula_parse(sess, response):
+def incapsula_parse(sess, response, **kwargs):
     soup = BeautifulSoup(response.content, 'lxml')
     meta = soup.find('meta', {'name': re.compile(r'robots', re.IGNORECASE)})
     if not meta:  # if the page is not blocked, then just return the original request.
@@ -249,8 +267,10 @@ def incapsula_parse(sess, response):
         url_params = urllib.urlencode(params)
         logger.debug('url_params={}'.format(url_params))
         r = sess.get(
-            '{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params),
+            '{scheme}://{host}/_Incapsula_Resource?{url_params}'.format(scheme=scheme, host=host,
+                                                                        url_params=url_params),
             headers={'Referer': response.url})
+        # print r.url, r.text
         _load_encapsula_resource(sess, r)
     else:
         sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host,
@@ -258,7 +278,14 @@ def incapsula_parse(sess, response):
                  headers={'Referer': response.url})
         _load_encapsula_resource(sess, response)
 
-    return sess.get(response.url)
+    if 'data' in kwargs or 'json' in kwargs:
+        data = kwargs.pop('data', None)
+        json = kwargs.pop('json', None)
+        print kwargs
+        print response.url, data, json
+        return sess.post(response.url, data=data, json=json, **kwargs)
+
+    return sess.get(response.url, **kwargs)
 
 
 def sup_fetcher(func):
@@ -349,8 +376,23 @@ class IncapSession(object):
         返回值为 response 对象
         """
         kwargs.setdefault('allow_redirects', True)
+        if 'headers' in kwargs:
+            self.session.headers.update(kwargs.pop('headers'))
+        else:
+            self.session.headers.update({'User-Agent': random.choice(USER_AGENT_LIST)})
         r = self.session.request('GET', url, **kwargs)
-        return incapsula_parse(self.session, r)
+        return incapsula_parse(self.session, r, **kwargs)
+
+    def post(self, url, data=None, json=None, **kwargs):
+        """
+        返回值为 response 对象
+        """
+        if 'headers' in kwargs:
+            self.session.headers.update(kwargs.pop('headers'))
+        else:
+            self.session.headers.update({'User-Agent': random.choice(USER_AGENT_LIST)})
+        r = self.session.request('POST', url, data=data, json=json, **kwargs)
+        return incapsula_parse(self.session, r, data=data, json=json, **kwargs)
 
 
 class IncapsulaMiddleware(object):
@@ -383,8 +425,8 @@ class IncapsulaMiddleware(object):
     def process_response(self, request, response, spider):
         if not request.meta.get('incap_set', False):
             soup = BeautifulSoup(response.body.decode('ascii', errors='ignore'), 'lxml')
-            meta = soup.find('meta', {'name': 'robots'})
-            if not meta:
+            meta = soup.find('meta', {'name': re.compile(r'robots', re.IGNORECASE)})
+            if not meta:  # if the page is not blocked, then just return the original request.
                 return response
             self.crawler.stats.inc_value('incap_blocked')
             self.logger.info('cracking incapsula blocked resource <{}>'.format(request.url))
@@ -446,7 +488,6 @@ if __name__ == "__main__":
     default_headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 '
                       'Safari/537.36',
-        'host': 'cn.onlinecomponents.com',
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json;charset=UTF-8',
         'Accept-Encoding': 'gzip, deflate, br',

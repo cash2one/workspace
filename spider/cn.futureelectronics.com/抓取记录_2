@@ -1,0 +1,598 @@
+E:\Hqchip\collection\siteall>python site_futureelectronics_spider.py -r
+2017-05-05 11:33:43 [scrapy.utils.log] INFO: Scrapy 1.3.3 started (bot: hqchipSpider)
+2017-05-05 11:33:43 [scrapy.utils.log] INFO: Overridden settings: {'SPIDER_LOADER_WARN_ONLY': True, 'TELNETCONSOLE_ENABLED': False, 'LOG_LEVEL': 10, 'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36', 'BOT_NAME': 'hqchipSpider'}
+2017-05-05 11:33:43 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.corestats.CoreStats']
+2017-05-05 11:33:43 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['__main__.IgnoreRquestMiddleware',
+ '__main__.UniqueRequestMiddleware',
+ '__main__.RandomUserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2017-05-05 11:33:43 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2017-05-05 11:33:43 [scrapy.middleware] INFO: Enabled item pipelines:
+['__main__.MetaItemPipeline']
+2017-05-05 11:33:43 [scrapy.core.engine] INFO: Spider opened
+2017-05-05 11:33:43 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2017-05-05 11:33:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/Pages/index.aspx> (referer: None)
+2017-05-05 11:33:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A761-4294938438> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:48 [scrapy.dupefilters] DEBUG: Filtered duplicate request: <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A876> - no more duplicates will be shown (see DUPEFILTER_DEBUG to show all duplicates)
+2017-05-05 11:33:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A889> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A876> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A761-4294938420> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4599> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/bipolar-transistors/Pages/4291795-PMBT3904,215.aspx?IM=0
+2017-05-05 11:33:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A881> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A744> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/passives/resistors/fixed-resistors/Pages/4016291-RC0603FR-071KL.aspx?IM=0
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/diodes/switching/Pages/5717335-BAV99,215.aspx?IM=0
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/passives/resistors/fixed-resistors/Pages/4023214-RC0603FR-0710KL.aspx?IM=0
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/passives/resistors/fixed-resistors/Pages/3388022-RC0402FR-0710KL.aspx?IM=0
+2017-05-05 11:33:49 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/passives/capacitors/ceramic-capacitors/multilayer-ceramic-capacitors/Pages/5291414-CL10B104KO8NNNC.aspx?IM=0
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A888-4294874918> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A773> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A782> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A815-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4600> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A902> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/igbts/Pages/3879160-IRG4PH40KDPBF.aspx
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A436> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4585> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:53 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A751> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:53 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A888-4294938340> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A50%2CAro%3A50> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A434-4294938429> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A80%2CAro%3A80> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A30%2CAro%3A30> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A90%2CAro%3A90> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A60%2CAro%3A60> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A20%2CAro%3A20> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A10%2CAro%3A10> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A40%2CAro%3A40> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A70%2CAro%3A70> (referer: http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294897561)
+2017-05-05 11:33:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4350> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A541> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4273> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:33:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A879> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4547> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A636> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A748> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A815-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4323> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A649> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A888-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:01 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A833> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A853> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A543-4294938422> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A435> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A903> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [__main__] WARNING: ingore repeat url: http://cn.futureelectronics.com/zh/technologies/passives/capacitors/ceramic-capacitors/multilayer-ceramic-capacitors/Pages/3768835-0805PC152KAT1A.aspx
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4382> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4272> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A883> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A768> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:05 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A750-4294938467> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294878620> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A530> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4595> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A434-4294938461> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A589> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A737> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:07 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A733> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A531> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A816> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/analog/regulators-reference/linear-regulators/Pages/5225115-SPX1117M3-L-2-5-TR.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:09 [__main__] INFO: success insert mongodb : ba0d93537b40307ff08b1f09edcd64a6
+2017-05-05 11:34:09 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Input Voltage-Max', u'20 V'],
+          [u'Output Voltage Fixed', u'2.5 V'],
+          [u'Output Current-Max', u'800 mA']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u6a21\u62df\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:588&dsDimensionSearch='],
+            [u'\u7a33\u538b\u5668\u53ca\u57fa\u51c6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:604&dsDimensionSearch='],
+            [u'\u7ebf\u6027\u7a33\u538b\u5668',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:605&dsDimensionSearch=']],
+ 'doc': 'http://www.exar.com/content/document.ashx?id=694',
+ 'goods_desc': u'SPX1117 \u7cfb\u5217 2.5 V 800 mA \u4f4e\u538b\u5dee\u6b63\u7535\u538b\u7a33\u538b\u5668 - SOT-223-3',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/analog/regulators-reference/linear-regulators/SOT-223-SEMICONDUCTORS-NXP-FNT-MED.JPG?m=dgoeAF',
+ 'goods_name': u'SPX1117M3-L-2-5',
+ 'goods_other_name': '',
+ 'goods_sn': '5225115-SPX1117M3-L-2-5-TR',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/analog/regulators-reference/linear-regulators/SOT-223-SEMICONDUCTORS-NXP-FNT-SML.JPG?m=dgoEKE',
+ 'increment': 1,
+ 'provider_name': 'EXAR',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [1475, 1],
+ 'tiered': [[1, 1.06], [400, 1.02]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/analog/regulators-reference/linear-regulators/Pages/5225115-SPX1117M3-L-2-5-TR.aspx'}
+2017-05-05 11:34:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A655> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A641> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:10 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A827> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:10 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A520> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A679-4294864623> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A644> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A590> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/igbts/Pages/7535883-IRGP30B60KD-EP.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:12 [__main__] INFO: success insert mongodb : fecfdaf035bd798da3ae9d4ed839fbd6
+2017-05-05 11:34:12 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'CE Voltage-Max', u'600 V'],
+          [u'Collector Current @ 25C', u'60 A'],
+          [u'Power Dissipation-Tot', u'304 W'],
+          [u'Turn-on Delay Time', u'46 ns'],
+          [u'Turn-off Delay Time', u'185 ns']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u5206\u7acb\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:658&dsDimensionSearch='],
+            [u'\u6676\u4f53\u7ba1',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:670&dsDimensionSearch='],
+            [u'IGBT',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:672&dsDimensionSearch=']],
+ 'doc': 'http://www.irf.com/product-info/datasheets/data/irgp30b60kd-epbf.pdf',
+ 'goods_desc': u'IRGP30B60KD-EP \u7cfb\u5217 600 V 30 A N \u6c9f\u9053 \u8d85\u5feb IGBT - TO-247AD',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/igbts/IRGP30B120KD-EP-IR-FNT-MED.JPG?m=bwHpDX',
+ 'goods_name': u'IRGP30B60KD-EP',
+ 'goods_other_name': '',
+ 'goods_sn': '7535883-IRGP30B60KD-EP',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/igbts/IRGP30B120KD-EP-IR-FNT-SML.JPG?m=Bwhqrv',
+ 'increment': 1,
+ 'provider_name': 'INFINEON',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [15, 5],
+ 'tiered': [[5, 33.49], [100, 29.86]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/igbts/Pages/7535883-IRGP30B60KD-EP.aspx'}
+2017-05-05 11:34:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A741> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4486> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A891> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A463> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A750-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A761-4294938476> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A588-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/analog/power-switches/Pages/8485831-SP2526A-1EN-L-TR.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:15 [__main__] INFO: success insert mongodb : 327d95c4b42b4581f16ccc2ca3497178
+2017-05-05 11:34:15 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Configuration', u'High Side'],
+          [u'Input Voltage', u'3 to 5.5 V'],
+          [u'No of Elements', u'Dual'],
+          [u'On-state Resistance-Max', u'150 m\u03a9'],
+          [u'Rated Current-Max', u'500 mA']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u6a21\u62df\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:588&dsDimensionSearch='],
+            [u'\u7535\u6e90\u5f00\u5173',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:4353&dsDimensionSearch=']],
+ 'doc': 'http://www.exar.com/content/document.ashx?id=668',
+ 'goods_desc': u'SP2526A \u7cfb\u5217 \u53cc\u901a\u9053 500 mA \u9ad8\u8fb9 \u8868\u9762\u5e16\u88c5 USB \u7535\u6e90\u5f00\u5173 - NSOIC-8',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/signal-interface/rs-485-422/SOIC-8-SEMICONDUCTOR-XR-FNT-MED.JPG?m=DmBQ3Z',
+ 'goods_name': u'SP2526A-1EN-L',
+ 'goods_other_name': '',
+ 'goods_sn': '8485831-SP2526A-1EN-L-TR',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/signal-interface/rs-485-422/SOIC-8-SEMICONDUCTOR-XR-FNT-SML.JPG?m=DMBTmP',
+ 'increment': 2500,
+ 'provider_name': 'EXAR',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [7500, 2500],
+ 'tiered': [[2500, 3.19]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/analog/power-switches/Pages/8485831-SP2526A-1EN-L-TR.aspx'}
+2017-05-05 11:34:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/signal-interface/rs-232/Pages/6286405-SP208CA-L.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:15 [__main__] INFO: success insert mongodb : 3bdd8b227a77f960b8bc7d51d761fe9e
+2017-05-05 11:34:15 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Data Rate', u'120 kbps'],
+          [u'ESD Voltage-Max', u'\xb110 kV'],
+          [u'Operating Temp Range', u'0 to 70 \xb0C'],
+          [u'Supply Voltage', u'4.5 to 5.5 V']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u4fe1\u53f7/\u63a5\u53e3',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:888&dsDimensionSearch='],
+            [u'RS 232',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:890&dsDimensionSearch=']],
+ 'doc': 'http://www.exar.com/content/document.ashx?id=20177',
+ 'goods_desc': u'SP208 \u7cfb\u5217 120 kbps \u9ad8\u901f RS-232 \u6536\u53d1\u5668 \u5e260.1\u03bcF \u7535\u5bb9-SSOP-24',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/signal-interface/rs-232/SP206CA-L-XR-FNT-MED.JPG?m=URgF2t',
+ 'goods_name': u'SP208CA-L',
+ 'goods_other_name': '',
+ 'goods_sn': '6286405-SP208CA-L',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/signal-interface/rs-232/SP206CA-L-XR-FNT-SML.JPG?m=1Bz5Q1',
+ 'increment': 1,
+ 'provider_name': 'EXAR',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [477, 10],
+ 'tiered': [[10, 8.55], [300, 7.58]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/signal-interface/rs-232/Pages/6286405-SP208CA-L.aspx'}
+2017-05-05 11:34:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A781> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A656> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A544> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A588-4294938420> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A745> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A890> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A717> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A728> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A718> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A907-4294853587> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A749> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A905> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A645> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A515> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4597> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/logic/translators/Pages/5780986-GTL2002D,118.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A908> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:21 [__main__] INFO: success insert mongodb : d6ac45697f74f879e03b144cbbbacf79
+2017-05-05 11:34:21 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'No of Channels', u'2'],
+          [u'Input Type', u'Voltage'],
+          [u'Output Type', u'Voltage'],
+          [u'Supply Voltage', u'3 to 3.6 V']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u903b\u8f91',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:679&dsDimensionSearch='],
+            [u'\u8f6c\u6362\u5668',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:4382&dsDimensionSearch=']],
+ 'doc': 'http://www.nxp.com/documents/data_sheet/GTL2002.pdf',
+ 'goods_desc': u'GTL2002 \u7cfb\u5217 3.3 V 2-\u4f4d \u53cc\u5411 \u4f4e\u538b \u8f6c\u6362\u5668 - SOIC-8',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/logic/translators/MLX90109EDC-MLX-FNT-MED.JPG?m=DfqPC1',
+ 'goods_name': u'GTL2002D,118',
+ 'goods_other_name': '',
+ 'goods_sn': '5780986-GTL2002D,118',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/logic/translators/MLX90109EDC-MLX-FNT-SML.JPG?m=DfS7PU',
+ 'increment': 1,
+ 'provider_name': 'NXP',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [163, 1],
+ 'tiered': [[1, 3.99], [100, 3.35], [500, 2.66]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/logic/translators/Pages/5780986-GTL2002D,118.aspx'}
+2017-05-05 11:34:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A489-4294885701> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A658-4294915846> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A893> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A907-4294869444> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A588-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A683> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A647> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A815-4294878620> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4598> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A875> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4455> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A738> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4594> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A634> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A479> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4437> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A874> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A490> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A716-4294938359> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A888-4294938420> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A489-4294898603> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A588-4294938340> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A434-4294938476> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A679-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4593> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A635> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A716-4294938467> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A679-4294938420> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A777> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A750-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:33 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4542> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:33 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A658-4294938420> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:33 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A543-4294938417> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4546> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A543-4294938480> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:34 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A612> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:35 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A478> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:35 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A750-4294938421> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:36 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A896> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:36 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A841> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:36 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A822> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:37 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A458> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:38 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A624> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:38 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A703> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A434-4294938373> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A716-4294915846> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A658-4294864623> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294915846> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/electromechanical/circuit-protection/protection-thyristors/Pages/4711107-P0080SALRP.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A753> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:40 [__main__] INFO: success insert mongodb : 80db43cbefcdf18c73084bdc2996a71a
+2017-05-05 11:34:40 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'On-State Voltage [Vtm]', u'4 V'],
+          [u'On State Current [It]-Typ', u'2 A'],
+          [u'Off-State Voltage [Vdrm]', u'6 V'],
+          [u'Off-State Current [Idrm]', u'5 \xb5A'],
+          [u'Hold Current [Ih]', u'50 mA']],
+ 'catlog': [[u'\u673a\u7535',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:543&dsDimensionSearch='],
+            [u'\u7535\u8def\u4fdd\u62a4',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:580&dsDimensionSearch='],
+            [u'\u4fdd\u62a4\u6676\u95f8\u7ba1',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:802&dsDimensionSearch=']],
+ 'doc': 'http://www.littelfuse.com/~/media/Electronics/Datasheets/SIDACtors/Littelfuse_SIDACtor_DO_214_Datasheet.pdf.pdf',
+ 'goods_desc': u'P0080S_L\u7cfb\u5217 50 mA 6V SIDACtor\xae \u4fdd\u62a4\u578b\u5668\u4ef6 DO-214AA',
+ 'goods_img': 'http://media.futureelectronics.com/electromechanical/circuit-protection/protection-thyristors/P0080SAMCLRP-LF-FNT-MED.JPG?m=uzLmsA',
+ 'goods_name': u'P0080SALRP',
+ 'goods_other_name': '',
+ 'goods_sn': '4711107-P0080SALRP',
+ 'goods_thumb': 'http://media.futureelectronics.com/electromechanical/circuit-protection/protection-thyristors/P0080SAMCLRP-LF-FNT-SML.JPG?m=UzLrl8',
+ 'increment': 2500,
+ 'provider_name': 'LITTELFUSE',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [17500, 2500],
+ 'tiered': [[2500, 4.36]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/electromechanical/circuit-protection/protection-thyristors/Pages/4711107-P0080SALRP.aspx'}
+2017-05-05 11:34:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4482> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:41 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A900> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:41 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A877> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:41 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A907-4294874430> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A594> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A528> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A868> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:43 [scrapy.extensions.logstats] INFO: Crawled 153 pages (at 153 pages/min), scraped 0 items (at 0 items/min)
+2017-05-05 11:34:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A752> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A543-4294875870> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4274> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4332> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/mosfets/Pages/3859915-BF862,215.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:45 [__main__] INFO: success insert mongodb : 4e0bb474dc038ff19de214ba65078e01
+2017-05-05 11:34:45 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Fet Type', u'N-Channel'],
+          [u'Drain-to-Source Voltage [Vdss]', u'20 V'],
+          [u'Rated Power Dissipation', u'300 mW']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u5206\u7acb\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:658&dsDimensionSearch='],
+            [u'\u6676\u4f53\u7ba1',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:670&dsDimensionSearch='],
+            [u'MOSFET',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:673&dsDimensionSearch=']],
+ 'doc': 'http://www.nxp.com/documents/data_sheet/BF862.pdf',
+ 'goods_desc': u'BF862 \u7cfb\u5217 20 V 300 mW \u8868\u9762\u8d34\u88c5 N\u6c9f\u9053 \u7ed3\u578b FET - SOT-23-3',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/mosfets/SOT-23-SEMICONDUCTORS-NXP-FNT-MED.JPG?m=DGnwMf',
+ 'goods_name': u'BF862,215',
+ 'goods_other_name': '',
+ 'goods_sn': '3859915-BF862,215',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/mosfets/SOT-23-SEMICONDUCTORS-NXP-FNT-SML.JPG?m=DGNyvX',
+ 'increment': 3000,
+ 'provider_name': 'NXP',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [24000, 3000],
+ 'tiered': [[3000, 1.23], [6000, 1.21]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/mosfets/Pages/3859915-BF862,215.aspx'}
+2017-05-05 11:34:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A654> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/passives/inductors/wirewound-inductors/Pages/1004195-LQW15AN15NG00D.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A489-4294938440> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:46 [__main__] INFO: success insert mongodb : e803200244d040e40191cf4d45b0e9df
+2017-05-05 11:34:46 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Type', u'Unshielded'],
+          [u'Inductance-Nom', u'15 nH'],
+          [u'Rated Current-Max', u'460 mA'],
+          [u'Tolerance (%)', u'\xb12 %'],
+          [u'DC Resistance', u'160 m\u03a9'],
+          [u'Case Size', u'0402 (1005 Metric)']],
+ 'catlog': [[u'\u65e0\u6e90\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:434&dsDimensionSearch='],
+            [u'\u7535\u611f',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:463&dsDimensionSearch='],
+            [u'\u7ed5\u7ebf\u7535\u611f',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:465&dsDimensionSearch=']],
+ 'doc': 'http://psearch.en.murata.com/inductor/product/LQW15AN15NG00%23.pdf',
+ 'goods_desc': u'LQW \u7cfb\u5217 0402\u5916\u58f3 15NH 500 mA  2 % SMD \u7535\u611f',
+ 'goods_img': 'http://media.futureelectronics.com/passives/inductors/wirewound-inductors/LQW-0402-MUR-FNT-MED.JPG?m=FGIqld',
+ 'goods_name': u'LQW15AN15NG00D',
+ 'goods_other_name': '',
+ 'goods_sn': '1004195-LQW15AN15NG00D',
+ 'goods_thumb': 'http://media.futureelectronics.com/passives/inductors/wirewound-inductors/LQW-0402-MUR-FNT-SML.JPG?m=fGItSh',
+ 'increment': 10000,
+ 'provider_name': 'MURATA',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [20000, 10000],
+ 'tiered': [[10000, 0.6859]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/passives/inductors/wirewound-inductors/Pages/1004195-LQW15AN15NG00D.aspx'}
+2017-05-05 11:34:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A588-4294938435> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A716-4294897561> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A534> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:47 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A754> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:47 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A2006> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A761-4294938349> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A859> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A779> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A845> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A564> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:50 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A907-4294885699> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:50 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4331> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A901> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A878> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/mosfets/Pages/3859915-BF862,215.aspx?IM=1> (referer: http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/mosfets/Pages/3859915-BF862,215.aspx)
+2017-05-05 11:34:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A897> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:52 [__main__] INFO: success update mongodb : 2aa754771d276870c75f698120c63a0b
+2017-05-05 11:34:52 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Fet Type', u'N-Channel'],
+          [u'Drain-to-Source Voltage [Vdss]', u'20 V'],
+          [u'Rated Power Dissipation', u'300 mW']],
+ 'catlog': [[u'\u534a\u5bfc\u4f53',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:587&dsDimensionSearch='],
+            [u'\u5206\u7acb\u5668\u4ef6',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:658&dsDimensionSearch='],
+            [u'\u6676\u4f53\u7ba1',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:670&dsDimensionSearch='],
+            [u'MOSFET',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:673&dsDimensionSearch=']],
+ 'doc': 'http://www.nxp.com/documents/data_sheet/BF862.pdf',
+ 'goods_desc': u'BF862 \u7cfb\u5217 20 V 300 mW \u8868\u9762\u8d34\u88c5 N\u6c9f\u9053 \u7ed3\u578b FET - SOT-23-3',
+ 'goods_img': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/mosfets/SOT-23-SEMICONDUCTORS-NXP-FNT-MED.JPG?m=DGnwMf',
+ 'goods_name': u'BF862,215',
+ 'goods_other_name': '',
+ 'goods_sn': '3859915-BF862,215',
+ 'goods_thumb': 'http://media.futureelectronics.com/semiconductors/discretes/transistors/mosfets/SOT-23-SEMICONDUCTORS-NXP-FNT-SML.JPG?m=DGNyvX',
+ 'increment': 3000,
+ 'provider_name': 'NXP',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [24000, 3000],
+ 'tiered': [[3000, 1.23], [6000, 1.21]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/semiconductors/discretes/transistors/mosfets/Pages/3859915-BF862,215.aspx?IM=1'}
+2017-05-05 11:34:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A904> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A899> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A568> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:53 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A761-4294938411> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A670> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A783> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A578> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A658-4294938489> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A684> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A920> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A638> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A556> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4324> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A907-4294891797> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A898> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4426> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A533> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:58 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4352> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:58 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A639> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:34:59 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A680> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A640> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A750-4294867293> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A658-4294938476> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A604> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:00 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4383> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:01 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A747> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:01 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A815-4294938421> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:01 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A895> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:02 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A716-4294938421> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:02 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A892> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A434-4294938432> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A477> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A489-4294938324> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:03 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A778> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A637> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A489-4294897415> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:05 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A780> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:05 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/electromechanical/circuit-protection/electronic-fuses/Pages/3940772-0297002.WXNV.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [__main__] INFO: success insert mongodb : a4f9fd0d74748d57e45f719ab1afae1e
+2017-05-05 11:35:06 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Voltage Rating', u'32 V'],
+          [u'Response Characteristic', u'Fast-Acting'],
+          [u'Current Rating', u'2 A'],
+          [u'Operating Temp Range', u'-40 to +125 \xb0C'],
+          [u'Dimension', u'8.8 x 10.9 mm']],
+ 'catlog': [[u'\u673a\u7535',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:543&dsDimensionSearch='],
+            [u'\u7535\u8def\u4fdd\u62a4',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:580&dsDimensionSearch='],
+            [u'\u7535\u5b50\u4fdd\u9669\u4e1d',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:583&dsDimensionSearch=']],
+ 'doc': 'http://www.littelfuse.com/~/media/automotive/datasheets/fuses/passenger-car-and-commercial-vehicle/blade-fuses/littelfuse_mini_datasheet.pdf',
+ 'goods_desc': u'297 \u7cfb\u5217 \u5feb\u7194\u578b 32 V 2 A 8.8 x 10.9 mm MINI\xae \u7070\u8272 \u63d2\u7247\u5f0f \u4fdd\u9669\u4e1d',
+ 'goods_img': 'http://media.futureelectronics.com/ELECTROMECHANICAL/CIRCUIT-PROTECTION/ELECTRONIC-FUSES/0297002.WXNV-LF-FNT-MED.JPG?m=Ouqkkj',
+ 'goods_name': u'0297002.WXNV',
+ 'goods_other_name': '',
+ 'goods_sn': '3940772-0297002.WXNV',
+ 'goods_thumb': 'http://media.futureelectronics.com/ELECTROMECHANICAL/CIRCUIT-PROTECTION/ELECTRONIC-FUSES/0297002.WXNV-LF-FNT-SML.JPG?m=OuQLJ8',
+ 'increment': 1,
+ 'provider_name': 'LITTELFUSE',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [11922, 60],
+ 'tiered': [[60, 1.35], [300, 1.3], [1500, 1.24], [3000, 1.13], [7000, 1.09]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/electromechanical/circuit-protection/electronic-fuses/Pages/3940772-0297002.WXNV.aspx'}
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A762> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4474> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/technologies/electromechanical/relays/reed-relays-switches/Pages/8987356-HE3621A0500.aspx> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [__main__] INFO: success insert mongodb : 18b0bf3f7e0619dc0fee59b2840cb211
+2017-05-05 11:35:06 [scrapy.core.scraper] WARNING: Dropped: success process
+{'attr': [[u'Contact Form', u'SPST (1 Form A)'],
+          [u'Contact Current-Max', u'0.5 A'],
+          [u'Nominal Coil Voltage', u'5 V'],
+          [u'Termination Style', u'PCB']],
+ 'catlog': [[u'\u673a\u7535',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:543&dsDimensionSearch='],
+            [u'\u7ee7\u7535\u5668',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:556&dsDimensionSearch='],
+            [u'\u7c27\u7247\u7ee7\u7535\u5668\u53ca\u5f00\u5173',
+             'http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:0,Nea:True,N:560&dsDimensionSearch=']],
+ 'doc': 'http://www.littelfuse.com/~/media/electronics/datasheets/reed_relays/littelfuse_reed_relays_he3600_datasheet.pdf.pdf',
+ 'goods_desc': u'HE3600 \u7cfb\u5217 \u6b21\u5fae\u578b SIP 0.5 A \u5355\u5200\u5355\u63b7-\u5e38\u5f00 5 VDC PCB \u5b89\u88c5 \u7c27\u7247\u7ee7\u7535\u5668',
+ 'goods_img': 'http://media.futureelectronics.com/ELECTROMECHANICAL/RELAYS/REED-RELAYS-SWITCHES/HE3621A0500-HML-FNT-MED.JPG?m=N4jwUF',
+ 'goods_name': u'HE3621A0500',
+ 'goods_other_name': '',
+ 'goods_sn': '8987356-HE3621A0500',
+ 'goods_thumb': 'http://media.futureelectronics.com/ELECTROMECHANICAL/RELAYS/REED-RELAYS-SWITCHES/HE3621A0500-HML-FNT-SML.JPG?m=n4JxWD',
+ 'increment': 1,
+ 'provider_name': 'LITTELFUSE',
+ 'provider_url': '',
+ 'rohs': 1,
+ 'stock': [18770, 15],
+ 'tiered': [[15, 7.5], [50, 7.22], [300, 6.9], [500, 6.29], [1250, 6.05]],
+ 'url': 'http://cn.futureelectronics.com/zh/technologies/electromechanical/relays/reed-relays-switches/Pages/8987356-HE3621A0500.aspx'}
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A888-4294938419> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A631-4294938335> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:06 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A572> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A580> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A880> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A702> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:08 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4353> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A774> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A659> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A543-4294938473> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:09 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A539> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A815-4294867293> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A4495> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A679-4294915846> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A842> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://cn.futureelectronics.com/zh/search.aspx?dsNav=Ro%3A0%2CNea%3ATrue%2CN%3A529> (referer: http://cn.futureelectronics.com/zh/Pages/index.aspx)
+2017-05-05 11:35:13 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-05-05 11:35:13 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/exception_count': 8,
+ 'downloader/exception_type_count/scrapy.exceptions.IgnoreRequest': 8,
+ 'downloader/request_bytes': 252788,
+ 'downloader/request_count': 234,
+ 'downloader/request_method_count/GET': 234,
+ 'downloader/response_bytes': 9422339,
+ 'downloader/response_count': 234,
+ 'downloader/response_status_count/200': 234,
+ 'dupefilter/filtered': 31147,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2017, 5, 5, 3, 35, 13, 864000),
+ 'item_dropped_count': 11,
+ 'item_dropped_reasons_count/DropItem': 11,
+ 'log_count/DEBUG': 235,
+ 'log_count/INFO': 19,
+ 'log_count/WARNING': 19,
+ 'request_depth_max': 3,
+ 'response_received_count': 234,
+ 'scheduler/dequeued': 242,
+ 'scheduler/dequeued/memory': 242,
+ 'scheduler/enqueued': 242,
+ 'scheduler/enqueued/memory': 242,
+ 'start_time': datetime.datetime(2017, 5, 5, 3, 33, 43, 185000)}
+2017-05-05 11:35:13 [scrapy.core.engine] INFO: Spider closed (finished)
