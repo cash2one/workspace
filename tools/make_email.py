@@ -29,9 +29,9 @@ def send_msg(content='', dist_email=''):
         raise ValueError
     # msg
     msg = MIMEText(content, 'plain', 'utf-8')
-    msg['From'] = _format_addr(u'Letmehelp <%s>' % email_address)
-    msg['To'] = _format_addr(u'Just for test <%s>' % dist_email)
-    msg['Subject'] = Header(u'Be careful!', 'utf-8').encode()
+    msg['From'] = _format_addr(u'Let_me_help <%s>' % email_address)
+    msg['To'] = _format_addr(u'User<%s>' % dist_email)
+    msg['Subject'] = Header(u'SYSTEM', 'utf-8').encode()
 
     # send
     server = smtplib.SMTP(smtp_server, smtp_port)
