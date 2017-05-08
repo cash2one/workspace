@@ -208,7 +208,7 @@ def set_incap_cookie(sess, response):
 
 def get_obfuscated_code(html):
     code = re.findall('var\s?b\s?=\s?\"(.*?)\"', html)
-    return code[0] if code else None
+    return code[0]
 
 
 def parse_obfuscated_code(code):
@@ -221,31 +221,26 @@ def parse_obfuscated_code(code):
 def get_resources(code, url):
     scheme, host = urlparse.urlsplit(url)[:2]
     resources = re.findall('(/_Incapsula_Resource.*?)\"', code)
-    logger.debug('resources found: {0}'.format(resources))
+    logger.debug('resources found: {}'.format(resources))
     return [scheme + '://' + host + r for r in resources]
 
 
 def _load_encapsula_resource(sess, response):
     timing = []
     start = now_in_seconds()
-    timing.append('s:{0}'.format(now_in_seconds() - start))
+    timing.append('s:{}'.format(now_in_seconds() - start))
 
     code = get_obfuscated_code(response.content)
-    if not code:
-        return response
     parsed = parse_obfuscated_code(code)
     # print parsed
     resources_list = list(set(get_resources(parsed, response.url)))
-    resources_list = sorted(resources_list, cmp=lambda x, y: cmp(len(x), len(y)),  reverse=True)
     for resources in resources_list:
         time.sleep(0.02)
         if '&d=' in resources:
-            timing.append('c:{0}'.format(now_in_seconds() - start))
+            timing.append('c:{}'.format(now_in_seconds() - start))
             time.sleep(0.02)  # simulate page refresh time
-            timing.append('r:{0}'.format(now_in_seconds() - start))
-            sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))))
-        elif '&e=' in resources:
-            sess.get(resources + str(random.random()))
+            timing.append('r:{}'.format(now_in_seconds() - start))
+            sess.get(resources + urllib.quote('complete ({})'.format(",".join(timing))))
         else:
             sess.get(resources)
             # resource1, resource2 = get_resources(parsed, response.url)[1:]
