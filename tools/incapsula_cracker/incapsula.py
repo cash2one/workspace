@@ -208,7 +208,7 @@ def set_incap_cookie(sess, response):
 
 def get_obfuscated_code(html):
     code = re.findall('var\s?b\s?=\s?\"(.*?)\"', html)
-    return code[0]
+    return code[0] if code else None
 
 
 def parse_obfuscated_code(code):
@@ -221,26 +221,31 @@ def parse_obfuscated_code(code):
 def get_resources(code, url):
     scheme, host = urlparse.urlsplit(url)[:2]
     resources = re.findall('(/_Incapsula_Resource.*?)\"', code)
-    logger.debug('resources found: {}'.format(resources))
+    logger.debug('resources found: {0}'.format(resources))
     return [scheme + '://' + host + r for r in resources]
 
 
 def _load_encapsula_resource(sess, response):
     timing = []
     start = now_in_seconds()
-    timing.append('s:{}'.format(now_in_seconds() - start))
+    timing.append('s:{0}'.format(now_in_seconds() - start))
 
     code = get_obfuscated_code(response.content)
+    if not code:
+        return response
     parsed = parse_obfuscated_code(code)
     # print parsed
     resources_list = list(set(get_resources(parsed, response.url)))
+    resources_list = sorted(resources_list, cmp=lambda x, y: cmp(len(x), len(y)),  reverse=True)
     for resources in resources_list:
         time.sleep(0.02)
         if '&d=' in resources:
-            timing.append('c:{}'.format(now_in_seconds() - start))
+            timing.append('c:{0}'.format(now_in_seconds() - start))
             time.sleep(0.02)  # simulate page refresh time
-            timing.append('r:{}'.format(now_in_seconds() - start))
-            sess.get(resources + urllib.quote('complete ({})'.format(",".join(timing))))
+            timing.append('r:{0}'.format(now_in_seconds() - start))
+            sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))))
+        elif '&e=' in resources:
+            sess.get(resources + str(random.random()))
         else:
             sess.get(resources)
             # resource1, resource2 = get_resources(parsed, response.url)[1:]
@@ -260,17 +265,17 @@ def incapsula_parse(sess, response, **kwargs):
     set_incap_cookie(sess, response)
 
     scheme, host = urlparse.urlsplit(response.url)[:2]
-    logger.debug('scheme={} host={}'.format(scheme, host))
-
-    if host in endpoints:
+    logger.debug('scheme={0} host={1}'.format(scheme, host))
+    # 可能会直接返回带有已编码的js，不需要在请求end points里的url
+    if get_obfuscated_code(response.content):
+        _load_encapsula_resource(sess, response)
+    # Incapsula告知Request unsuccessful 或者 无法直接获取到已编码的js
+    elif host in endpoints:
         params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
         url_params = urllib.urlencode(params)
-        logger.debug('url_params={}'.format(url_params))
-        r = sess.get(
-            '{scheme}://{host}/_Incapsula_Resource?{url_params}'.format(scheme=scheme, host=host,
-                                                                        url_params=url_params),
-            headers={'Referer': response.url})
-        # print r.url, r.text
+        logger.debug('url_params={0}'.format(url_params))
+        r = sess.get('{scheme}://{host}/_Incapsula_Resource?{url_params}'.format(scheme=scheme, host=host,
+                                                                        url_params=url_params), headers={'Referer': response.url})
         _load_encapsula_resource(sess, r)
     else:
         sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host,
@@ -281,8 +286,6 @@ def incapsula_parse(sess, response, **kwargs):
     if 'data' in kwargs or 'json' in kwargs:
         data = kwargs.pop('data', None)
         json = kwargs.pop('json', None)
-        print kwargs
-        print response.url, data, json
         return sess.post(response.url, data=data, json=json, **kwargs)
 
     return sess.get(response.url, **kwargs)
