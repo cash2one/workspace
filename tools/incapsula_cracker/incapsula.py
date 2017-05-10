@@ -47,7 +47,7 @@ setting = {
         },
         'www.ttiinc.com': {
             'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
-            'ns': '2',
+            'ns': '1',
         },
     }
 }
@@ -208,12 +208,12 @@ def set_incap_cookie(sess, response):
 
 def get_obfuscated_code(html):
     code = re.findall('var\s?b\s?=\s?\"(.*?)\"', html)
-    return code[0]
+    return code[0] if code else None
 
 
 def parse_obfuscated_code(code):
     data = []
-    content = code.decode('hex')
+    content = code.decode('hex') if code else ''
     return content
 
 
@@ -221,26 +221,29 @@ def parse_obfuscated_code(code):
 def get_resources(code, url):
     scheme, host = urlparse.urlsplit(url)[:2]
     resources = re.findall('(/_Incapsula_Resource.*?)\"', code)
-    logger.debug('resources found: {}'.format(resources))
+    resources = list(set(resources))
+    logger.debug('resources found: {0}'.format(resources))
     return [scheme + '://' + host + r for r in resources]
 
 
 def _load_encapsula_resource(sess, response):
     timing = []
     start = now_in_seconds()
-    timing.append('s:{}'.format(now_in_seconds() - start))
+    timing.append('s:{0}'.format(now_in_seconds() - start))
 
     code = get_obfuscated_code(response.content)
     parsed = parse_obfuscated_code(code)
     # print parsed
-    resources_list = list(set(get_resources(parsed, response.url)))
+    resources_list = get_resources(parsed, response.url)
     for resources in resources_list:
         time.sleep(0.02)
         if '&d=' in resources:
-            timing.append('c:{}'.format(now_in_seconds() - start))
+            timing.append('c:{0}'.format(now_in_seconds() - start))
             time.sleep(0.02)  # simulate page refresh time
-            timing.append('r:{}'.format(now_in_seconds() - start))
-            sess.get(resources + urllib.quote('complete ({})'.format(",".join(timing))))
+            timing.append('r:{0}'.format(now_in_seconds() - start))
+            sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))))
+        elif '&e=' in resources:
+            sess.get(resources + str(random.random()))
         else:
             sess.get(resources)
             # resource1, resource2 = get_resources(parsed, response.url)[1:]
@@ -270,7 +273,8 @@ def incapsula_parse(sess, response, **kwargs):
         url_params = urllib.urlencode(params)
         logger.debug('url_params={0}'.format(url_params))
         r = sess.get('{scheme}://{host}/_Incapsula_Resource?{url_params}'.format(scheme=scheme, host=host,
-                                                                        url_params=url_params), headers={'Referer': response.url})
+                                                                                 url_params=url_params),
+                     headers={'Referer': response.url})
         _load_encapsula_resource(sess, r)
     else:
         sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host,
@@ -393,94 +397,6 @@ class IncapSession(object):
         return incapsula_parse(self.session, r, data=data, json=json, **kwargs)
 
 
-class IncapsulaMiddleware(object):
-    cookie_count = 0
-    logger = logging.getLogger('incapsula')
-
-    def __init__(self, crawler):
-        self.crawler = crawler
-        self.priority_adjust = crawler.settings.getint('RETRY_PRIORITY_ADJUST')
-
-    def _get_session_cookies(self, request):
-        cookies_ = []
-        for cookie_key, cookie_value in request.cookies.items():
-            if 'incap_ses_' in cookie_key:
-                cookies_.append(cookie_value)
-        return cookies_
-
-    def get_incap_cookie(self, request, response):
-        extensions = load_plugin_extensions(navigator['plugins'])
-        extensions.append(load_plugin(navigator['plugins']))
-        extensions.extend(load_config())
-        cookies = self._get_session_cookies(request)
-        digests = []
-        for cookie in cookies:
-            digests.append(simple_digest(",".join(extensions) + cookie))
-        res = ",".join(extensions) + ",digest=" + ",".join(str(digests))
-        cookie = create_cookie('___utmvc', res, 20, request.url)
-        return cookie
-
-    def process_response(self, request, response, spider):
-        if not request.meta.get('incap_set', False):
-            soup = BeautifulSoup(response.body.decode('ascii', errors='ignore'), 'lxml')
-            meta = soup.find('meta', {'name': re.compile(r'robots', re.IGNORECASE)})
-            if not meta:  # if the page is not blocked, then just return the original request.
-                return response
-            self.crawler.stats.inc_value('incap_blocked')
-            self.logger.info('cracking incapsula blocked resource <{}>'.format(request.url))
-
-            # Set generated cookie to request more cookies from incapsula resource
-            cookie = self.get_incap_cookie(request, response)
-            scheme, host = urlparse.urlsplit(request.url)[:2]
-            url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host,
-                                                                                    rdm=random.random())
-            cpy = request.copy()
-            cpy.meta['incap_set'] = True
-            cpy.meta['org_response'] = response
-            cpy.meta['org_request'] = request
-            cpy.cookies.update(cookie)
-            cpy._url = url
-            cpy.priority = request.priority + self.priority_adjust
-            return cpy
-        elif request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
-            timing = []
-            start = now_in_seconds()
-            timing.append('s:{}'.format(now_in_seconds() - start))
-            code = get_obfuscated_code(request.meta.get('org_response').body.decode('ascii', errors='ignore'))
-            parsed = parse_obfuscated_code(code)
-            resource1, resource2 = get_resources(parsed, response.url)[1:]
-            cpy = request.copy()
-            cpy._url = str(resource1)
-            cpy.meta['resource2'] = resource2
-            cpy.meta['tstart'] = start
-            cpy.meta['timing'] = timing
-            cpy.meta['incap_request_1'] = True
-            cpy.priority = request.priority + self.priority_adjust
-            return cpy
-        elif request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
-            timing = request.meta.get('timing', [])
-            resource2 = request.meta.get('resource2')
-            start = request.meta.get('tstart')
-            timing.append('c:{}'.format(now_in_seconds() - start))
-            time.sleep(0.02)
-            timing.append('r:{}'.format(now_in_seconds() - start))
-            cpy = request.copy()
-            cpy.meta['completed_incap'] = True
-            cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
-            cpy.priority = request.priority + self.priority_adjust
-            return cpy
-        self.crawler.stats.inc_value('incap_cracked')
-        cpy = request.meta.get('org_request').copy()
-        cpy.cookies = request.cookies
-        cpy.dont_filter = True
-        cpy.priority = request.priority + self.priority_adjust
-        return cpy
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(crawler)
-
-
 if __name__ == "__main__":
     test_url = 'http://cn.onlinecomponents.com/productsearch/'
     default_headers = {
@@ -492,7 +408,7 @@ if __name__ == "__main__":
     }
     # 测试 incapsula_parse
     # session = requests.Session()
-    # 使用正常访问
+    # 使用正常访问 get
     # before_rs = session.get(url=test_url, headers=default_headers, timeout=30)
     # with open(r'html/in_before.html', 'w') as fp:
     #     fp.write(before_rs.content)
@@ -510,9 +426,32 @@ if __name__ == "__main__":
     # with open(r'html/in_after.html', 'w') as fp:
     #     fp.write(after_rs.content)
 
-    # 测试 IncapSession
+    # 测试 IncapSession.get
+    # session = IncapSession()
+    # IncapSession_rs = session.get(url=test_url, headers=default_headers, timeout=30)
+    # with open(r'html/IncapSession_rs.html', 'w') as fp:
+    #     fp.write(IncapSession_rs.content)
+    # pass
+
+    # 正常POST
+    tti_headers = {
+        'Host': 'www.ttiinc.com',
+        'Connection': 'keep-alive',
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.ttiinc.com/content/ttiinc/en/apps/part-search.html?manufacturers=&searchTerms=&systemsCatalog=254428',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
+    }
+    post_url = url = 'https://www.ttiinc.com/bin/services/processData?jsonPayloadAvailable=true&osgiService=partsearchpost'
+    post_data = data = {"searchTerms": 'lm358', "inStock": "", "rohsCompliant": "", "leadFree": "", "containsLead": ""}
+    session = requests.Session()
+    rs = session.post(url=post_url, data=json.dumps(post_data), headers=tti_headers)
+    with open(r'html/post_test_before.html', 'w') as fp:
+        fp.write(rs.content)
+    # 测试 IncapSession.post
     session = IncapSession()
-    IncapSession_rs = session.get(url=test_url, headers=default_headers, timeout=30)
+    IncapSession_rs = session.post(url=post_url, data=json.dumps(post_data), headers=tti_headers, timeout=30)
     with open(r'html/IncapSession_rs.html', 'w') as fp:
         fp.write(IncapSession_rs.content)
     pass

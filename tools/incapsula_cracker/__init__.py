@@ -1,1 +1,1 @@
-from incapsula import incapsula_parse, IncapSession, IncapsulaMiddleware
+from incapsula import incapsula_parse, IncapSession

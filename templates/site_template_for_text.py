@@ -2,14 +2,6 @@
 # -*- coding: utf-8 -*-
 # Created by Vin on 2017/5/4
 
-# -*- coding: utf-8 -*-
-
-"""
-requirements:
-    scrapy>=1.2.0
-    lxml
-"""
-
 import os
 import re
 import sys
@@ -18,12 +10,9 @@ import urlparse
 import random
 import logging
 import requests
-import hashlib
-import json
 import copy
-import time
-import math
 from bs4 import BeautifulSoup
+
 # scrapy import
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
@@ -32,6 +21,7 @@ from scrapy.exceptions import DropItem, IgnoreRequest, CloseSpider
 # from scrapy.pipelines.files import FilesPipeline
 from scrapy.http import Request, FormRequest, HtmlResponse
 from scrapy.utils.python import to_bytes
+
 # lmxl
 import lxml.html
 from w3lib.html import remove_tags
@@ -63,7 +53,7 @@ settings = {
     'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
 
     'DOWNLOADER_MIDDLEWARES': {
-        # __name__ + '.IgnoreRquestMiddleware': 1,
+        # __name__ + '.IgnoreRequestMiddleware': 1,
         # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
         # __name__ + '.RequestsDownloader': 8,
@@ -91,23 +81,21 @@ request_list = []
 total_data = 0
 
 
+def headers_list_to_str(request_header):
+    _headers = {}
+    for k, v in request_header.iteritems():
+        _headers[k] = ''.join(v)
+    return _headers
+
+
 class RequestsDownloader(object):
     def __init__(self):
         self.session = requests.Session()
 
-    def headers_list_to_str(self, request_header):
-        _headers = {}
-        for k, v in request_header.iteritems():
-            _headers[k] = ''.join(v)
-        return _headers
-
     def process_request(self, request, spider):
         try:
             if getattr(request, 'headers', None) and getattr(request, 'cookies', None):
-                headers = self.headers_list_to_str(request.headers)
-                print("="*10 + "request_mid" + "BEGIN" + "="*10)
-                print(request.url)
-                print("="*10 + "request_mid" + "END" + "="*10)
+                headers = headers_list_to_str(request.headers)
                 res = self.session.get(url=request.url, headers=headers, cookies=request.cookies)
             else:
                 res = self.session.get(url=request.url, )
@@ -115,7 +103,8 @@ class RequestsDownloader(object):
             raise
         return HtmlResponse(request.url, body=res.content, encoding='utf-8', request=request)
 
-    def process_exception(request, exception, spider):
+    @staticmethod
+    def process_exception(exception, spider):
         return None
 
 
@@ -138,7 +127,7 @@ class RandomUserAgentMiddleware(object):
             request.headers.setdefault('User-Agent', random.choice(self.agents))
 
 
-class IgnoreRquestMiddleware(object):
+class IgnoreRequestMiddleware(object):
     """忽略请求url"""
 
     def __init__(self, crawler):
@@ -158,7 +147,7 @@ class IgnoreRquestMiddleware(object):
                 _ignore = False
                 break
         if _ignore:
-            raise IgnoreRequest("ingore repeat url: %s" % request.url)
+            raise IgnoreRequest("ignore repeat url: %s" % request.url)
 
 
 class GoodsItem(scrapy.Item):
