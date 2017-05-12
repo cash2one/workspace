@@ -76,7 +76,7 @@ filter_rules = (
     'xicidaili\.com/\w{,2}/$',  # 目录
     'xicidaili\.com/\w{,2}/\d$',  # 分页
     # 开心代理
-    # 'kxdaili\.com/dailiip/\d/\d',  # 分页
+    'kxdaili\.com/dailiip/\d/\d',  # 分页
     #
 
 )

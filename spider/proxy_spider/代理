@@ -1,0 +1,11 @@
+http://www.xicidaili.com/api
+
+proxy_ip = scrapy.Field()  # 代理IP
+proxy_port = scrapy.Field()  # 代理端口
+proxy_protocol = scrapy.Field()  # 代理协议
+proxy_alive = scrapy.Field()  # 代理存活标志
+proxy_fetch_date = scrapy.Field() # 代理抓取时间
+proxy_from = scrapy.Field()  # 来源的网或者地址
+proxy_high_quality = scrapy.Field()是否高品质代理
+proxy_location = scrapy.Field()  # 代理所在地区
+

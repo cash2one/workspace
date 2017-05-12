@@ -16,3 +16,22 @@ item = {
     'catlog': [],  # 分类
     'goods_other_name': '',  # 其他商品名
 }
+
+# goods_sn    
+# goods_name
+# url
+# goods_img
+# goods_thumb
+# desc
+# provider_name
+# provider_url
+# tiered: [[0, 0.00]]
+# stock: [0, 1]  >> [stock, qty]
+# increment: 1
+# doc
+# attr: [[None, None]]
+# rohs: -1
+# catlog: [[name, url]]
+# goods_other_name
+# product_id
+# family_sn
