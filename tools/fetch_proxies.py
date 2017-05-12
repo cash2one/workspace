@@ -53,10 +53,9 @@ settings = {
     'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
 
     'DOWNLOADER_MIDDLEWARES': {
-        # __name__ + '.IgnoreRequestMiddleware': 1,
-        # __name__ + '.UniqueRequestMiddleware': 3,
+        __name__ + '.IgnoreRequestMiddleware': 1,
+        __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
-        # __name__ + '.RequestsDownloader': 8,
 
     },
     'ITEM_PIPELINES': {
@@ -109,26 +108,6 @@ def headers_list_to_str(request_header):
     for k, v in request_header.iteritems():
         _headers[k] = ''.join(v)
     return _headers
-
-
-class RequestsDownloader(object):
-    def __init__(self):
-        self.session = requests.Session()
-
-    def process_request(self, request, spider):
-        try:
-            if getattr(request, 'headers', None) and getattr(request, 'cookies', None):
-                headers = headers_list_to_str(request.headers)
-                res = self.session.get(url=request.url, headers=headers, cookies=request.cookies)
-            else:
-                res = self.session.get(url=request.url, )
-        except KeyboardInterrupt:
-            raise
-        return HtmlResponse(request.url, body=res.content, encoding='utf-8', request=request)
-
-    @staticmethod
-    def process_exception(exception, spider):
-        return None
 
 
 class RandomUserAgentMiddleware(object):
@@ -243,17 +222,6 @@ class ProxySpider(CrawlSpider):
             self.headers.update({'Host': host})
             yield Request(url=url, headers=self.headers)
 
-    # def parse(self, response):
-    #     return self.parse_selector(response)
-
-    # def parse_selector(self, response):
-    #     # 提取域名
-    #     host = urlparse.urlsplit(response.url)[1].replace('.', '_')
-    #     # 根据域名命名不同网站的解析方法
-    #     call_back = "parse_{host}".format(host=host)
-    #     handler = self.__getattribute__(call_back)
-    #     return handler(response) if handler else None
-
     def parse_selector(self, response):
         # 提取域名
         host = urlparse.urlsplit(response.url)[1]
@@ -270,24 +238,6 @@ class ProxySpider(CrawlSpider):
         else:
             proxy_location = self.guide_book.get(host).get('proxy_location', None)
             return self.parse_common(response, proxy_location=proxy_location)
-
-    # def parse_www_xicidaili_com(self, response):
-    #     item = ProxyItem()
-    #     ip_list_tr = response.xpath('//table[@id="ip_list"]/tr').extract()
-    #     for tr in ip_list_tr:
-    #         proxy_ip = re.search(r'<td>(\d+\.\d+\.\d+\.\d+)</td>', tr)
-    #         proxy_port = re.search(r'<td>(\d+)</td>', tr)
-    #         proxy_protocol = re.search(r'<td>(HTTPS?)</td>', tr, flags=re.IGNORECASE)
-    #         proxy_location = re.search(r'<td class="country">([^<>/]+)</td>', tr)
-    #         item['proxy_ip'] = proxy_ip.group(1) if proxy_ip else ''
-    #         item['proxy_port'] = proxy_port.group(1) if proxy_port else ''
-    #         item['proxy_protocol'] = proxy_protocol.group(1) if proxy_protocol else ''
-    #         item['proxy_location'] = proxy_location.group(1) if proxy_location else ''
-    #         item['proxy_fetch_date'] = int(time.time())
-    #         item['proxy_from'] = response.url
-    #         item['proxy_alive'] = 1
-    #         item['proxy_high_quality'] = 0
-    #         yield item
 
     def parse_detail(self, response, table_header=None, table_header_xpath=None, table_body_xpath=None):
         item = ProxyItem()
@@ -362,7 +312,6 @@ class ProxySpider(CrawlSpider):
         """蜘蛛关闭清理操作"""
 
         def wrap(reason):
-            # del self.queue
             global request_list
             global total_data
             print("=" * 10 + "close_spider" + "BEGIN" + "=" * 10)
