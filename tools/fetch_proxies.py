@@ -5,13 +5,12 @@
 import os
 import re
 import sys
-import argparse
-import urlparse
+import time
 import random
 import logging
-import requests
-import time
-import sqlite3
+import hashlib
+import argparse
+import urlparse
 
 # scrapy import
 import scrapy
@@ -19,8 +18,6 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import DropItem, IgnoreRequest, CloseSpider
 from scrapy.http import Request, FormRequest, HtmlResponse
-from scrapy.link import Link
-from scrapy.utils.python import to_bytes
 
 # lmxl
 import lxml.html
@@ -35,6 +32,7 @@ except ImportError:
     import config
 
 from tools import box
+from tools import db
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +52,7 @@ settings = {
 
     'DOWNLOADER_MIDDLEWARES': {
         __name__ + '.IgnoreRequestMiddleware': 1,
-        __name__ + '.UniqueRequestMiddleware': 3,
+        # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
 
     },
@@ -156,10 +154,10 @@ class ProxyItem(scrapy.Item):
     proxy_ip = scrapy.Field()  # 代理IP
     proxy_port = scrapy.Field()  # 代理端口
     proxy_protocol = scrapy.Field()  # 代理协议
-    proxy_alive = scrapy.Field()  # 代理存活标志
-    proxy_fetch_date = scrapy.Field()  # 代理抓取时间
+    proxy_fetch_date = scrapy.Field()  # 代理抓取时间 Unix timestamp
+    proxy_alive = scrapy.Field()  # 代理存活标志 0/1
     proxy_from = scrapy.Field()  # 来源的网站域名/或者地址
-    proxy_high_quality = scrapy.Field()  # 是否高品质代理
+    proxy_high_quality = scrapy.Field()  # 是否高品质代理 0/1
     proxy_location = scrapy.Field()  # 代理所在地区
 
 
@@ -167,7 +165,7 @@ class MetaItemPipeline(object):
     """数据集管道"""
 
     def __init__(self, crawler):
-        name = 'spider_' + crawler.spider.name + '_item'
+        self.proxy_db = db.ProxyDB()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -180,12 +178,14 @@ class MetaItemPipeline(object):
         data = dict(item)
         if not data:
             raise DropItem("item data is empty")
-        # print("=" * 10 + "process_item" + "BEGIN" + "=" * 10)
-        print(data['proxy_ip'] + "  " + data['proxy_from'])
-        # print("=" * 10 + "process_item" + "END" + "=" * 10)
+        data['id'] = hashlib.md5(data['proxy_protocol'] + data['proxy_ip'] + data['proxy_port']).hexdigest()
+        if self.proxy_db.is_exist(table='proxies', key=data['id']):
+            raise DropItem("item data is exist")
+        self.proxy_db.insert(table='proxies', data=data)
+        print data
 
     def close_spider(self, spider):
-        pass
+        self.proxy_db.close()
 
 
 class ProxySpider(CrawlSpider):
@@ -259,17 +259,17 @@ class ProxySpider(CrawlSpider):
             if not proxy.xpath('.//td'):
                 continue
             try:
-                ip = proxy.xpath('.//td')[table_map.get('proxy_ip')]
-                port = proxy.xpath('.//td')[table_map.get('proxy_port')]
-                protocol = proxy.xpath('.//td')[table_map.get('proxy_protocol')]
-                location = proxy.xpath('.//td')[table_map.get('proxy_location')]
+                ip = proxy.xpath('.//td')[table_map.get('proxy_ip')].extract()
+                port = proxy.xpath('.//td')[table_map.get('proxy_port')].extract()
+                protocol = proxy.xpath('.//td')[table_map.get('proxy_protocol')].extract()
+                location = proxy.xpath('.//td')[table_map.get('proxy_location')].extract()
             except IndexError:
                 continue
-            item['proxy_ip'] = ip.xpath('text()').extract().pop()
-            item['proxy_port'] = port.xpath('text()').extract().pop()
-            item['proxy_protocol'] = protocol.xpath('text()').extract().pop()
-            item['proxy_location'] = location.xpath('text()').extract().pop()
-            item['proxy_fetch_date'] = int(time.time())
+            item['proxy_ip'] = box.clear_text(remove_tags(ip))
+            item['proxy_port'] = box.clear_text(remove_tags(port))
+            item['proxy_protocol'] = box.clear_text(remove_tags(protocol))
+            item['proxy_location'] = box.clear_text(remove_tags(location))
+            item['proxy_fetch_date'] = str(int(time.time()))
             item['proxy_from'] = response.url
             item['proxy_alive'] = 1
             item['proxy_high_quality'] = 0
@@ -289,7 +289,7 @@ class ProxySpider(CrawlSpider):
                 item['proxy_port'] = port
                 item['proxy_protocol'] = protocol
                 item['proxy_location'] = location
-                item['proxy_fetch_date'] = int(time.time())
+                item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
                 item['proxy_alive'] = 1
                 item['proxy_high_quality'] = 0
@@ -301,7 +301,7 @@ class ProxySpider(CrawlSpider):
                 item['proxy_port'] = port
                 item['proxy_protocol'] = protocol
                 item['proxy_location'] = ''
-                item['proxy_fetch_date'] = int(time.time())
+                item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
                 item['proxy_alive'] = 1
                 item['proxy_high_quality'] = 0

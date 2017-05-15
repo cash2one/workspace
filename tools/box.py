@@ -69,6 +69,10 @@ def int_with_commas(x):
     return Format.int_with_commas(x)
 
 
+def clear_text(text):
+    return Format.clear_text(text, keep=False)
+
+
 """
 爬虫工具
 """
