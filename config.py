@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 # Created by Vin on 2017/4/27
 
-import os
 import sys
+import os
+import datetime
+import logging
+from logging.handlers import RotatingFileHandler
 
 APP_ROOT = getattr(sys, '__APP_ROOT__', os.path.split(os.path.realpath(__file__))[0])
 
@@ -11,6 +14,28 @@ APP_ROOT = getattr(sys, '__APP_ROOT__', os.path.split(os.path.realpath(__file__)
 DB = {
     'proxy_db': os.path.join(APP_ROOT, r'db\proxy.db'),
 }
+
+"""
+日志配置
+"""
+DEBUG = True
+APP_LOG = getattr(sys, '__APP_LOG__', True)
+level = logging.DEBUG if DEBUG else logging.ERROR
+LOG_DIR = os.path.join(APP_ROOT, "logs")
+# 仅应用日志
+if APP_LOG:
+    # 每小时一个日志
+    _handler = RotatingFileHandler(
+        filename=os.path.join(LOG_DIR, 'spider_' + datetime.datetime.now().strftime("%Y-%m-%d_%H") + ".logs"),
+        mode='a+')
+    _handler.setFormatter(
+        logging.Formatter(fmt='>>> %(asctime)-10s %(name)-12s %(levelname)-8s %(message)s', datefmt='%H:%M:%S'))
+    LOG = logging.getLogger('spider')
+    LOG.setLevel(level)
+    LOG.addHandler(_handler)
+    # 在控制台打印
+    _console = logging.StreamHandler()
+    LOG.addHandler(_console)
 
 # 常见浏览器的User-Agent
 USER_AGENT_LIST = [

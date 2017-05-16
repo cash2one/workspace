@@ -4,8 +4,15 @@
 
 import config
 import sqlite3
+import logging
+
+db_logger = logging.getLogger('DB')
 
 db_setting = config.DB
+
+# 参考mongo的查询方法将sql条件查询统一
+SQL_OPERATOR = {'eq': '=', 'ne': '!=', 'gt': '>', 'gte': '>=', 'lt': '<', 'let': '<=', 'like': 'LIKE',
+                'in': 'IN', '!like': 'NOT LIKE', '!in': 'NOT IN', }
 
 
 def dict_to_str(data=None, joiner=','):
@@ -20,10 +27,10 @@ def dict_to_str(data=None, joiner=','):
     if isinstance(data, dict):
         for k, v in data.items():
             key_tuple += k + joiner
-            if not isinstance(v, (str, unicode)):
-                value_tuple += str(v) + joiner
-            else:
+            if isinstance(v, unicode):
                 value_tuple += repr(v.encode('utf-8')) + joiner
+            else:
+                value_tuple += repr(v) + joiner
         else:
             # 去除最后多出来的逗号
             key_tuple = key_tuple[:-1]
@@ -34,10 +41,58 @@ def dict_to_str(data=None, joiner=','):
         return [key_tuple, value_tuple]
 
 
+# 临时方法， 方法局限性无法嵌套多层操作符
+# TODO 通过递归的方法重写方法
+def mongo_interface_to_sql(data=None):
+    data = data if data else {}
+    global SQL_OPERATOR
+    operator = SQL_OPERATOR
+    operation = []
+    if isinstance(data, dict):
+        for k, v in data.items():
+            if isinstance(v, dict):
+                if len(v) != 1:
+                    db_logger.debug(u"条件语句语法不正确！参考mongo查询语法")
+                    return None
+                # 取出操作符和值
+                v_key, v_value = v.popitem()
+                # 将操作符小写
+                v_key = v_key.lower()
+                operation.append(k + operator[v_key] + repr(v_value))
+            elif isinstance(v, list):
+                if k != 'or' and len(v) < 2:
+                    db_logger.debug(u"条件语句语法不正确！只有or的值才可以是列表")
+                    return None
+                temp_list = []
+                print v
+                for inner_dict in v:
+                    print inner_dict
+                    if len(inner_dict) != 1:
+                        db_logger.debug(u"条件语句语法不正确！参考mongo查询语法")
+                        return None
+                    # 取出操作符和值
+                    v_key, v_value = inner_dict.popitem()
+                    # 将操作符小写
+                    v_key = v_key.lower()
+                    if isinstance(v_value, dict):
+                        v_key_key, v_value_value = v_value.popitem()
+                        temp_operation = v_key + operator[v_key_key] + repr(v_value_value)
+                    else:
+                        temp_operation = v_key + '=' + repr(v_value)
+                    temp_list.append(temp_operation)
+                operation.append('({or_statement})'.format(or_statement=' OR '.join(temp_list)))
+            else:
+                operation.append(k + '=' + repr(v))
+            print operation
+    operator_str = ' AND '.join(operation)
+    return operator_str
+
+
 class ProxyDB(object):
     """
     单例模式
     """
+
     # TODO 添加异常数据的判断和异常处理
     class Proxy_SQLite(object):
         """数据库操作封装"""
@@ -79,9 +134,38 @@ class ProxyDB(object):
                 result = cursor.fetchall()
             return result
 
+        # AND 和 OR 的使用和Mongo的一致
+        def select(self, table='', data=None, limit=10, fields=None):
+            """
+            使用mongo查询方式来查询SQL
+            :param table: 表名
+            :param data: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
+                         ==>> proxy_port = '808' and proxy_high_quality = 1
+                         {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
+                         ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
+            :param limit: 需要输出的数据数目 整型
+            :param fields: 需要输出的数据域 元组或列表格式
+            :return: list
+            """
+            if not table or not data:
+                return None
+            operation = mongo_interface_to_sql(data)
+            cursor, result = None, None
+            if operation:
+                if isinstance(fields, (list, tuple)):
+                    fields = ','.join(fields)
+                else:
+                    fields = '*'
+                sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION}""".format(COLUMNS=fields,
+                                                                                            TABLE_NAME=table,
+                                                                                            OPERATION=operation)
+                cursor = self.proxy_db.execute(sql_str)
+                result = cursor.fetchall()
+            return result
+
         # 字典类型或列表类型整理为sql字符串
         # TODO 添加插入条件功能
-        def insert(self, table, data=None, return_insert_id=False):
+        def insert(self, table='', data=None, return_insert_id=False):
             """插入数据
             可以直接插入字典类型或列表(元组)类型数据到指定表
             :param table: 表名
@@ -90,12 +174,15 @@ class ProxyDB(object):
             :return: 
             """
             sql_str = ''
+            if not table or not data:
+                return None
             if isinstance(data, dict):
                 data_str = dict_to_str(data)
                 sql_str = """INSERT INTO {TABLE_NAME} {COLUMN_NAME} VALUES {VALUES}""".format(TABLE_NAME=table,
                                                                                               COLUMN_NAME=data_str[0],
                                                                                               VALUES=data_str[1])
             elif isinstance(data, list):
+                data = [repr(x) for x in data]
                 data_str = '(' + ','.join(data) + ')'
                 sql_str = """INSERT INTO {TABLE_NAME} VALUES {VALUES}""".format(TABLE_NAME=table, VALUES=data_str)
 
@@ -155,3 +242,6 @@ if __name__ == '__main__':
     l = dict_to_str(d)
     for x in l:
         print repr(x)
+
+    d = {"proxy_ip": {'eq': '127.0.0.1'}, 'or': [{"proxy_port": "808"}, {"proxy_alive": 1}]}
+    print mongo_interface_to_sql(d)
