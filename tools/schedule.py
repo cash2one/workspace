@@ -14,26 +14,27 @@ QUEUE_LOCK = threading.Lock()
 
 def fill_proxy_queue():
     proxy_db = db.ProxyDB()
-    proxies = proxy_db.get_iter(
+    fetch_proxies = proxy_db.get_iter(
         table='proxies',
         condition=None,
         limit=None,
         fields=('proxy_protocol', 'proxy_ip', 'proxy_port')
     )
-    QUEUE_LOCK.acquire()
-    for proxy in proxies:
-        print proxy_db
+    # global PROXY_QUEUE
+    proxies = {}
+    target = "https://www.baidu.com/index.html"
+    # QUEUE_LOCK.acquire()
+    for proxy in fetch_proxies:
+        proxy_url = "{protocol}://{ip}:{port}".format(protocol=proxy[0], ip=proxy[1], port=proxy[2])
+        proxies.update({
+            'http': proxy_url,
+            'https': proxy_url,
+        })
 
 
 def main():
     # sb = subprocess.call(['python', r'E:\workspace\tools\fetch_proxies.py', '-r'])
-    proxy_db = db.ProxyDB()
-    condition = {
-        'proxy_port': {'eq': '808'},
-        'proxy_protocol': 'HTTPS'
-    }
-    for x in proxy_db.get_iter(table='proxies', condition=condition, limit=10, fields=('proxy_protocol', 'proxy_ip', 'proxy_port')):
-        print x
+    fill_proxy_queue()
 
 
 if __name__ == '__main__':

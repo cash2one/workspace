@@ -28,7 +28,6 @@ try:
     import config
 except ImportError:
     sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
-    print sys.path[0]
     import config
 
 from tools import box
@@ -181,6 +180,9 @@ class MetaItemPipeline(object):
         data['id'] = hashlib.md5(data['proxy_protocol'] + data['proxy_ip'] + data['proxy_port']).hexdigest()
         if self.proxy_db.is_exist(table='proxies', key=data['id']):
             raise DropItem("item data is exist")
+        # 默认值
+        data['proxy_check_time'] = ''
+        data['proxy_support_https'] = 0
         self.proxy_db.insert(table='proxies', data=data)
         print data
 
@@ -267,7 +269,7 @@ class ProxySpider(CrawlSpider):
                 continue
             item['proxy_ip'] = box.clear_text(remove_tags(ip))
             item['proxy_port'] = box.clear_text(remove_tags(port))
-            item['proxy_protocol'] = box.clear_text(remove_tags(protocol))
+            item['proxy_protocol'] = box.clear_text(remove_tags(protocol)).lower()
             item['proxy_location'] = box.clear_text(remove_tags(location))
             item['proxy_fetch_date'] = str(int(time.time()))
             item['proxy_from'] = response.url
@@ -287,7 +289,7 @@ class ProxySpider(CrawlSpider):
             for ip, port, protocol, location in proxies:
                 item['proxy_ip'] = ip
                 item['proxy_port'] = port
-                item['proxy_protocol'] = protocol
+                item['proxy_protocol'] = protocol.lower()
                 item['proxy_location'] = location
                 item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
@@ -299,7 +301,7 @@ class ProxySpider(CrawlSpider):
             for ip, port, protocol in proxies:
                 item['proxy_ip'] = ip
                 item['proxy_port'] = port
-                item['proxy_protocol'] = protocol
+                item['proxy_protocol'] = protocol.lower()
                 item['proxy_location'] = ''
                 item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
