@@ -43,13 +43,13 @@ def dict_to_str(data=None, joiner=','):
 
 # 临时方法， 方法局限性无法嵌套多层操作符
 # TODO 通过递归的方法重写方法
-def mongo_interface_to_sql(data=None):
-    data = data if data else {}
+def mongo_interface_to_sql(condition=None):
+    condition = condition if condition else {}
     global SQL_OPERATOR
     operator = SQL_OPERATOR
     operation = []
-    if isinstance(data, dict):
-        for k, v in data.items():
+    if isinstance(condition, dict):
+        for k, v in condition.items():
             if isinstance(v, dict):
                 if len(v) != 1:
                     db_logger.debug(u"条件语句语法不正确！参考mongo查询语法")
@@ -135,11 +135,11 @@ class ProxyDB(object):
             return result
 
         # AND 和 OR 的使用和Mongo的一致
-        def select(self, table='', data=None, limit=10, fields=None):
+        def select(self, table='', condition=None, limit=10, fields=None):
             """
             使用mongo查询方式来查询SQL
             :param table: 表名
-            :param data: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
+            :param condition: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
                          ==>> proxy_port = '808' and proxy_high_quality = 1
                          {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
                          ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
@@ -147,21 +147,40 @@ class ProxyDB(object):
             :param fields: 需要输出的数据域 元组或列表格式
             :return: list
             """
-            if not table or not data:
+            if not table or not condition:
                 return None
-            operation = mongo_interface_to_sql(data)
+            operation = mongo_interface_to_sql(condition)
             cursor, result = None, None
             if operation:
                 if isinstance(fields, (list, tuple)):
                     fields = ','.join(fields)
                 else:
                     fields = '*'
-                sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION}""".format(COLUMNS=fields,
-                                                                                            TABLE_NAME=table,
-                                                                                            OPERATION=operation)
+                if not limit:
+                    sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION}""".format(
+                        COLUMNS=fields,
+                        TABLE_NAME=table,
+                        OPERATION=operation)
+                else:
+                    sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION} LIMIT {LIMIT}""".format(
+                        COLUMNS=fields,
+                        TABLE_NAME=table,
+                        OPERATION=operation,
+                        LIMIT=limit)
                 cursor = self.proxy_db.execute(sql_str)
-                result = cursor.fetchall()
-            return result
+            return cursor
+
+        def get_list(self, **kwargs):
+            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None), limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+            return cursor.fetchall() if cursor else None
+
+        def get_iter(self, **kwargs):
+            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None), limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+            while True and cursor:
+                row = cursor.fetchone()
+                if not row:
+                    break
+                yield row
 
         # 字典类型或列表类型整理为sql字符串
         # TODO 添加插入条件功能
