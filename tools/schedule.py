@@ -3,7 +3,26 @@
 # Created by Vin on 2017/5/11
 
 import db
+import time
+import Queue
+import threading
 import subprocess
+
+PROXY_QUEUE = []
+QUEUE_LOCK = threading.Lock()
+
+
+def fill_proxy_queue():
+    proxy_db = db.ProxyDB()
+    proxies = proxy_db.get_iter(
+        table='proxies',
+        condition=None,
+        limit=None,
+        fields=('proxy_protocol', 'proxy_ip', 'proxy_port')
+    )
+    QUEUE_LOCK.acquire()
+    for proxy in proxies:
+        print proxy_db
 
 
 def main():

@@ -84,7 +84,7 @@ def mongo_interface_to_sql(condition=None):
             else:
                 operation.append(k + '=' + repr(v))
             print operation
-    operator_str = ' AND '.join(operation)
+    operator_str = ' AND '.join(operation) if operation else None
     return operator_str
 
 
@@ -135,47 +135,40 @@ class ProxyDB(object):
             return result
 
         # AND 和 OR 的使用和Mongo的一致
-        def select(self, table='', condition=None, limit=10, fields=None):
+        def select(self, table='', fields=None, condition=None, limit=10):
             """
             使用mongo查询方式来查询SQL
             :param table: 表名
+            :param fields: 需要输出的数据域 元组或列表格式
             :param condition: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
                          ==>> proxy_port = '808' and proxy_high_quality = 1
                          {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
                          ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
             :param limit: 需要输出的数据数目 整型
-            :param fields: 需要输出的数据域 元组或列表格式
             :return: list
             """
-            if not table or not condition:
+            if not table:
                 return None
-            operation = mongo_interface_to_sql(condition)
-            cursor, result = None, None
-            if operation:
-                if isinstance(fields, (list, tuple)):
-                    fields = ','.join(fields)
-                else:
-                    fields = '*'
-                if not limit:
-                    sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION}""".format(
-                        COLUMNS=fields,
-                        TABLE_NAME=table,
-                        OPERATION=operation)
-                else:
-                    sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME} WHERE {OPERATION} LIMIT {LIMIT}""".format(
-                        COLUMNS=fields,
-                        TABLE_NAME=table,
-                        OPERATION=operation,
-                        LIMIT=limit)
-                cursor = self.proxy_db.execute(sql_str)
+            fields = ','.join(fields) if isinstance(fields, (list, tuple)) else '*'
+            condition_str = mongo_interface_to_sql(condition) if isinstance(condition, dict) else None
+            condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
+            limit_str = """ LIMIT {LIMIT}""".format(LIMIT=limit) if limit else ''
+            sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME}{condition}{limit}""".format(
+                COLUMNS=fields,
+                TABLE_NAME=table,
+                condition=condition_str,
+                limit=limit_str)
+            cursor = self.proxy_db.execute(sql_str)
             return cursor
 
         def get_list(self, **kwargs):
-            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None), limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
+                                 limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
             return cursor.fetchall() if cursor else None
 
         def get_iter(self, **kwargs):
-            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None), limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
+                                 limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
             while True and cursor:
                 row = cursor.fetchone()
                 if not row:
@@ -209,6 +202,9 @@ class ProxyDB(object):
             self.proxy_db.commit()
 
         def close(self):
+            self.proxy_db.close()
+
+        def __del__(self):
             self.proxy_db.close()
 
     # 类变量，用于存储数据库的实例
