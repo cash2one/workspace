@@ -1,0 +1,50 @@
+http://www.linear.com.cn/mylinear/login.php
+用户名：287986942@qq.com，密码：HQchip123
+
+/s.nl/c.402442/it.A/id.26371/.f
+http://shopping.netsuite.com/app/site/backend/additemtocart.nl/c.402442/.f
+
+目录
+http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f
+翻页
+http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f?range=11%2C20%2C12990
+详情
+http://shopping.netsuite.com/s.nl/c.402442/it.A/id.28061/.f
+http://shopping.netsuite.com/s.nl/c.402442/it.A/id.26371/.f
+http://shopping.netsuite.com/s.nl/c.402442/it.A/id.50637/.f
+
+
+*****************************************************************************
+http://www.linear.com.cn/search/index.php?q=LT1117CST%23PBF
+request
+GET /search/index.php?q=LT1117CST%23PBF HTTP/1.1
+host : www.linear.com.cn
+proxy-connection : keep-alive
+pragma : no-cache
+cache-control : no-cache
+upgrade-insecure-requests : 1
+user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36
+accept : text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+dnt : 1
+referer : http://www.linear.com.cn/
+accept-language : en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4
+cookie : LTC=19e9b8e4cdcd0d4c3804d4034826023b; parametric=advanced; __atuvc=35%7C20; __atuvs=591b9dcf4f18a678019; _ga=GA1.3.1897773957; _gid=GA1.3.379859835.1494986124
+content-length : 0
+request body
+
+response header
+
+HTTP/1.1 302
+date : Wed, 17 May 2017 01:56:56 GMT
+server : Apache/2.4.10 (Debian)
+x-powered-by : PHP/5.6.29-0+deb8u1
+expires : Thu, 19 Nov 1981 08:52:00 GMT
+cache-control : no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+pragma : no-cache
+location : /product/LT1117
+connection : close
+content-type : text/html; charset=UTF-8
+response body
+*******************************************************************************
+
+$x('//a[@class="lnk12b-blackOff"]')
