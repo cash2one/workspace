@@ -69,8 +69,9 @@ def int_with_commas(x):
     return Format.int_with_commas(x)
 
 
-def clear_text(text):
-    return Format.clear_text(text, keep=False)
+def clear_text(text, keep=False):
+    """keep = False 去除所有空格"""
+    return Format.clear_text(text, keep=keep)
 
 
 """

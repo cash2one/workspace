@@ -34,7 +34,7 @@ except ImportError:
     print sys.path[0]
     import config
 
-from tools import box
+from tools import box as util
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,8 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-
+    r'Product-End-Category\.aspx\?productCategory=\d+',  # 产品链接
+    r'Product-Details\.aspx\?productId=(\d+)',  # 详情
 )
 
 request_list = []
@@ -192,10 +193,10 @@ class MetaItemPipeline(object):
 
 
 class HQChipSpider(CrawlSpider):
-    """future_electronics 蜘蛛"""
-    name = 'future_electronics'
-    allowed_domains = ['cn.futureelectronics.com']
-    start_urls = ['http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:70,Aro:70,Nea:True']
+    """richardsonrfpd.com 蜘蛛"""
+    name = 'richardsonrfpd'
+    allowed_domains = ['www.richardsonrfpd.com']
+    start_urls = ['http://www.richardsonrfpd.com/Pages/home.aspx']
 
 
     def __init__(self, name=None, **kwargs):
@@ -209,13 +210,80 @@ class HQChipSpider(CrawlSpider):
         self.rules = (
             Rule(LinkExtractor(allow=filter_rules), callback="parse_resp", follow=True),
         )
-        self.headers = {}
-        self.cookies = {
-
+        self.headers = headers = {
+            'Host': 'www.richardsonrfpd.com',
+            'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
+            'Accept-Encoding': 'gzip, deflate, sdch',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
         }
 
     def parse_resp(self, resp):
+        if 'Product-Details' in resp.url:
+            yield self.parse_detail(resp)
 
+    def parse_detail(self, resp):
+        item = GoodsItem()
+        root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        # goods_sn
+        goods_sn_match = re.search(r'productId=(\d+)', resp.url)
+        if goods_sn_match:
+            item['goods_sn'] = goods_sn_match.group(1)
+        else:
+            logger.debug("解析 goods_sn 失败，重试URL:{url}".format(url=resp.url))
+            return None
+        # goods_name, provider_name
+        try:
+            title = root.xpath('//span[@class="ContentTitle"]')[0]
+            item['goods_name'] = util.clear_text(title.text)
+            provider_name = title.xpath('a')
+            item['provider_name'] = util.clear_text(provider_name[0].text) if provider_name else ''
+            item['provider_url'] = ''
+        except IndexError:
+            logger.debug("解析 goods_name 失败，重试URL:{url}".format(url=resp.url))
+            return Request(url=resp.url, headers=self.headers)
+
+        # goods_other_name
+        goods_other_name = root.xpath('//span[@style="font-weight:bold;"]')
+        for x in goods_other_name:
+            match = re.search('MFG\s*Part\s*Number:\s*([^\s]+)', x.text, re.IGNORECASE)
+            item['goods_other_name'] = match.group(1) if match else ''
+
+        # catlog
+        item['catlog'] = []
+        catlog_div = root.xpath('//div[@class="breadcrumb"]//a')
+        for catlog in catlog_div:
+            catlog_name = util.clear_text(catlog.text)
+            catlog_url = urlparse.urljoin(resp.url, catlog.xpath('./@href')[0])
+            if catlog_name and catlog_url:
+                item['catlog'].append([catlog_name, catlog_url])
+            else:
+                break
+
+        # attr
+        item['attr'] = []
+        attr_table = root.xpath('//table[@class="PDTable"]//td')
+        # TODO index error
+        for x in range(0, len(attr_table), 2):
+            attr_key = attr_table[x].text
+            attr_value = attr_table[x + 1].text
+            if attr_key and attr_value:
+                attr_key = attr_key.strip(' ')
+                attr_value = attr_value.strip(' ')
+                item['attr'].append([attr_key, attr_value])
+            else:
+                break
+
+        # rohs
+        rohs_img = root.xpath('//img[@title="IsROHSCompliant"]')
+        item['rohs'] = 1 if rohs_img else -1
+
+        # doc
+        doc_link = root.xpath('//a[@id="docDown"]/@href')
+        item['doc'] = doc_link[0] if doc_link else ''
+
+        #
+        return item
 
     @property
     def closed(self):

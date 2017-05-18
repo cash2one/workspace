@@ -37,7 +37,7 @@ def str_to_dict(src_str='', pattern=''):
         return {}
 
 
-def clear_text(text='', keep=True):
+def clear_text(text='', keep=False):
     """
     去除文本中的空字符（空格，制表符，换行符）
     :param text:文本或元素为文本的列表 
