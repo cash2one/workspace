@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Created by Vin on 2017/5/18
 
 import os
 import re
 import sys
-import json
 import argparse
 import urlparse
 import random
 import logging
 import requests
 import copy
+from bs4 import BeautifulSoup
 
 # scrapy import
 import scrapy
@@ -33,7 +34,7 @@ except ImportError:
     print sys.path[0]
     import config
 
-from tools import box as util
+from tools import box
 
 logger = logging.getLogger(__name__)
 
@@ -70,11 +71,7 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r'/products/[^/]+',  # index page
-    r'/parametric/[^/]+$',  #
-    r'/product/',  # detail
-    r's\.nl/c\.402442/sc\.2/\.f\?range',  # 翻页
-    r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
+
 )
 
 request_list = []
@@ -195,10 +192,11 @@ class MetaItemPipeline(object):
 
 
 class HQChipSpider(CrawlSpider):
-    """linear 蜘蛛"""
-    name = 'linear'
-    allowed_domains = ['shopping.netsuite.com', 'www.linear.com.cn']
-    start_urls = ['http://www.linear.com.cn/products/']
+    """future_electronics 蜘蛛"""
+    name = 'future_electronics'
+    allowed_domains = ['cn.futureelectronics.com']
+    start_urls = ['http://cn.futureelectronics.com/zh/Search.aspx?dsNav=Ny:True,Ro:70,Aro:70,Nea:True']
+
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -211,150 +209,12 @@ class HQChipSpider(CrawlSpider):
         self.rules = (
             Rule(LinkExtractor(allow=filter_rules), callback="parse_resp", follow=True),
         )
-        self.headers = {
-            'Host': 'www.linear.com.cn',
-            'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
-            'Accept-Encoding': 'gzip, deflate, sdch',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
+        self.headers = {}
+        self.cookies = {
+
         }
-        self.search_pattern = re.compile(filter_rules[1], re.IGNORECASE)
-        self.product_list_pattern = re.compile(r'var\s*prin=\s*(\[[^;]+\]);')
-        # 库存查询正则表达式
-        self.stock_pattern = re.compile(r'Quantity\s*Available\s*(\d+)', re.IGNORECASE)
-        self.goods_sn_pattern = re.compile(r'/id\.(\d+)/')
 
     def parse_resp(self, resp):
-        # search_match = self.search_pattern.search(resp.url)
-        # if search_match:
-        if '/parametric/' in resp.url:
-            product_list = self.product_list_pattern.search(resp.text.encode('utf-8'))
-            product_list = json.loads(product_list.group(1)) if product_list else []
-            for product in product_list:
-                try:
-                    goods_name = product[0]
-                    product_url = 'http://www.linear.com.cn/product/{goods_name}'.format(goods_name=goods_name)
-                except IndexError:
-                    logger.debug("无法解析产品详情链接。URL:{url}".format(url=resp.url))
-                    break
-                yield Request(url=product_url, headers=self.headers, meta={'goods_name': goods_name}, callback=self.parse_family)
-
-    def parse_family(self, resp):
-        data = {}
-        root = lxml.html.fromstring(resp.text.encode('utf-8'))
-        # family_sn
-        family_sn = resp.request.meta.get('goods_name', None)
-        if not family_sn:
-            return None
-        data['family_sn'] = family_sn
-
-        # catlog
-        breadcrumb = root.xpath('//p[@class="breadcrumb"]/a')
-        data['catlog'] = []
-        for catlog in breadcrumb:
-            catlog_name = util.clear_text(catlog.text_content())
-            catlog_url = catlog.xpath('./@href')[0]
-            if catlog_name and catlog_url:
-                data['catlog'].append([catlog_name, catlog_url])
-            else:
-                data['catlog'] = []
-                break
-        else:
-            data['catlog'].append([family_sn, resp.url])
-        # doc
-        doc = root.xpath('//a[@class="doclink"]//@title')
-        data['doc'] = "http://cds.linear.com/docs/en/datasheet/{title}".format(title=doc[0]) if doc else ''
-
-        # get series
-        search_url = 'http://shopping.netsuite.com/s.nl?' \
-                     'ext=F&c=402442&sc=2&category=&search={search}'.format(search=family_sn)
-        headers = copy.copy(self.headers)
-        headers.update({'Host': 'shopping.netsuite.com', 'Referer': '',})
-        return Request(url=search_url, headers=headers, meta={'data': copy.deepcopy(data)}, callback=self.parse_stock)
-
-    # def parse_redirect(self, resp):
-    #
-    #     root = lxml.html.fromstring(resp.text.encode('utf-8'))
-    #     part_list = root.xpath('//td[@class="partnumber"]')
-    #     for part in part_list:
-    #         part_number = box.clear_text(part.text_content)
-    #         search_url = 'http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search={part_number}'.format(part_number=part_number)
-    #         yield Request(url=search_url, headers=self.headers, meta=resp.request.meta, callback=self.parse_stock)
-
-    def parse_stock(self, resp):
-        root = lxml.html.fromstring(resp.text.encode('utf-8'))
-        product_list = root.xpath('//tr[@valign="top"][@height=85]')
-        for product in product_list:
-            data = resp.request.meta.get('data', {})
-            detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
-            # goods_name
-            goods_name = detail[0].text_content() if detail else ''
-            detail_url = urlparse.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
-            # goods_sn
-            goods_sn = self.goods_sn_pattern.search(detail_url)
-            goods_sn = goods_sn.group(1) if goods_sn else ''
-            # stock
-            stock = self.stock_pattern.search(util.clear_text(remove_tags(product_list[0].text_content())))
-            stock = util.intval(stock.group(1)) if stock else 0
-            headers = copy.copy(self.headers)
-            headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
-            if goods_name and goods_sn:
-                data.update({'goods_name': goods_name, 'goods_sn': goods_sn})
-                yield Request(url=detail_url, headers=headers, meta={'item': data, 'stock': copy.copy(stock)},
-                              callback=self.parse_detail)
-            else:
-                yield Request(url=resp.url, headers=headers)
-
-    def parse_detail(self, resp):
-        if 'item' in resp.request.meta:
-            root = lxml.html.fromstring(resp.text.encode('utf-8'))
-            item = copy.deepcopy(resp.request.meta.get('item', None))
-            goods_desc = root.xpath('//td[@class="txt11"]/text()')
-            item['goods_desc'] = goods_desc[0].replace('\n', '').replace('\t', '') if goods_desc else ''
-            # tiered
-            tiered = []
-            price_list = root.xpath('//td[@class="texttable"]')
-            for x in range(0, len(price_list), 2):
-                qty = util.intval(price_list[x].text_content())
-                price = util.floatval(price_list[x+1].text_content())
-                if qty and price:
-                    tiered.append([qty, price])
-                else:
-                    tiered = [[0, 0.00]]
-                    break
-            if not tiered:
-                price = root.xpath('//td[@class="txt18b-red"]/text()')
-                price = util.floatval(price[0]) if price else 0
-                if price:
-                    tiered = [1, price]
-                else:
-                    tiered = []
-
-            item['tiered'] = tiered if tiered else [[0, 0.00]]
-            # stock
-            qty = root.xpath('//input[@id="qty"]/@value')
-            qty = util.intval(qty[0]) if qty else 1
-            stock = resp.request.meta.get('stock')
-            item['stock'] = [stock, qty]
-            # url
-            item['url'] = resp.url
-            # provider_name
-            item['provider_name'] = 'LINEAR'
-            item['provider_url'] = ''
-            # attr
-            item['attr'] = []
-            # rohs
-            item['rohs'] = -1
-            item['goods_other_name'] = ''
-            # increment
-            item['increment'] = 1
-            # img
-            item['goods_img'] = ''
-            item['goods_thumb'] = ''
-            #
-        else:
-            item = None
-        return item
 
 
     @property

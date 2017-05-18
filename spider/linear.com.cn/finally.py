@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
@@ -72,40 +71,8 @@ settings = {
 filter_rules = (
     r'/products/[^/]+',  # index page
     r'/parametric/[^/]+$',  #
-    r'/product/',  # detail
-    r's\.nl/c\.402442/sc\.2/\.f\?range',  # 翻页
-    r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
+    r'/product/([^/]+)$',  # detail
 )
-
-request_list = []
-total_data = 0
-
-
-def headers_list_to_str(request_header):
-    _headers = {}
-    for k, v in request_header.iteritems():
-        _headers[k] = ''.join(v)
-    return _headers
-
-
-class RequestsDownloader(object):
-    def __init__(self):
-        self.session = requests.Session()
-
-    def process_request(self, request, spider):
-        try:
-            if getattr(request, 'headers', None) and getattr(request, 'cookies', None):
-                headers = headers_list_to_str(request.headers)
-                res = self.session.get(url=request.url, headers=headers, cookies=request.cookies)
-            else:
-                res = self.session.get(url=request.url, )
-        except KeyboardInterrupt:
-            raise
-        return HtmlResponse(request.url, body=res.content, encoding='utf-8', request=request)
-
-    @staticmethod
-    def process_exception(exception, spider):
-        return None
 
 
 class RandomUserAgentMiddleware(object):
@@ -150,6 +117,109 @@ class IgnoreRequestMiddleware(object):
             raise IgnoreRequest("ignore repeat url: %s" % request.url)
 
 
+class UniqueRequestMiddleware(object):
+    """去重请求中间件"""
+
+    def __init__(self, crawler):
+        name = 'spider_' + crawler.spider.name + '_item'
+        self.mongo = hqchip.db.mongo[name]
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def close_spider(self, spider):
+        del self.mongo
+
+    def process_request(self, request, spider):
+        url = to_bytes(request.url.split('#')[0])
+        key = hashlib.md5(url).hexdigest()
+        info = self.mongo.find_one({'key': key})
+        if info:
+            logger.warn("ingore repeat url: %s" % request.url)
+            raise IgnoreRequest("ingore repeat url: %s" % request.url)
+
+
+class ProxyRequestMiddleware(object):
+    """代理请求中间件"""
+
+    def __init__(self, crawler):
+        global proxy_rules
+        self.filters = []
+        for rule in proxy_rules:
+            self.filters.append(re.compile(rule))
+        self.mongo = hqchip.db.mongo.proxys
+        self.queue = queue.RabbitMQ(name='spider.proxys', dsn=config.AMQP_URL)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
+
+    def close_spider(self, spider):
+        del self.mongo
+        del self.queue
+
+    def process_request(self, request, spider):
+        if not self._check_rules(request):
+            return
+        proxies = {}
+        try:
+            data = self.queue.get(block=False)
+            proxies['http'] = self._get_proxy(data['ip'], 'http')
+            proxies['https'] = self._get_proxy(data['ip'], 'https')
+        except:
+            self._fill_queue(100)
+        self._set_proxy(request, proxies)
+
+    def process_exception(self, request, exception, spider):
+        if 'proxy' not in request.meta or not self._check_rules(request):
+            return
+        request.meta['retry_num'] = 0
+        return request
+
+    def _check_rules(self, request):
+        _use_proxy = False
+        for vo in self.filters:
+            if vo.search(request.url):
+                _use_proxy = True
+                break
+        return _use_proxy
+
+    def _fill_queue(self, limit_num=100):
+        """填充队列"""
+        total_count = self.mongo.find().count()
+        skip_num = random.randint(0, total_count - limit_num) if total_count > limit_num else 0
+        dlist = self.mongo.find({}).skip(skip_num).limit(limit_num)
+        for vo in dlist:
+            self.queue.put({'ip': vo['ip'], 'anonymous': vo['anonymous']})
+
+    def _get_proxy(self, url, orig_type):
+        proxy_type, user, password, hostport = _parse_proxy(url)
+        proxy_url = urlunparse((proxy_type or orig_type, hostport, '', '', '', ''))
+        if user:
+            user_pass = to_bytes(
+                '%s:%s' % (unquote(user), unquote(password)),
+                encoding=self.auth_encoding)
+            creds = base64.b64encode(user_pass).strip()
+        else:
+            creds = None
+        return creds, proxy_url
+
+    def _set_proxy(self, request, proxies):
+        if not proxies:
+            return
+        parsed = urlparse_cached(request)
+        scheme = parsed.scheme
+        if scheme in ('http', 'https') and proxy_bypass(parsed.hostname):
+            return
+        if scheme not in proxies:
+            return
+        creds, proxy = proxies[scheme]
+        request.meta['proxy'] = proxy
+        if creds:
+            request.headers['Proxy-Authorization'] = b'Basic ' + creds
+
+
 class GoodsItem(scrapy.Item):
     goods_sn = scrapy.Field()  # 产品标识
     goods_name = scrapy.Field()  # 产品销售型号名
@@ -167,6 +237,7 @@ class GoodsItem(scrapy.Item):
     rohs = scrapy.Field()  # rohs
     catlog = scrapy.Field()  # 分类
     goods_other_name = scrapy.Field()
+    family_sn = scrapy.Field()
 
 
 class MetaItemPipeline(object):
@@ -174,6 +245,9 @@ class MetaItemPipeline(object):
 
     def __init__(self, crawler):
         name = 'spider_' + crawler.spider.name + '_item'
+        self.mongo = hqchip.db.mongo[name]
+        self.mongo.ensure_index('key', unique=True)
+        self.mongo.ensure_index('goods_sn', unique=False)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -186,12 +260,19 @@ class MetaItemPipeline(object):
         data = copy.deepcopy(dict(item))
         if not data:
             raise DropItem("item data is empty")
-        print("=" * 10 + "process_item" + "BEGIN" + "=" * 10)
-        print(data)
-        print("=" * 10 + "process_item" + "END" + "=" * 10)
+        data['url'] = to_bytes(item['url'].split('#')[0])
+        data['key'] = hashlib.md5(data['url']).hexdigest()
+        info = self.mongo.find_one({'goods_sn': data['goods_sn']})
+        if not info:
+            self.mongo.insert(data)
+            logger.info('success insert mongodb : %s' % data['key'])
+        else:
+            self.mongo.update({'_id': info['_id']}, {"$set": data})
+            logger.info('success update mongodb : %s' % data['key'])
+        raise DropItem('success process')
 
     def close_spider(self, spider):
-        pass
+        del self.mongo
 
 
 class HQChipSpider(CrawlSpider):
@@ -218,32 +299,38 @@ class HQChipSpider(CrawlSpider):
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
         }
-        self.search_pattern = re.compile(filter_rules[1], re.IGNORECASE)
+        # family_sn
+        self.family_sn_pattern = re.compile(r'/product/([^/]+)$', re.IGNORECASE)
         self.product_list_pattern = re.compile(r'var\s*prin=\s*(\[[^;]+\]);')
         # 库存查询正则表达式
         self.stock_pattern = re.compile(r'Quantity\s*Available\s*(\d+)', re.IGNORECASE)
         self.goods_sn_pattern = re.compile(r'/id\.(\d+)/')
 
     def parse_resp(self, resp):
-        # search_match = self.search_pattern.search(resp.url)
-        # if search_match:
         if '/parametric/' in resp.url:
             product_list = self.product_list_pattern.search(resp.text.encode('utf-8'))
             product_list = json.loads(product_list.group(1)) if product_list else []
             for product in product_list:
                 try:
-                    goods_name = product[0]
-                    product_url = 'http://www.linear.com.cn/product/{goods_name}'.format(goods_name=goods_name)
+                    family_sn = product[6]
+                    product_url = 'http://www.linear.com.cn/product/{family_sn}'.format(family_sn=family_sn)
+                    # print resp.url
+                    # print goods_name, product_url
                 except IndexError:
                     logger.debug("无法解析产品详情链接。URL:{url}".format(url=resp.url))
                     break
-                yield Request(url=product_url, headers=self.headers, meta={'goods_name': goods_name}, callback=self.parse_family)
+                yield Request(url=product_url, headers=self.headers)
+        elif '/product/' in resp.url:
+            match = self.family_sn_pattern.search(resp.url)
+            family_sn = match.group(1) if match else ''
+            yield self.parse_family(resp, family_sn=family_sn)
 
-    def parse_family(self, resp):
+    def parse_family(self, resp, **kwargs):
         data = {}
         root = lxml.html.fromstring(resp.text.encode('utf-8'))
         # family_sn
-        family_sn = resp.request.meta.get('goods_name', None)
+        # family_sn = resp.request.meta.get('family_sn', None)
+        family_sn = kwargs.get('family_sn')
         if not family_sn:
             return None
         data['family_sn'] = family_sn
@@ -252,7 +339,7 @@ class HQChipSpider(CrawlSpider):
         breadcrumb = root.xpath('//p[@class="breadcrumb"]/a')
         data['catlog'] = []
         for catlog in breadcrumb:
-            catlog_name = util.clear_text(catlog.text_content())
+            catlog_name = util.cleartext(catlog.text_content())
             catlog_url = catlog.xpath('./@href')[0]
             if catlog_name and catlog_url:
                 data['catlog'].append([catlog_name, catlog_url])
@@ -272,43 +359,43 @@ class HQChipSpider(CrawlSpider):
         headers.update({'Host': 'shopping.netsuite.com', 'Referer': '',})
         return Request(url=search_url, headers=headers, meta={'data': copy.deepcopy(data)}, callback=self.parse_stock)
 
-    # def parse_redirect(self, resp):
-    #
-    #     root = lxml.html.fromstring(resp.text.encode('utf-8'))
-    #     part_list = root.xpath('//td[@class="partnumber"]')
-    #     for part in part_list:
-    #         part_number = box.clear_text(part.text_content)
-    #         search_url = 'http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search={part_number}'.format(part_number=part_number)
-    #         yield Request(url=search_url, headers=self.headers, meta=resp.request.meta, callback=self.parse_stock)
-
     def parse_stock(self, resp):
         root = lxml.html.fromstring(resp.text.encode('utf-8'))
         product_list = root.xpath('//tr[@valign="top"][@height=85]')
+        data = resp.request.meta.get('data', {})
         for product in product_list:
-            data = resp.request.meta.get('data', {})
             detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
             # goods_name
             goods_name = detail[0].text_content() if detail else ''
-            detail_url = urlparse.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
+            detail_url = util.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
             # goods_sn
             goods_sn = self.goods_sn_pattern.search(detail_url)
             goods_sn = goods_sn.group(1) if goods_sn else ''
             # stock
-            stock = self.stock_pattern.search(util.clear_text(remove_tags(product_list[0].text_content())))
+            stock = self.stock_pattern.search(util.cleartext(remove_tags(product.text_content())))
             stock = util.intval(stock.group(1)) if stock else 0
             headers = copy.copy(self.headers)
             headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
             if goods_name and goods_sn:
-                data.update({'goods_name': goods_name, 'goods_sn': goods_sn})
-                yield Request(url=detail_url, headers=headers, meta={'item': data, 'stock': copy.copy(stock)},
+                data['goods_name'] = goods_name
+                data['goods_sn'] = goods_sn
+                yield Request(url=detail_url, headers=headers, meta={'item': copy.deepcopy(data), 'stock': copy.deepcopy(stock)},
                               callback=self.parse_detail)
             else:
                 yield Request(url=resp.url, headers=headers)
+            # 翻页
+            if 'range=' not in resp.url:
+                links = LinkExtractor(allow=r'search=').extract_links(resp)
+                for link in links:
+                    yield Request(url=link.url, headers=headers,
+                                  meta={'data': copy.deepcopy(data), 'stock': copy.deepcopy(stock)},
+                                  callback=self.parse_stock)
+
 
     def parse_detail(self, resp):
-        if 'item' in resp.request.meta:
+        item = resp.request.meta.get('item', None)
+        if item:
             root = lxml.html.fromstring(resp.text.encode('utf-8'))
-            item = copy.deepcopy(resp.request.meta.get('item', None))
             goods_desc = root.xpath('//td[@class="txt11"]/text()')
             item['goods_desc'] = goods_desc[0].replace('\n', '').replace('\t', '') if goods_desc else ''
             # tiered
@@ -351,11 +438,7 @@ class HQChipSpider(CrawlSpider):
             # img
             item['goods_img'] = ''
             item['goods_thumb'] = ''
-            #
-        else:
-            item = None
         return item
-
 
     @property
     def closed(self):
@@ -363,14 +446,6 @@ class HQChipSpider(CrawlSpider):
 
         def wrap(reason):
             # del self.queue
-            global request_list
-            global total_data
-            print("=" * 10 + "close_spider" + "BEGIN" + "=" * 10)
-            request_list = [urlparse.unquote(x) for x in request_list]
-            print(request_list)
-            print(len(request_list))
-            print(total_data)
-            print("=" * 10 + "close_spider" + "END" + "=" * 10)
             pass
 
         return wrap

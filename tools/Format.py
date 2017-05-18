@@ -101,8 +101,8 @@ def number_format(num=None, places=0, index=0, auto=True):
     _number_regex = None
     if not isinstance(num, (int, float)):
         if _number_regex is None:
-            _number_regex = re.compile(r'(-?\d+.?\d+)')
-        num = clear_text(num).replace(',', '')
+            _number_regex = re.compile('(\-{0,1}\d*\.{0,1}\d+)')
+        num = clear_text(num, keep=False).replace(',', '')
         match = _number_regex.findall(num)
         try:
             num = float(match[index]) if match else 0.0
