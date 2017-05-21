@@ -3,6 +3,7 @@
 # Created by Vin on 2017/5/11
 
 import re
+import json
 import logging
 import urlparse
 import requests
@@ -153,8 +154,7 @@ if __name__ == '__main__':
         def __init__(self, text):
             self.url = 'https://www.avnet.com/shop/us/p/capacitor/capacitor-niobium/avx/noja226m002rwj-3074457345625507635/'
             self.text = text
-
-
+    print json
     with open('product_detail.html', 'r') as fp:
         text = fp.read()
         resp = a(text)

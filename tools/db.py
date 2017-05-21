@@ -94,7 +94,7 @@ class ProxyDB(object):
     """
 
     # TODO 添加异常数据的判断和异常处理
-    class Proxy_SQLite(object):
+    class ProxySQLite(object):
         """数据库操作封装"""
 
         def __init__(self):
@@ -213,7 +213,7 @@ class ProxyDB(object):
     def __init__(self):
         """ 先判断类变量中是否已经保存了 _A 的实例，如果没有则创建一个后返回"""
         if ProxyDB._instance is None:
-            ProxyDB._instance = ProxyDB.Proxy_SQLite()
+            ProxyDB._instance = ProxyDB.ProxySQLite()
 
     def __getattr__(self, attr):
         """ 所有的属性都应该直接从 Singleton._instance 获取"""
