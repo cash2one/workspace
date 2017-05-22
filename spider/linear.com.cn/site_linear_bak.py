@@ -10,30 +10,21 @@ requirements:
 import os
 import re
 import sys
-import copy
-import base64
+import argparse
+import requests
 import random
 import logging
-import hashlib
-import argparse
+import copy
 
-try:
-    from urllib2 import _parse_proxy
-except ImportError:
-    from urllib.request import _parse_proxy
+from string import ascii_lowercase
 # scrapy import
 import scrapy
-import requests
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import DropItem, IgnoreRequest, CloseSpider
+# from scrapy.pipelines.files import FilesPipeline
 from scrapy.http import Request, FormRequest, HtmlResponse
 from scrapy.utils.python import to_bytes
-# six
-from six.moves.urllib.request import getproxies, proxy_bypass
-from six.moves.urllib.parse import unquote
-from six.moves.urllib.parse import urlunparse
-from scrapy.utils.httpobj import urlparse_cached
 
 # lmxl
 import lxml.html
@@ -43,11 +34,11 @@ sys.__APP_LOG__ = False
 try:
     import config
 except ImportError:
-    sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
+    sys.path[0] = os.path.dirname(os.path.dirname(os.path.split(os.path.realpath(__file__))[0]))
+    print sys.path[0]
     import config
-import packages.Util as util
-from packages import hqchip
-from packages import rabbit as queue
+
+from tools import box as util
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +48,7 @@ settings = {
     'COOKIES_ENABLED': True,
     'CONCURRENT_ITEMS': 100,
     'CONCURRENT_REQUESTS': 16,
+    'DOWNLOAD_DELAY': 0.2,
 
     'DEFAULT_REQUEST_HEADERS': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -65,10 +57,11 @@ settings = {
     'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
 
     'DOWNLOADER_MIDDLEWARES': {
-        __name__ + '.IgnoreRquestMiddleware': 1,
-        __name__ + '.UniqueRequestMiddleware': 3,
+        # __name__ + '.IgnoreRequestMiddleware': 1,
+        # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
-        # __name__ + '.ProxyRequestMiddleware': 8,
+        # __name__ + '.RequestsDownloader': 8,
+
     },
     'ITEM_PIPELINES': {
         __name__ + '.MetaItemPipeline': 500,
@@ -82,7 +75,7 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r's\.nl/c\.402442/sc\.2/\.f\?range',  # 翻页
+    r'range=',  # 翻页
     r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
 )
 
@@ -256,9 +249,6 @@ class MetaItemPipeline(object):
 
     def __init__(self, crawler):
         name = 'spider_' + crawler.spider.name + '_item'
-        self.mongo = hqchip.db.mongo[name]
-        self.mongo.ensure_index('key', unique=True)
-        self.mongo.ensure_index('goods_sn', unique=False)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -271,26 +261,19 @@ class MetaItemPipeline(object):
         data = copy.deepcopy(dict(item))
         if not data:
             raise DropItem("item data is empty")
-        data['url'] = to_bytes(item['url'].split('#')[0])
-        data['key'] = hashlib.md5(data['url']).hexdigest()
-        info = self.mongo.find_one({'goods_sn': data['goods_sn']})
-        if not info:
-            self.mongo.insert(data)
-            logger.info('success insert mongodb : %s' % data['key'])
-        else:
-            self.mongo.update({'_id': info['_id']}, {"$set": data})
-            logger.info('success update mongodb : %s' % data['key'])
-        raise DropItem('success process')
+        print("=" * 10 + "process_item" + "BEGIN" + "=" * 10)
+        print(data)
+        print("=" * 10 + "process_item" + "END" + "=" * 10)
 
     def close_spider(self, spider):
-        del self.mongo
+        pass
 
 
 class HQChipSpider(CrawlSpider):
     """linear 蜘蛛"""
     name = 'linear'
     allowed_domains = ['shopping.netsuite.com', 'www.linear.com.cn']
-    start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
+    # start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -318,82 +301,119 @@ class HQChipSpider(CrawlSpider):
         self.limit_num = 10.0
 
     def start_requests(self):
-        for url in self.start_urls:
+        # for url in self.start_urls:
+        #     yield Request(url=url, headers=self.headers)
+        for keyword in ascii_lowercase:
+            url = 'http://shopping.netsuite.com/s.nl?' \
+                  'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
             yield Request(url=url, headers=self.headers)
 
     def parse_resp(self, resp):
-        root = lxml.html.fromstring(resp.text.encode('utf-8'))
-        product_list = root.xpath('//tr[@valign="top"][@height=85]')
-        for product in product_list:
-            data = {}
-            detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
-            # goods_name
-            goods_name = detail[0].text_content() if detail else ''
-            detail_url = util.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
-            # goods_sn
-            goods_sn = self.goods_sn_pattern.search(detail_url)
-            goods_sn = goods_sn.group(1) if goods_sn else ''
-            # stock
-            stock = self.stock_pattern.search(util.cleartext(remove_tags(product_list[0].text_content())))
-            stock = util.intval(stock.group(1)) if stock else 0
-            if goods_name and goods_sn:
-                data = {'goods_name': goods_name, 'goods_sn': goods_sn}
-                yield Request(url=detail_url, headers=self.headers, meta={'item': data, 'stock': copy.copy(stock)}, callback=self.parse_detail)
-            else:
-                yield Request(url=resp.url, headers=self.headers)
+        # root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        # product_list = root.xpath('//tr[@valign="top"][@height=85]')
+        # for product in product_list:
+        #     detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
+        #     detail_url = urlparse.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
+        #     yield Request(url=detail_url, headers=self.headers, callback=self.parse_detail)
+        match = re.search(filter_rules[1], resp.url)
+        if match:
+            yield self.parse_detail(resp)
 
     def parse_detail(self, resp):
-        if 'item' in resp.request.meta:
-            root = lxml.html.fromstring(resp.text.encode('utf-8'))
-            item = copy.deepcopy(resp.request.meta.get('item', None))
-            goods_desc = root.xpath('//td[@class="txt11"]/text()')
-            item['goods_desc'] = util.cleartext(goods_desc[0], '\n', '\t') if goods_desc else ''
-            # tiered
-            tiered = []
-            price_list = root.xpath('//td[@class="texttable"]')
-            for x in range(0, len(price_list), 2):
-                qty = util.intval(price_list[x].text_content())
-                price = util.floatval(price_list[x+1].text_content())
-                if qty and price:
-                    tiered.append([qty, price])
-                else:
-                    tiered = [[0, 0.00]]
-                    break
+        item = GoodsItem()
+        root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        # goods_name
+        goods_name = root.xpath('//td[@class="lnk11b-colorOff"]')
+        item['goods_name'] = util.clear_text(goods_name[0].text) if goods_name else ''
+        # goods_sn
+        match = self.goods_sn_pattern.search(resp.url)
+        item['goods_sn'] = match.group(1) if match else ''
+        if not item['goods_name'] or not item['goods_sn']:
+            logger.debug("无法解析goods_name和goods_sn URL:{url}".format(url=resp.url))
+            if not resp.request.meta.get('retry', None):
+                return Request(url=resp.url, headers=self.headers, meta={'retry': 1})
+            else:
+                return None
+        # goods_desc
+        goods_desc = root.xpath('//td[@class="txt11"]/text()')
+        item['goods_desc'] = goods_desc[0].replace('\n', '').replace('\t', '') if goods_desc else ''
+        # tiered
+        tiered = []
+        price_list = root.xpath('//td[@class="texttable"]')
+        for x in range(0, len(price_list), 2):
+            qty = util.intval(price_list[x].text_content())
+            price = util.floatval(price_list[x + 1].text_content())
+            if qty and price:
+                tiered.append([qty, price])
             else:
                 tiered = [[0, 0.00]]
-                # except:
-                #     logger.debug("解析价格阶梯失败。 URL:{url}".format(url=resp.url))
-                #     return Request(url=resp.url, headers=self.headers, meta={'item': item}, callback=self.parse_detail)
-            item['tiered'] = tiered
-            # stock
-            qty = root.xpath('//input[@id="qty"]/@value')
-            qty = util.intval(qty[0]) if qty else 1
-            stock = resp.request.meta.get('stock')
-            item['stock'] = [stock, qty]
-            # url
-            item['url'] = resp.url
-            # provider_name
-            item['provider_name'] = 'LINEAR'
-            item['provider_url'] = ''
-            # doc
-            item['doc'] = ''
-            # attr
-            item['attr'] = []
-            # rohs
-            item['rohs'] = -1
-            # catlog
-            item['catlog'] = []
-            item['goods_other_name'] = ''
-            # increment
-            item['increment'] = 1
-            # img
-            item['goods_img'] = ''
-            item['goods_thumb'] = ''
-            #
-        else:
-            item = None
-        return item
+                break
+        if not tiered:
+            price = root.xpath('//td[@class="txt18b-red"]/text()')
+            price = util.floatval(price[0]) if price else 0
+            if price:
+                tiered = [1, price]
+            else:
+                tiered = []
 
+        item['tiered'] = tiered if tiered else [[0, 0.00]]
+        # stock
+        qty = root.xpath('//input[@id="qty"]/@value')
+        qty = util.intval(qty[0]) if qty else 1
+        stock = root.xpath('//input[@id="custcol7"]/@value')
+        stock = util.intval(stock[0]) if stock else 0
+        item['stock'] = [stock, qty]
+        # url
+        item['url'] = resp.url
+        # provider_name
+        item['provider_name'] = 'LINEAR'
+        item['provider_url'] = ''
+        # doc catlog
+        item['doc'] = ''
+        item['catlog'] = ''
+        # attr
+        item['attr'] = []
+        # rohs
+        item['rohs'] = -1
+        item['goods_other_name'] = ''
+        # increment
+        item['increment'] = 1
+        # img
+        item['goods_img'] = ''
+        item['goods_thumb'] = ''
+        # 一些信息需要在linear.com.cn获取
+        search_url = 'http://www.linear.com.cn/search/index.php?q={search}'.format(search=item['goods_name'])
+        _headers = self.headers
+        _headers.update({'Host': 'www.linear.com.cn'})
+        return Request(url=search_url, headers=_headers, meta={'item': item}, callback=self.parse_more)
+
+    def parse_more(self, resp):
+        item = resp.request.meta.get('item')
+        root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        if '/product/' in resp.url or '/solutions/' in resp.url:
+            # family_sn
+            match = self.goods_sn_pattern.search(resp.url)
+            item['family_sn'] = match.group(1)
+            # catlog
+            breadcrumb = root.xpath('//p[@class="breadcrumb"]/a')
+            item['catlog'] = []
+            for catlog in breadcrumb:
+                catlog_name = util.clear_text(catlog.text_content())
+                catlog_url = catlog.xpath('./@href')[0]
+                if catlog_name and catlog_url:
+                    item['catlog'].append([catlog_name, catlog_url])
+                else:
+                    item['catlog'] = []
+                    break
+            else:
+                item['family_sn'] = item['family_sn'] if item['family_sn'] else item['goods_name']
+                item['catlog'].append([item['family_sn'], resp.url])
+            # doc
+            doc = root.xpath('//li[@class="pdf"]/a[@class="doclink"]/@title')
+            item['doc'] = "http://cds.linear.com/docs/en/datasheet/{title}".format(title=doc[0]) if doc else ''
+            return item
+        elif 'search.php' in resp.url:
+            return item
     @property
     def closed(self):
         """蜘蛛关闭清理操作"""

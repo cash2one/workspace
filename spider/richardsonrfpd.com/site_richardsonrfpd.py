@@ -71,8 +71,8 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r'Product-End-Category\.aspx\?productCategory=\d+',  # 产品链接
-    r'Product-Details\.aspx\?productId=(\d+)',  # 详情
+    r'Product-End-Category\.aspx\?productCategory=\d+$',  # 产品链接
+    r'Product-Details\.aspx\?productId=(\d+)$',  # 详情
 )
 
 request_list = []
@@ -198,7 +198,6 @@ class HQChipSpider(CrawlSpider):
     allowed_domains = ['www.richardsonrfpd.com']
     start_urls = ['http://www.richardsonrfpd.com/Pages/home.aspx']
 
-
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
         super(HQChipSpider, self).__init__(name, **kwargs)
@@ -210,7 +209,7 @@ class HQChipSpider(CrawlSpider):
         self.rules = (
             Rule(LinkExtractor(allow=filter_rules), callback="parse_resp", follow=True),
         )
-        self.headers = headers = {
+        self.headers = {
             'Host': 'www.richardsonrfpd.com',
             'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
             'Accept-Encoding': 'gzip, deflate, sdch',
@@ -230,17 +229,18 @@ class HQChipSpider(CrawlSpider):
         if goods_sn_match:
             item['goods_sn'] = goods_sn_match.group(1)
         else:
-            logger.debug("解析 goods_sn 失败，重试URL:{url}".format(url=resp.url))
+            logger.debug(u"解析 goods_sn 失败，重试URL:{url}".format(url=resp.url))
             return None
-        # goods_name, provider_name
+        # goods_name, provider_name, goods_desc
         try:
             title = root.xpath('//span[@class="ContentTitle"]')[0]
             item['goods_name'] = util.clear_text(title.text)
             provider_name = title.xpath('a')
+            item['goods_desc'] = title.text_content().strip(' ')
             item['provider_name'] = util.clear_text(provider_name[0].text) if provider_name else ''
             item['provider_url'] = ''
         except IndexError:
-            logger.debug("解析 goods_name 失败，重试URL:{url}".format(url=resp.url))
+            logger.debug(u"解析 goods_name 失败，重试URL:{url}".format(url=resp.url))
             return Request(url=resp.url, headers=self.headers)
 
         # goods_other_name
@@ -248,6 +248,9 @@ class HQChipSpider(CrawlSpider):
         for x in goods_other_name:
             match = re.search('MFG\s*Part\s*Number:\s*([^\s]+)', x.text, re.IGNORECASE)
             item['goods_other_name'] = match.group(1) if match else ''
+
+        # url
+        item['url'] = resp.url
 
         # catlog
         item['catlog'] = []
@@ -260,29 +263,78 @@ class HQChipSpider(CrawlSpider):
             else:
                 break
 
-        # attr
-        item['attr'] = []
-        attr_table = root.xpath('//table[@class="PDTable"]//td')
-        # TODO index error
-        for x in range(0, len(attr_table), 2):
-            attr_key = attr_table[x].text
-            attr_value = attr_table[x + 1].text
-            if attr_key and attr_value:
-                attr_key = attr_key.strip(' ')
-                attr_value = attr_value.strip(' ')
-                item['attr'].append([attr_key, attr_value])
-            else:
-                break
+        # attr and tiered div
+        div = root.xpath('//div[@id="div2"]')
+        # 获取不到div就重试一次
+        if not div and not resp.request.meta.get('retry'):
+            logger.debug(u'网页加载不完整。重试一次 URL:{url}'.format(url=resp.url))
+            return Request(url=resp.url, headers=self.headers, meta={'retry': 1})
 
         # rohs
-        rohs_img = root.xpath('//img[@title="IsROHSCompliant"]')
+        rohs_img = div[0].xpath('.//img[contains(@title, "ROHS")]/@src')
         item['rohs'] = 1 if rohs_img else -1
+
+        # img
+        img_thumb = div[0].xpath('.//table[@align="Right"]//img/@src')
+        item['goods_thumb'] = urlparse.urljoin(resp.url, img_thumb[0]) if img_thumb else ''
+        img_large = div[0].xpath('.//table[@align="Right"]//a[@id="imgFull"]/@href')
+        item['goods_img'] = urlparse.urljoin(resp.url, img_large[0]) if img_large else ''
+
+        # attr
+        item['attr'] = []
+        try:
+            attr_table = div[0].xpath('.//td[@align="left"]//table[@class="PDTable"]//td')
+            for x in range(0, len(attr_table), 2):
+                attr_key = attr_table[x].text
+                attr_value = attr_table[x + 1].text
+                if attr_key:
+                    attr_key = attr_key.strip(' ')
+                    attr_value = attr_value.strip(' ') if attr_value else ''
+                    if attr_value:
+                        item['attr'].append([attr_key, attr_value])
+                else:
+                    break
+        except IndexError:
+            logger.debug(u"无法查找到属性列表 URL:{url}".format(url=resp.url))
+
+        # tiered
+        item['tiered'] = []
+        try:
+            price_table = div[0].xpath('.//td[@align="center"]//table[@class="PDTable"]/tr')
+            stock = []
+            for tr in price_table:
+                td = tr.findall('td')
+                if len(td) == 1:
+                    if "Quote Required" in td[0].text:
+                        item['tiered'] = [[0, 0.00]]
+                        break
+                    else:
+                        stock.append(util.intval(td[0].text))
+                elif len(td) == 2:
+                    qty = util.intval(td[0].text)
+                    price = util.floatval(td[1].text)
+                    if price:
+                        item['tiered'].append([qty, price])
+                else:
+                    continue
+            min_qty = item['tiered'][0][0] if item['tiered'][0][0] else 1
+            # 将最小起订量加入stock
+            stock.insert(1, min_qty)
+            if len(stock) >= 3:
+                print "+_" * 20
+            item['stock'] = stock
+        except IndexError:
+            logger.debug(u"无法正确解析价格列表 URL:{url}".format(url=resp.url))
+            item['stock'] = [0, 1, 0]
+            item['tiered'] = [[0, 0.00]]
 
         # doc
         doc_link = root.xpath('//a[@id="docDown"]/@href')
         item['doc'] = doc_link[0] if doc_link else ''
 
-        #
+        # increment
+        item['increment'] = 1
+
         return item
 
     @property
@@ -290,16 +342,7 @@ class HQChipSpider(CrawlSpider):
         """蜘蛛关闭清理操作"""
 
         def wrap(reason):
-            # del self.queue
-            global request_list
-            global total_data
-            print("=" * 10 + "close_spider" + "BEGIN" + "=" * 10)
-            request_list = [urlparse.unquote(x) for x in request_list]
-            print(request_list)
-            print(len(request_list))
-            print(total_data)
-            print("=" * 10 + "close_spider" + "END" + "=" * 10)
-            pass
+            return
 
         return wrap
 

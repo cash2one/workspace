@@ -70,11 +70,9 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r'/products/[^/]+',  # index page
+    # r'/products/[^/]+',  # index page
     r'/parametric/[^/]+$',  #
-    r'/product/',  # detail
-    r's\.nl/c\.402442/sc\.2/\.f\?range',  # 翻页
-    r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
+    # r'/product/[^/]+$',  # detail
 )
 
 request_list = []
@@ -218,7 +216,6 @@ class HQChipSpider(CrawlSpider):
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
         }
-        self.search_pattern = re.compile(filter_rules[1], re.IGNORECASE)
         self.product_list_pattern = re.compile(r'var\s*prin=\s*(\[[^;]+\]);')
         # 库存查询正则表达式
         self.stock_pattern = re.compile(r'Quantity\s*Available\s*(\d+)', re.IGNORECASE)
@@ -232,12 +229,13 @@ class HQChipSpider(CrawlSpider):
             product_list = json.loads(product_list.group(1)) if product_list else []
             for product in product_list:
                 try:
-                    goods_name = product[0]
+                    goods_name = product[6]
                     product_url = 'http://www.linear.com.cn/product/{goods_name}'.format(goods_name=goods_name)
                 except IndexError:
                     logger.debug("无法解析产品详情链接。URL:{url}".format(url=resp.url))
                     break
-                yield Request(url=product_url, headers=self.headers, meta={'goods_name': goods_name}, callback=self.parse_family)
+                yield Request(url=product_url, headers=self.headers, meta={'goods_name': goods_name},
+                              callback=self.parse_family)
 
     def parse_family(self, resp):
         data = {}
@@ -265,58 +263,71 @@ class HQChipSpider(CrawlSpider):
         doc = root.xpath('//a[@class="doclink"]//@title')
         data['doc'] = "http://cds.linear.com/docs/en/datasheet/{title}".format(title=doc[0]) if doc else ''
 
-        # get series
-        search_url = 'http://shopping.netsuite.com/s.nl?' \
-                     'ext=F&c=402442&sc=2&category=&search={search}'.format(search=family_sn)
-        headers = copy.copy(self.headers)
-        headers.update({'Host': 'shopping.netsuite.com', 'Referer': '',})
-        return Request(url=search_url, headers=headers, meta={'data': copy.deepcopy(data)}, callback=self.parse_stock)
+        # part_list
+        buy_button = root.xpath('//li[@class="buy"]/a/@href')
+        if buy_button:
+            url = urlparse.urljoin(resp.url, buy_button[0])
+            return Request(url=url, headers=self.headers, meta={'data': data}, callback=self.parse_more)
+        else:
+            # get series
+            search_url = 'http://shopping.netsuite.com/s.nl?' \
+                         'ext=F&c=402442&sc=2&category=&search={search}'.format(search=family_sn)
+            headers = copy.copy(self.headers)
+            headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
+            return Request(url=search_url, headers=headers, meta={'data': data}, callback=self.parse_more)
 
-    # def parse_redirect(self, resp):
-    #
-    #     root = lxml.html.fromstring(resp.text.encode('utf-8'))
-    #     part_list = root.xpath('//td[@class="partnumber"]')
-    #     for part in part_list:
-    #         part_number = box.clear_text(part.text_content)
-    #         search_url = 'http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search={part_number}'.format(part_number=part_number)
-    #         yield Request(url=search_url, headers=self.headers, meta=resp.request.meta, callback=self.parse_stock)
+    def parse_more(self, resp):
+        if '/purchase/' in resp.url:
+            data = resp.request.meta.get('data', {})
+            root = lxml.html.fromstring(resp.text.encode('utf-8'))
+            part_list = root.xpath('//td[@class="partnumber"]/text()')
+            for part_num in part_list:
+                part_num = util.clear_text(part_num)
+                # get series
+                search_url = 'http://shopping.netsuite.com/s.nl?' \
+                             'ext=F&c=402442&sc=2&category=&search={search}'.format(search=part_num)
+                headers = copy.copy(self.headers)
+                headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
+                yield Request(url=search_url, headers=headers, meta={'data': data}, callback=self.parse_more)
+        elif 'shopping.netsuite.com' in resp.url:
+            for req in self.parse_stock(resp):
+                yield req
 
     def parse_stock(self, resp):
         root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        headers = copy.copy(self.headers)
+        headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
+        page_list = root.xpath('//td[@class="medtext"]/a/@href')
+        if page_list and 'range=' not in resp.url:
+            for page in page_list:
+                data = resp.request.meta.get('data', {})
+                page_url = urlparse.urljoin(resp.url, page)
+                yield Request(url=page_url, headers=headers, meta={'item': data}, callback=self.parse_stock)
         product_list = root.xpath('//tr[@valign="top"][@height=85]')
         for product in product_list:
             data = resp.request.meta.get('data', {})
             detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
-            # goods_name
-            goods_name = detail[0].text_content() if detail else ''
             detail_url = urlparse.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
-            # goods_sn
-            goods_sn = self.goods_sn_pattern.search(detail_url)
-            goods_sn = goods_sn.group(1) if goods_sn else ''
-            # stock
-            stock = self.stock_pattern.search(util.clear_text(remove_tags(product_list[0].text_content())))
-            stock = util.intval(stock.group(1)) if stock else 0
-            headers = copy.copy(self.headers)
-            headers.update({'Host': 'shopping.netsuite.com', 'Referer': '', })
-            if goods_name and goods_sn:
-                data.update({'goods_name': goods_name, 'goods_sn': goods_sn})
-                yield Request(url=detail_url, headers=headers, meta={'item': data, 'stock': copy.copy(stock)},
-                              callback=self.parse_detail)
-            else:
-                yield Request(url=resp.url, headers=headers)
+            yield Request(url=detail_url, headers=headers, meta={'item': data}, callback=self.parse_detail)
 
     def parse_detail(self, resp):
         if 'item' in resp.request.meta:
             root = lxml.html.fromstring(resp.text.encode('utf-8'))
-            item = copy.deepcopy(resp.request.meta.get('item', None))
+            item = resp.request.meta.get('item')
             goods_desc = root.xpath('//td[@class="txt11"]/text()')
             item['goods_desc'] = goods_desc[0].replace('\n', '').replace('\t', '') if goods_desc else ''
+            # goods_name
+            goods_name = root.xpath('//td[@class="lnk11b-colorOff"]')
+            item['goods_name'] = util.clear_text(goods_name[0].text) if goods_name else ''
+            # goods_sn
+            match = self.goods_sn_pattern.search(resp.url)
+            item['goods_sn'] = match.group(1) if match else ''
             # tiered
             tiered = []
             price_list = root.xpath('//td[@class="texttable"]')
             for x in range(0, len(price_list), 2):
                 qty = util.intval(price_list[x].text_content())
-                price = util.floatval(price_list[x+1].text_content())
+                price = util.floatval(price_list[x + 1].text_content())
                 if qty and price:
                     tiered.append([qty, price])
                 else:
@@ -334,7 +345,8 @@ class HQChipSpider(CrawlSpider):
             # stock
             qty = root.xpath('//input[@id="qty"]/@value')
             qty = util.intval(qty[0]) if qty else 1
-            stock = resp.request.meta.get('stock')
+            stock = root.xpath('//input[@id="custcol7"]/@value')
+            stock = util.intval(stock[0]) if stock else 0
             item['stock'] = [stock, qty]
             # url
             item['url'] = resp.url
@@ -355,7 +367,6 @@ class HQChipSpider(CrawlSpider):
         else:
             item = None
         return item
-
 
     @property
     def closed(self):
