@@ -11,7 +11,7 @@ import os
 import re
 import sys
 import argparse
-import requests
+import urlparse
 import random
 import logging
 import copy
@@ -22,7 +22,6 @@ import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import DropItem, IgnoreRequest, CloseSpider
-# from scrapy.pipelines.files import FilesPipeline
 from scrapy.http import Request, FormRequest, HtmlResponse
 from scrapy.utils.python import to_bytes
 
@@ -78,6 +77,8 @@ filter_rules = (
     r'range=',  # 翻页
     r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
 )
+
+cache_request_data = {}
 
 
 class RandomUserAgentMiddleware(object):
@@ -242,6 +243,7 @@ class GoodsItem(scrapy.Item):
     rohs = scrapy.Field()  # rohs
     catlog = scrapy.Field()  # 分类
     goods_other_name = scrapy.Field()
+    family_sn = scrapy.Field()
 
 
 class MetaItemPipeline(object):
@@ -273,7 +275,8 @@ class HQChipSpider(CrawlSpider):
     """linear 蜘蛛"""
     name = 'linear'
     allowed_domains = ['shopping.netsuite.com', 'www.linear.com.cn']
-    # start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
+
+    start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -292,21 +295,22 @@ class HQChipSpider(CrawlSpider):
             'Accept-Encoding': 'gzip, deflate, sdch',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
-            }
+        }
 
         # 库存查询正则表达式
+        self.family_sn_pattern = re.compile(r'product/([^/]+)')
         self.stock_pattern = re.compile(r'Quantity\s*Available\s*(\d+)', re.IGNORECASE)
         self.goods_sn_pattern = re.compile(r'/id\.(\d+)/')
         # 每一页的商品数量
         self.limit_num = 10.0
 
     def start_requests(self):
-        # for url in self.start_urls:
-        #     yield Request(url=url, headers=self.headers)
-        for keyword in ascii_lowercase:
-            url = 'http://shopping.netsuite.com/s.nl?' \
-                  'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
+        for url in self.start_urls:
             yield Request(url=url, headers=self.headers)
+        # for keyword in ascii_lowercase:
+        #     url = 'http://shopping.netsuite.com/s.nl?' \
+        #           'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
+        #     yield Request(url=url, headers=self.headers)
 
     def parse_resp(self, resp):
         # root = lxml.html.fromstring(resp.text.encode('utf-8'))
@@ -385,35 +389,83 @@ class HQChipSpider(CrawlSpider):
         search_url = 'http://www.linear.com.cn/search/index.php?q={search}'.format(search=item['goods_name'])
         _headers = self.headers
         _headers.update({'Host': 'www.linear.com.cn'})
-        return Request(url=search_url, headers=_headers, meta={'item': item}, callback=self.parse_more)
+        return Request(url=search_url, headers=_headers,
+                       meta={'item': item, 'dont_redirect': True, 'handle_httpstatus_list': [302]},
+                       callback=self.manual_handle_of_redirects)
+
+    def manual_handle_of_redirects(self, resp):
+        item = resp.request.meta.get('item')
+        _headers = self.headers
+        _headers.update({'Host': 'www.linear.com.cn'})
+        location = urlparse.urljoin(resp.url, resp.headers.get('Location'))
+        if 'product/' in location or 'solutions/' in location:
+            return Request(url=location, headers=_headers, meta={'item': item}, callback=self.parse_more)
+        elif 'search.php' in location:
+            return Request(url=location, headers=_headers, meta={'item': item}, callback=self.filter_search_result)
+
+    def filter_search_result(self, resp):
+        item = resp.request.meta.get('item')
+        root = lxml.html.fromstring(resp.text.encode('utf-8'))
+        search_result = root.xpath('//a[@class="search-keymatches-link"]/@href')
+        if not search_result:
+            item['catlog'] = []
+            item['doc'] = ''
+            item['family_sn'] = item['goods_name']
+            return item
+        match_num = 0
+        real_link = ''
+        for link in search_result:
+            match_last_num = match_num
+            family_sn = link.split('/')[-1]
+            for x in family_sn:
+                if x in item['goods_name']:
+                    match_num += 1
+            if match_num > match_last_num:
+                real_link = link
+            match_num = 0
+        if real_link in cache_request_data:
+            print "=" * 50
+            item.update(cache_request_data[real_link])
+            return item
+        _headers = self.headers
+        _headers.update({'Host': 'www.linear.com.cn'})
+        return Request(url=real_link, headers=_headers, meta={'item': item}, callback=self.parse_more)
 
     def parse_more(self, resp):
         item = resp.request.meta.get('item')
         root = lxml.html.fromstring(resp.text.encode('utf-8'))
-        if '/product/' in resp.url or '/solutions/' in resp.url:
-            # family_sn
-            match = self.goods_sn_pattern.search(resp.url)
-            item['family_sn'] = match.group(1)
-            # catlog
-            breadcrumb = root.xpath('//p[@class="breadcrumb"]/a')
-            item['catlog'] = []
-            for catlog in breadcrumb:
-                catlog_name = util.clear_text(catlog.text_content())
-                catlog_url = catlog.xpath('./@href')[0]
-                if catlog_name and catlog_url:
-                    item['catlog'].append([catlog_name, catlog_url])
-                else:
-                    item['catlog'] = []
-                    break
+        data = {}
+        # family_sn
+        match = self.family_sn_pattern.search(resp.url)
+        data['family_sn'] = match.group(1) if match else item['goods_name']
+        # catlog
+        breadcrumb = root.xpath('//p[@class="breadcrumb"]/a')
+        data['catlog'] = []
+        for catlog in breadcrumb:
+            catlog_name = util.clear_text(catlog.text_content())
+            catlog_url = urlparse.urljoin(resp.url, catlog.xpath('./@href')[0])
+            if catlog_name and catlog_url:
+                data['catlog'].append([catlog_name, catlog_url])
             else:
-                item['family_sn'] = item['family_sn'] if item['family_sn'] else item['goods_name']
-                item['catlog'].append([item['family_sn'], resp.url])
-            # doc
-            doc = root.xpath('//li[@class="pdf"]/a[@class="doclink"]/@title')
-            item['doc'] = "http://cds.linear.com/docs/en/datasheet/{title}".format(title=doc[0]) if doc else ''
-            return item
-        elif 'search.php' in resp.url:
-            return item
+                data['catlog'] = []
+                break
+        else:
+            data['catlog'].append([data['family_sn'], resp.url])
+        # doc
+        doc = root.xpath('//li[@class="pdf"]/a[@class="doclink"]/@title')
+        data['doc'] = "http://cds.linear.com/docs/en/datasheet/{title}".format(title=doc[0]) if doc else ''
+
+        item.update(data)
+
+        # 添加缓存
+
+        if len(cache_request_data) > 50:
+            cache_request_data.popitem()
+            cache_request_data.update({resp.url: data})
+        else:
+            cache_request_data.update({resp.url: data})
+        return item
+
     @property
     def closed(self):
         """蜘蛛关闭清理操作"""

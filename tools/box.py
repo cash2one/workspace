@@ -74,6 +74,15 @@ def clear_text(text, keep=False):
     return Format.clear_text(text, keep=keep)
 
 
+# 兼容工作环境
+def cleartext(text, *args, **kwargs):
+    return Format.text_filter(text, *args, **kwargs)
+
+
+def urljoin(base, url, allow_fragments=True):
+    return urlparse.urljoin(base, url, allow_fragments=True)
+
+
 """
 爬虫工具
 """
