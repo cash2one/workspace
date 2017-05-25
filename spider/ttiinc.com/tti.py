@@ -48,3 +48,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+# process_url = "https://www.ttiinc.com/bin/services/processData?jsonPayloadAvailable=true&osgiService=partsearchpost"
+
+# 搜索翻页 默认25个一页
+# {"searchTerms":"lm358","pageNum":"1","inStock":"","rohsCompliant":"","leadFree":"","containsLead":""}
+# 搜索不翻页
+# {"searchTerms":"LM358","inStock":"","rohsCompliant":"","leadFree":"","containsLead":""}

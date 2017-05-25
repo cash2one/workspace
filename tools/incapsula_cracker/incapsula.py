@@ -47,14 +47,14 @@ setting = {
         },
         'www.ttiinc.com': {
             'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
-            'ns': '1',
+            'ns': '2',
         },
     }
 }
 
 # default
 logger = logging.getLogger('incapsula')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 fmt = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
 s_handler = logging.StreamHandler()
 s_handler.setFormatter(fmt)
@@ -129,15 +129,15 @@ def load_plugin_extensions(plugins):
             extension = filename.split('.')[-1]
             if extension not in _extensions:
                 _extensions.append(extension)
-    return [urllib.quote('plugin_ext={}'.format(x)) for x in _extensions]
+    return [urllib.quote('plugin_ext={0}'.format(x)) for x in _extensions]
 
 
 def load_plugin(plugins):
     for k, v in plugins.items():
-        logger.debug('calculating plugin key={}'.format(k))
+        logger.debug('calculating plugin key={0}'.format(k))
         if '.' in v.get('filename', ''):
             filename, extension = v['filename'].split('.')
-            return urllib.quote('plugin={}'.format(extension))
+            return urllib.quote('plugin={0}'.format(extension))
 
 
 def _get_session_cookies(sess):
@@ -226,7 +226,7 @@ def get_resources(code, url):
     return [scheme + '://' + host + r for r in resources]
 
 
-def _load_encapsula_resource(sess, response):
+def _load_encapsula_resource(sess, response, **kwargs):
     timing = []
     start = now_in_seconds()
     timing.append('s:{0}'.format(now_in_seconds() - start))
@@ -234,25 +234,28 @@ def _load_encapsula_resource(sess, response):
     code = get_obfuscated_code(response.content)
     parsed = parse_obfuscated_code(code)
     # print parsed
-    resources_list = get_resources(parsed, response.url)
+    resources_list = list(set(get_resources(parsed, response.url)))
     for resources in resources_list:
         time.sleep(0.02)
         if '&d=' in resources:
             timing.append('c:{0}'.format(now_in_seconds() - start))
             time.sleep(0.02)  # simulate page refresh time
             timing.append('r:{0}'.format(now_in_seconds() - start))
-            sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))))
-        elif '&e=' in resources:
-            sess.get(resources + str(random.random()))
+            sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))), **kwargs)
+        elif "&e=":
+            # /_Incapsula_Resource?SWKMTFSR=1&e=\d{19} 是图片资源
+            if 'headers' in kwargs:
+                kwargs['headers'].update({'Accept': 'image/webp,image/*,*/*;q=0.8'})
+            sess.get(resources + str(random.random()) + str(random.random())[-5:], **kwargs)
         else:
-            sess.get(resources)
+            sess.get(resources, **kwargs)
             # resource1, resource2 = get_resources(parsed, response.url)[1:]
             # sess.get(resource1)
             #
-            # timing.append('c:{}'.format(now_in_seconds() - start))
+            # timing.append('c:{0}'.format(now_in_seconds() - start))
             # time.sleep(0.02)  # simulate page refresh time
-            # timing.append('r:{}'.format(now_in_seconds() - start))
-            # sess.get(resource2 + urllib.quote('complete ({})'.format(",".join(timing))))
+            # timing.append('r:{0}'.format(now_in_seconds() - start))
+            # sess.get(resource2 + urllib.quote('complete ({0})'.format(",".join(timing))))
 
 
 def incapsula_parse(sess, response, **kwargs):
@@ -261,31 +264,48 @@ def incapsula_parse(sess, response, **kwargs):
     if not meta:  # if the page is not blocked, then just return the original request.
         return response
     set_incap_cookie(sess, response)
+    # 保存得到的cookies
+    cookies_bak = sess.cookies
 
     scheme, host = urlparse.urlsplit(response.url)[:2]
     logger.debug('scheme={0} host={1}'.format(scheme, host))
+
+    # 设置cookies之后，删除传递进来的cookie
+    if 'cookies' in kwargs:
+        kwargs.pop('cookies')
+
+    # 使用传递的头部
+    if 'headers' in kwargs:
+        kwargs['headers'].update({'Referer': response.url})
+    else:
+        kwargs['headers'] = {'Referer': response.url}
+
+    # 如果是post请求，先保存data或者json
+    form_data, json_data = None, None
+    if 'data' in kwargs or 'json' in kwargs:
+        form_data = kwargs.pop('data', None)
+        json_data = kwargs.pop('json', None)
+
     # 可能会直接返回带有已编码的js，不需要在请求end points里的url
     if get_obfuscated_code(response.content):
-        _load_encapsula_resource(sess, response)
-    # Incapsula告知Request unsuccessful 或者 无法直接获取到已编码的js
+        _load_encapsula_resource(sess, response, **kwargs)
+
     elif host in endpoints:
         params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
         url_params = urllib.urlencode(params)
         logger.debug('url_params={0}'.format(url_params))
-        r = sess.get('{scheme}://{host}/_Incapsula_Resource?{url_params}'.format(scheme=scheme, host=host,
-                                                                                 url_params=url_params),
-                     headers={'Referer': response.url})
-        _load_encapsula_resource(sess, r)
+        r = sess.get('{scheme}://{host}/_Incapsula_Resource?'
+                     '{url_params}'.format(scheme=scheme, host=host, url_params=url_params), **kwargs)
+        sess.cookies = cookies_bak
+        _load_encapsula_resource(sess, r, **kwargs)
     else:
-        sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host,
-                                                                                   rdm=random.random()),
-                 headers={'Referer': response.url})
-        _load_encapsula_resource(sess, response)
+        r = sess.get('{scheme}://{host}/_Incapsula_Resource?'
+                     'SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()), **kwargs)
+        sess.cookies = cookies_bak
+        _load_encapsula_resource(sess, r, **kwargs)
 
-    if 'data' in kwargs or 'json' in kwargs:
-        data = kwargs.pop('data', None)
-        json = kwargs.pop('json', None)
-        return sess.post(response.url, data=data, json=json, **kwargs)
+    if form_data or json_data:
+        return sess.post(response.url, data=form_data, json=json_data, **kwargs)
 
     return sess.get(response.url, **kwargs)
 
@@ -378,10 +398,8 @@ class IncapSession(object):
         返回值为 response 对象
         """
         kwargs.setdefault('allow_redirects', True)
-        if 'headers' in kwargs:
-            self.session.headers.update(kwargs.pop('headers'))
-        else:
-            self.session.headers.update({'User-Agent': random.choice(USER_AGENT_LIST)})
+        if 'headers' not in kwargs:
+            kwargs['headers'] = {'User-Agent': random.choice(USER_AGENT_LIST)}
         r = self.session.request('GET', url, **kwargs)
         return incapsula_parse(self.session, r, **kwargs)
 
@@ -389,10 +407,8 @@ class IncapSession(object):
         """
         返回值为 response 对象
         """
-        if 'headers' in kwargs:
-            self.session.headers.update(kwargs.pop('headers'))
-        else:
-            self.session.headers.update({'User-Agent': random.choice(USER_AGENT_LIST)})
+        if 'headers' not in kwargs:
+            kwargs['headers'] = {'User-Agent': random.choice(USER_AGENT_LIST)}
         r = self.session.request('POST', url, data=data, json=json, **kwargs)
         return incapsula_parse(self.session, r, data=data, json=json, **kwargs)
 
