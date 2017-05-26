@@ -5,13 +5,12 @@
 import os
 import re
 import sys
-import argparse
-import urlparse
+import copy
+import math
 import random
 import logging
+import argparse
 import requests
-import copy
-from bs4 import BeautifulSoup
 
 # scrapy import
 import scrapy
@@ -216,10 +215,68 @@ class HQChipSpider(CrawlSpider):
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
         }
+        self.limit = 25.0
 
     def parse_resp(self, resp):
         if 'Product-Details' in resp.url:
             yield self.parse_detail(resp)
+        elif 'productCategory=' in resp.url:
+            html = resp.text.encode('utf-8')
+            root = lxml.html.fromstring(html)
+            # 获取页数
+            search_result = root.xpath('//span[@class="SearchResult"]/text()')
+            count = util.intval(search_result[0]) if search_result else 0
+            pages = int(math.ceil(count / self.limit))
+            if pages <= 1:
+                yield None
+                return
+            if resp.request.meta.get('next_page', False):
+                links = LinkExtractor(allow=filter_rules).extract_links(resp)
+                for link in links:
+                    yield Request(url=link.url, headers=self.headers, callback=self.parse_resp)
+            form_data = {}
+            # 获取翻页参数 post_back
+            page_list = root.xpath('//tr[@class="Paging"]//a/@href')
+            post_back_pattern = re.compile('\'([^\']+)\',\'([^\']+)\'')
+
+            match = post_back_pattern.search(page_list[0]) if page_list else None
+            post_data = match.group(1)
+
+            # 获取事件参数 ctl00$scr
+            match = re.search(r'(ctl00[^\"\',]+outerPanelPanel)', html)
+            src = match.group() + '|' if match else ''
+
+            # 获取事件参数 __VIEWSTATE
+            field1 = root.xpath('//input[@id="__VIEWSTATE"]/@value')
+            form_data['__VIEWSTATE'] = field1[0] if field1 else ''
+
+            # 获取事件参数 __VIEWSTATEGENERATOR
+            field2 = root.xpath('//input[@id="__VIEWSTATEGENERATOR"]/@value')
+            form_data['__VIEWSTATEGENERATOR'] = field2[0] if field2 else ''
+
+            # 获取事件参数 __VIEWSTATEENCRYPTED 没有这个参数请求会出错
+            form_data['__VIEWSTATEENCRYPTED'] = ''
+
+            # 获取事件参数 __EVENTVALIDATION
+            field3 = root.xpath('//input[@id="__EVENTVALIDATION"]/@value')
+            form_data['__EVENTVALIDATION'] = field3[0] if field3 else ''
+
+            # 构造翻页表单
+            for x in xrange(2, pages):
+                form_data.update({
+                    'ctl00$scr': src + post_data,
+                    '__EVENTTARGET': post_data,
+                    '__EVENTARGUMENT': 'Page${page_num}'.format(page_num=x),
+                })
+                _headers = self.headers
+                _headers.update({
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-MicrosoftAjax': 'Delta=true',
+                    'Accept': '*/*'
+                })
+                yield FormRequest(url=resp.url, headers=self.headers,
+                                  formdata=copy.deepcopy(form_data), meta={'next_page': True, 'page': x},
+                                  callback=self.parse_resp)
 
     def parse_detail(self, resp):
         item = GoodsItem()
@@ -234,10 +291,10 @@ class HQChipSpider(CrawlSpider):
         # goods_name, provider_name, goods_desc
         try:
             title = root.xpath('//span[@class="ContentTitle"]')[0]
-            item['goods_name'] = util.clear_text(title.text)
+            item['goods_name'] = util.cleartext(title.text)
             provider_name = title.xpath('a')
             item['goods_desc'] = title.text_content().strip(' ')
-            item['provider_name'] = util.clear_text(provider_name[0].text) if provider_name else ''
+            item['provider_name'] = util.cleartext(provider_name[0].text) if provider_name else ''
             item['provider_url'] = ''
         except IndexError:
             logger.debug(u"解析 goods_name 失败，重试URL:{url}".format(url=resp.url))
@@ -256,12 +313,12 @@ class HQChipSpider(CrawlSpider):
         item['catlog'] = []
         catlog_div = root.xpath('//div[@class="breadcrumb"]//a')
         for catlog in catlog_div:
-            catlog_name = util.clear_text(catlog.text)
-            catlog_url = urlparse.urljoin(resp.url, catlog.xpath('./@href')[0])
+            catlog_name = util.cleartext(catlog.text)
+            catlog_url = util.urljoin(resp.url, catlog.xpath('./@href')[0])
             if catlog_name and catlog_url:
+                if '/Pages/Home.aspx' in catlog_url or 'productCategory=All' in catlog_url:
+                    continue
                 item['catlog'].append([catlog_name, catlog_url])
-            else:
-                break
 
         # attr and tiered div
         div = root.xpath('//div[@id="div2"]')
@@ -276,9 +333,9 @@ class HQChipSpider(CrawlSpider):
 
         # img
         img_thumb = div[0].xpath('.//table[@align="Right"]//img/@src')
-        item['goods_thumb'] = urlparse.urljoin(resp.url, img_thumb[0]) if img_thumb else ''
+        item['goods_thumb'] = util.urljoin(resp.url, img_thumb[0]) if img_thumb else ''
         img_large = div[0].xpath('.//table[@align="Right"]//a[@id="imgFull"]/@href')
-        item['goods_img'] = urlparse.urljoin(resp.url, img_large[0]) if img_large else ''
+        item['goods_img'] = util.urljoin(resp.url, img_large[0]) if img_large else ''
 
         # attr
         item['attr'] = []
@@ -317,11 +374,12 @@ class HQChipSpider(CrawlSpider):
                         item['tiered'].append([qty, price])
                 else:
                     continue
+            # 可能 Manufacturer Stock 并没有显示在表格中，将其设置为0，并添加到stock中
+            if len(stock) == 1:
+                stock.append(0)
+            # 从价格阶梯中获取最小起订量加入stock
             min_qty = item['tiered'][0][0] if item['tiered'][0][0] else 1
-            # 将最小起订量加入stock
             stock.insert(1, min_qty)
-            if len(stock) >= 3:
-                print "+_" * 20
             item['stock'] = stock
         except IndexError:
             logger.debug(u"无法正确解析价格列表 URL:{url}".format(url=resp.url))
@@ -342,7 +400,8 @@ class HQChipSpider(CrawlSpider):
         """蜘蛛关闭清理操作"""
 
         def wrap(reason):
-            return
+            # del self.queue
+            pass
 
         return wrap
 
