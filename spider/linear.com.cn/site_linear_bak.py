@@ -77,7 +77,7 @@ settings = {
 # 过滤规则
 filter_rules = (
     # r'search=',
-    # r'range=',  # 翻页
+    r'range=',  # 翻页
     r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
 )
 
@@ -338,6 +338,12 @@ class HQChipSpider(CrawlSpider):
         match = self.detail_pattern.search(resp.url)
         if match:
             yield self.parse_detail(resp)
+        elif 'range' in resp.url:
+            root = lxml.html.fromstring(resp.text.encode('utf-8'))
+            links = root.xpath('//a[@class="lnk12b-blackOff"]/@href')
+            links = ['http://shopping.netsuite.com' + x for x in links]
+            for link in links:
+                yield Request(url=link, headers=self.headers, callback=self.parse_resp)
         elif 'range' not in resp.url:
             root = lxml.html.fromstring(resp.text.encode('utf-8'))
             count = root.xpath('//td[@class="medtext"]')
