@@ -15,6 +15,7 @@ import urlparse
 import random
 import logging
 import copy
+import math
 
 from string import ascii_lowercase
 # scrapy import
@@ -38,6 +39,7 @@ except ImportError:
     import config
 
 from tools import box as util
+from tools import Format
 
 logger = logging.getLogger(__name__)
 
@@ -74,11 +76,14 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r'range=',  # 翻页
+    # r'search=',
+    # r'range=',  # 翻页
     r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
 )
 
 cache_request_data = {}
+request_list = []
+total_data = 0
 
 
 class RandomUserAgentMiddleware(object):
@@ -276,7 +281,8 @@ class HQChipSpider(CrawlSpider):
     name = 'linear'
     allowed_domains = ['shopping.netsuite.com', 'www.linear.com.cn']
 
-    start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
+    # start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
+    start_urls = ['http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search=lt100']
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -298,6 +304,7 @@ class HQChipSpider(CrawlSpider):
         }
 
         # 库存查询正则表达式
+        self.detail_pattern = re.compile(r's\.nl/c\.402442/it\.A/id\.\d+/\.f')
         self.family_sn_pattern = re.compile(r'product/([^/]+)')
         self.stock_pattern = re.compile(r'Quantity\s*Available\s*(\d+)', re.IGNORECASE)
         self.goods_sn_pattern = re.compile(r'/id\.(\d+)/')
@@ -306,11 +313,15 @@ class HQChipSpider(CrawlSpider):
 
     def start_requests(self):
         for url in self.start_urls:
+            # yield Request(url=url, headers=self.headers)
             yield Request(url=url, headers=self.headers)
         # for keyword in ascii_lowercase:
         #     url = 'http://shopping.netsuite.com/s.nl?' \
         #           'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
         #     yield Request(url=url, headers=self.headers)
+
+    def parse_start_url(self, resp):
+        return self.parse_resp(resp)
 
     def parse_resp(self, resp):
         # root = lxml.html.fromstring(resp.text.encode('utf-8'))
@@ -319,9 +330,32 @@ class HQChipSpider(CrawlSpider):
         #     detail = product.xpath('.//a[@class="lnk12b-blackOff"]')
         #     detail_url = urlparse.urljoin(resp.url, detail[0].xpath('./@href')[0]) if detail else ''
         #     yield Request(url=detail_url, headers=self.headers, callback=self.parse_detail)
-        match = re.search(filter_rules[1], resp.url)
+        # match = re.search(filter_rules[1], resp.url)
+        # if match:
+        #     yield self.parse_detail(resp)
+        global request_list
+        request_list.append(resp.url)
+        match = self.detail_pattern.search(resp.url)
         if match:
             yield self.parse_detail(resp)
+        elif 'range' not in resp.url:
+            root = lxml.html.fromstring(resp.text.encode('utf-8'))
+            count = root.xpath('//td[@class="medtext"]')
+            count = Format.number_format(count[0].text, places=0, index=999, auto=True) if count else 0
+            page_num = int(math.ceil(count / 10.0))
+            if page_num <= 1:
+                logger.debug('URL:{url}'.format(url=resp.url))
+                yield None
+                return
+            for x in xrange(1, page_num):
+                # page_url = 'http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f?' \
+                #            'range={start}%2C{end}%2C{total}'.format(start=x * 10 + 1, end=(x + 1) * 10, total=count)
+                end = (x + 1) * 10
+                page_url = 'http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f?' \
+                           'search=lt100&range={start}%2C{end}%2C{total}'.format(start=x * 10 + 1,
+                                                                                 end=end if end <= count else count,
+                                                                                 total=count)
+                yield Request(url=page_url, headers=self.headers)
 
     def parse_detail(self, resp):
         item = GoodsItem()
@@ -472,6 +506,14 @@ class HQChipSpider(CrawlSpider):
 
         def wrap(reason):
             # del self.queue
+            global request_list
+            global total_data
+            print("=" * 10 + "close_spider" + "BEGIN" + "=" * 10)
+            request_list = [urlparse.unquote(x) for x in request_list]
+            print(request_list)
+            print(len(request_list))
+            print(total_data)
+            print("=" * 10 + "close_spider" + "END" + "=" * 10)
             pass
 
         return wrap
@@ -554,3 +596,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    import subprocess
+    subprocess.call(['python', r'E:\workspace\spider\linear.com.cn\site_linear_bak.py', '-r'])
