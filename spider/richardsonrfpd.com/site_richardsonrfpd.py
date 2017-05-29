@@ -9,6 +9,7 @@ import copy
 import math
 import random
 import logging
+import urlparse
 import argparse
 import requests
 
@@ -70,7 +71,8 @@ settings = {
 }
 # 过滤规则
 filter_rules = (
-    r'Product-End-Category\.aspx\?productCategory=\d+$',  # 产品链接
+    r'Product-End-Category\.aspx\?productCategory=10366$',  # 产品链接
+    # r'Product-End-Category\.aspx\?productCategory=\d+$',  # 产品链接
     r'Product-Details\.aspx\?productId=(\d+)$',  # 详情
 )
 
@@ -195,7 +197,8 @@ class HQChipSpider(CrawlSpider):
     """richardsonrfpd.com 蜘蛛"""
     name = 'richardsonrfpd'
     allowed_domains = ['www.richardsonrfpd.com']
-    start_urls = ['http://www.richardsonrfpd.com/Pages/home.aspx']
+    # start_urls = ['http://www.richardsonrfpd.com/Pages/home.aspx']
+    start_urls = ['http://www.richardsonrfpd.com/Pages/Product-End-Category.aspx?productCategory=10366']
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -218,6 +221,8 @@ class HQChipSpider(CrawlSpider):
         self.limit = 25.0
 
     def parse_resp(self, resp):
+        global request_list
+        request_list.append(resp.url)
         if 'Product-Details' in resp.url:
             yield self.parse_detail(resp)
         elif 'productCategory=' in resp.url:
@@ -227,13 +232,17 @@ class HQChipSpider(CrawlSpider):
             search_result = root.xpath('//span[@class="SearchResult"]/text()')
             count = util.intval(search_result[0]) if search_result else 0
             pages = int(math.ceil(count / self.limit))
+            print "O*O" * 20
+            print pages
             if pages <= 1:
                 yield None
                 return
-            if resp.request.meta.get('next_page', False):
-                links = LinkExtractor(allow=filter_rules).extract_links(resp)
-                for link in links:
-                    yield Request(url=link.url, headers=self.headers, callback=self.parse_resp)
+            # if resp.request.meta.get('next_page', False):
+            #     links = LinkExtractor(allow=filter_rules).extract_links(resp)
+            #     print "&%" * 20
+            #     print links
+            #     for link in links:
+            #         yield Request(url=link.url, headers=self.headers, callback=self.parse_resp)
             form_data = {}
             # 获取翻页参数 post_back
             page_list = root.xpath('//tr[@class="Paging"]//a/@href')
@@ -262,7 +271,7 @@ class HQChipSpider(CrawlSpider):
             form_data['__EVENTVALIDATION'] = field3[0] if field3 else ''
 
             # 构造翻页表单
-            for x in xrange(2, pages):
+            for x in xrange(2, pages+1):
                 form_data.update({
                     'ctl00$scr': src + post_data,
                     '__EVENTTARGET': post_data,
@@ -274,9 +283,12 @@ class HQChipSpider(CrawlSpider):
                     'X-MicrosoftAjax': 'Delta=true',
                     'Accept': '*/*'
                 })
+                # yield FormRequest(url=resp.url, headers=self.headers,
+                #                   formdata=copy.deepcopy(form_data), meta={'next_page': True, 'page': x},
+                #                   callback=self.parse_resp)
                 yield FormRequest(url=resp.url, headers=self.headers,
-                                  formdata=copy.deepcopy(form_data), meta={'next_page': True, 'page': x},
-                                  callback=self.parse_resp)
+                                  formdata=copy.deepcopy(form_data), meta={'next_page': True, 'page': x}
+                                  )
 
     def parse_detail(self, resp):
         item = GoodsItem()
@@ -401,6 +413,14 @@ class HQChipSpider(CrawlSpider):
 
         def wrap(reason):
             # del self.queue
+            global request_list
+            global total_data
+            print("=" * 10 + "close_spider" + "BEGIN" + "=" * 10)
+            request_list = [urlparse.unquote(x) for x in request_list]
+            print(request_list)
+            print(len(request_list))
+            print(total_data)
+            print("=" * 10 + "close_spider" + "END" + "=" * 10)
             pass
 
         return wrap
