@@ -77,7 +77,7 @@ settings = {
 # 过滤规则
 filter_rules = (
     # r'search=',
-    # r'range=',  # 翻页
+    r'range=',  # 翻页
     r's\.nl/c\.402442/it\.A/id\.\d+/\.f',  # 详情
 )
 
@@ -281,8 +281,9 @@ class HQChipSpider(CrawlSpider):
     name = 'linear'
     allowed_domains = ['shopping.netsuite.com', 'www.linear.com.cn']
 
-    # start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
-    start_urls = ['http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search=lt100']
+    start_urls = ['http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f']
+
+    # start_urls = ['http://shopping.netsuite.com/s.nl?ext=F&c=402442&sc=2&category=&search=lt100']
 
     def __init__(self, name=None, **kwargs):
         self._init_args(**kwargs)
@@ -315,10 +316,10 @@ class HQChipSpider(CrawlSpider):
         for url in self.start_urls:
             # yield Request(url=url, headers=self.headers)
             yield Request(url=url, headers=self.headers)
-        # for keyword in ascii_lowercase:
-        #     url = 'http://shopping.netsuite.com/s.nl?' \
-        #           'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
-        #     yield Request(url=url, headers=self.headers)
+            # for keyword in ascii_lowercase:
+            #     url = 'http://shopping.netsuite.com/s.nl?' \
+            #           'ext=F&c=402442&sc=2&category=&search={search}'.format(search=keyword)
+            #     yield Request(url=url, headers=self.headers)
 
     def parse_start_url(self, resp):
         return self.parse_resp(resp)
@@ -333,29 +334,25 @@ class HQChipSpider(CrawlSpider):
         # match = re.search(filter_rules[1], resp.url)
         # if match:
         #     yield self.parse_detail(resp)
-        global request_list
-        request_list.append(resp.url)
+
+        # global request_list
+        # request_list.append(resp.url)
         match = self.detail_pattern.search(resp.url)
         if match:
-            yield self.parse_detail(resp)
-        elif 'range' not in resp.url:
+            print resp.url
+            with open(os.path.join(config.APP_ROOT, 'logs', 'match_goods.html'), 'a') as fp:
+                fp.write(resp.url + '\n')
+            # yield self.parse_detail(resp)
+        elif 'range' in resp.url:
             root = lxml.html.fromstring(resp.text.encode('utf-8'))
-            count = root.xpath('//td[@class="medtext"]')
-            count = Format.number_format(count[0].text, places=0, index=999, auto=True) if count else 0
-            page_num = int(math.ceil(count / 10.0))
-            if page_num <= 1:
-                logger.debug('URL:{url}'.format(url=resp.url))
-                yield None
-                return
-            for x in xrange(1, page_num):
-                # page_url = 'http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f?' \
-                #            'range={start}%2C{end}%2C{total}'.format(start=x * 10 + 1, end=(x + 1) * 10, total=count)
-                end = (x + 1) * 10
-                page_url = 'http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f?' \
-                           'search=lt100&range={start}%2C{end}%2C{total}'.format(start=x * 10 + 1,
-                                                                                 end=end if end <= count else count,
-                                                                                 total=count)
-                yield Request(url=page_url, headers=self.headers)
+            detail_url = root.xpath('//a[@class="lnk12b-blackOff"]/@href')
+            for x in detail_url:
+                detail_url = 'http://shopping.netsuite.com' + x
+                print detail_url + "**" + "from range page"
+                match = self.detail_pattern.search(detail_url)
+                if not match:
+                    with open(os.path.join(config.APP_ROOT, 'logs', 'not_match_goods.html'), 'a') as fp:
+                        fp.write(resp.url + '\n' + detail_url + '\n'+'\n')
 
     def parse_detail(self, resp):
         item = GoodsItem()
@@ -597,4 +594,5 @@ def main():
 if __name__ == '__main__':
     main()
     import subprocess
+
     subprocess.call(['python', r'E:\workspace\spider\linear.com.cn\site_linear_bak.py', '-r'])
