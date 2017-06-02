@@ -101,67 +101,6 @@ def mongo_interface_to_sql(condition=None):
 # TODO 添加异常数据的判断和异常处理
 class SQLite(object):
     """数据库操作封装"""
-
-<<<<<<< HEAD
-    # TODO 添加异常数据的判断和异常处理
-    class ProxySQLite(object):
-        """数据库操作封装"""
-
-        def __init__(self):
-            self.proxy_db = sqlite3.connect(database=db_setting.get('proxy_db'), timeout=15)
-
-        def display(self):
-            return id(self)
-
-        def get_fields(self, table_name):
-            """
-            获取字段列表
-            """
-            result = self.proxy_db.execute('PRAGMA table_info({table_name});'.format(table_name=table_name))
-            info = []
-            if result:
-                for val in result:
-                    if isinstance(val, dict):
-                        f = val['Field']
-                    else:
-                        f = val[0]
-                    if isinstance(f, unicode):
-                        f = f.encode('utf-8')
-                    info.append(f)
-            return info
-
-        def is_exist(self, table='', key=''):
-            """是否存在
-            检查是否已经存在相同的元素
-            :param table: 表名 
-            :param key: id
-            :return: bool
-            """
-            cursor, result = None, None
-            if table and key:
-                sql_str = """SELECT id FROM {TABLE_NAME} WHERE id={key}""".format(TABLE_NAME=table, key=repr(key))
-                cursor = self.proxy_db.execute(sql_str)
-                result = cursor.fetchall()
-            return result
-
-        # AND 和 OR 的使用和Mongo的一致
-        def select(self, table='', fields=None, condition=None, limit=10):
-            """
-            使用mongo查询方式来查询SQL
-            :param table: 表名
-            :param fields: 需要输出的数据域 元组或列表格式
-            :param condition: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
-                         ==>> proxy_port = '808' and proxy_high_quality = 1
-                         {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
-                         ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
-            :param limit: 需要输出的数据数目 整型
-            :return: list
-            """
-            if not table:
-                return None
-            fields = ','.join(fields) if isinstance(fields, (list, tuple)) else '*'
-            condition_str = mongo_interface_to_sql(condition) if isinstance(condition, dict) else None
-=======
     def __init__(self, database):
         self.proxy_db = sqlite3.connect(database=database, timeout=15)
 
@@ -197,7 +136,6 @@ class SQLite(object):
         cursor, result = None, None
         if table and isinstance(condition, dict):
             condition_str = mongo_interface_to_sql(condition)
->>>>>>> 3e7264eeb4010318e5633eb3c9c11ae3139afe14
             condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
             sql_str = """SELECT * FROM {TABLE_NAME}{condition}""".format(TABLE_NAME=table, condition=condition_str)
             cursor = self.proxy_db.execute(sql_str)
@@ -329,11 +267,7 @@ class ProxyDB(object):
     def __init__(self, database=None):
         """ 先判断类变量中是否已经保存了 ProxySQLite 的实例，如果没有则创建一个后返回"""
         if ProxyDB._instance is None:
-<<<<<<< HEAD
-            ProxyDB._instance = ProxyDB.ProxySQLite()
-=======
             ProxyDB._instance = SQLite(database=database if database else db_setting.get('proxy_db'))
->>>>>>> 3e7264eeb4010318e5633eb3c9c11ae3139afe14
 
     def __getattr__(self, attr):
         """ 所有的属性都应该直接从 ProxyDB.ProxySQLite 获取"""

@@ -339,11 +339,14 @@ class HQChipSpider(CrawlSpider):
         # request_list.append(resp.url)
         match = self.detail_pattern.search(resp.url)
         if match:
-            print resp.url
-            with open(os.path.join(config.APP_ROOT, 'logs', 'match_goods.html'), 'a') as fp:
-                fp.write(resp.url + '\n')
-            # yield self.parse_detail(resp)
+            yield self.parse_detail(resp)
         elif 'range' in resp.url:
+            root = lxml.html.fromstring(resp.text.encode('utf-8'))
+            links = root.xpath('//a[@class="lnk12b-blackOff"]/@href')
+            links = ['http://shopping.netsuite.com' + x for x in links]
+            for link in links:
+                yield Request(url=link, headers=self.headers, callback=self.parse_resp)
+        elif 'range' not in resp.url:
             root = lxml.html.fromstring(resp.text.encode('utf-8'))
             detail_url = root.xpath('//a[@class="lnk12b-blackOff"]/@href')
             for x in detail_url:
