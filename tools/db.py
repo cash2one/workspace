@@ -6,6 +6,10 @@ import config
 import sqlite3
 import logging
 
+import config
+import sqlite3
+import logging
+
 db_logger = logging.getLogger("DB")
 db_logger.setLevel(logging.DEBUG)
 fmt = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
@@ -106,6 +110,14 @@ class SQLite(object):
         self.proxy_db.commit()
         return None
 
+    def get_count(self, table):
+        if table:
+            sql_str = """SELECT count() as num FROM {table_name}""".format(table_name=table)
+            cursor = self.proxy_db.execute(sql_str)
+            self.proxy_db.commit()
+            result = cursor.fetchone()
+            return result[0] if result else 0
+
     def get_fields(self, table, keep=False):
         """获取字段列表
         :param table: 选择需要获取的表名 
@@ -115,19 +127,21 @@ class SQLite(object):
         result = self.proxy_db.execute('PRAGMA table_info({table_name});'.format(table_name=table))
         return [elements[1] for elements in result] if not keep else result.fetchall()
 
-    def is_exist(self, table='', key=''):
+    def is_exist(self, table='', condition=None):
         """判断是否存在相同元素
         利用id检查是否已经存在相同的元素
+        :param condition: dict
         :param table: 表名 
-        :param key: id
         :return: bool
         """
         cursor, result = None, None
-        if table and key:
-            sql_str = """SELECT id FROM {TABLE_NAME} WHERE id={key}""".format(TABLE_NAME=table, key=repr(key))
+        if table and isinstance(condition, dict):
+            condition_str = mongo_interface_to_sql(condition)
+            condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
+            sql_str = """SELECT * FROM {TABLE_NAME}{condition}""".format(TABLE_NAME=table, condition=condition_str)
             cursor = self.proxy_db.execute(sql_str)
             result = cursor.fetchall()
-        return result
+        return True if result else False
 
     # AND 和 OR 的使用和Mongo的一致
     def select(self, table='', fields=None, condition=None, limit=10):
@@ -293,18 +307,19 @@ if __name__ == '__main__':
     # 测试
     # 创建ProxyDB实例
     pd = ProxyDB()
-    # 直接调用 ProxyDB.ProxySQLite()
-    print pd.get_fields('proxies')
-    # 测试mongo查询语句转sql查询
-    d = {'key1': "hell", 'key2': 3}
-    l = dict_to_str(d)
-    d = {"proxy_ip": {'eq': '127.0.0.1'}, 'or': [{"proxy_port": "808"}, {"proxy_alive": 1}]}
+    # # 直接调用 ProxyDB.ProxySQLite()
+    # print pd.get_fields('proxies')
+    # # 测试mongo查询语句转sql查询
+    # d = {'key1': "hell", 'key2': 3}
+    # l = dict_to_str(d)
+    # d = {"proxy_ip": {'eq': '127.0.0.1'}, 'or': [{"proxy_port": "808"}, {"proxy_alive": 1}]}
+    d = {'id': {'gt': 100}}
     print mongo_interface_to_sql(d)
-    # 测试查询语句
-    condition_for_https = {"proxy_protocol": "https"}
-    print pd.get_list(table="proxies", condition=condition_for_https, )
-    # 获取列名
-    print pd.get_fields(table='proxies')
+    # # 测试查询语句
+    # condition_for_https = {"proxy_protocol": "https"}
+    # print pd.get_list(table="proxies", condition=condition_for_https, )
+    # # 获取列名
+    # print pd.get_fields(table='proxies')
 
-    # 创建新数据库
-    alive = SQLite(database=config.DB.get('alive_db'))
+    print pd.is_exist(table="proxies", condition={'id': '3276ab14495c9333b61806a0fb1c47d1'})
+    print pd.get_count(table="proxies")
