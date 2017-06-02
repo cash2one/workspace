@@ -181,7 +181,7 @@ class MetaItemPipeline(object):
         if self.proxy_db.is_exist(table='proxies', key=data['id']):
             raise DropItem("item data is exist")
         # 默认值
-        data['proxy_check_time'] = ''
+        # data['proxy_check_time'] = ''
         data['proxy_support_https'] = 0
         self.proxy_db.insert(table='proxies', data=data)
         print data
@@ -273,8 +273,8 @@ class ProxySpider(CrawlSpider):
             item['proxy_location'] = box.clear_text(remove_tags(location))
             item['proxy_fetch_date'] = str(int(time.time()))
             item['proxy_from'] = response.url
-            item['proxy_alive'] = 1
-            item['proxy_high_quality'] = 0
+            # item['proxy_alive'] = 1
+            # item['proxy_high_quality'] = 0
             yield item
 
     def parse_common(self, response, **kwargs):
@@ -293,8 +293,8 @@ class ProxySpider(CrawlSpider):
                 item['proxy_location'] = location
                 item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
-                item['proxy_alive'] = 1
-                item['proxy_high_quality'] = 0
+                # item['proxy_alive'] = 1
+                # item['proxy_high_quality'] = 0
                 yield item
         else:
             proxies = zip(ip_list, port_list, protocol_list)
@@ -305,8 +305,8 @@ class ProxySpider(CrawlSpider):
                 item['proxy_location'] = ''
                 item['proxy_fetch_date'] = str(int(time.time()))
                 item['proxy_from'] = response.url
-                item['proxy_alive'] = 1
-                item['proxy_high_quality'] = 0
+                # item['proxy_alive'] = 1
+                # item['proxy_high_quality'] = 0
                 yield item
 
     @property

@@ -32,10 +32,11 @@ def get_event_kwargs(response=None, **kwargs):
     :param kwargs: 其他的需要加入时间表单的键值对
     :return: 字典
     """
-    if response is None:
+    html = kwargs.pop('html', None)
+    if response is None and html is None:
         return -400
     try:
-        html = response.text.encode('utf-8')
+        html = response.text.encode('utf-8') if response else html
         root = lxml.html.fromstring(html)
     except:
         return -400
@@ -123,8 +124,14 @@ def main():
     base_url = 'http://www.richardsonrfpd.com/Pages/Search-Results.aspx'
     product_list = [urlparse.urljoin(base_url, x) for x in product_list]
     print product_list
+    print '-------------------'
     # with open(r'html/search_result_show_all.html', 'w') as fp:
     #     fp.write(resp.text.encode('utf-8'))
+    with open(r'html/productCategory=10374page1.html', 'r') as fp:
+        html = fp.read()
+    event = get_event_kwargs(html=html)
+    print event
+
 
 
 if __name__ == '__main__':

@@ -6,7 +6,12 @@ import config
 import sqlite3
 import logging
 
-db_logger = logging.getLogger('DB')
+db_logger = logging.getLogger("DB")
+db_logger.setLevel(logging.DEBUG)
+fmt = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
+s_handler = logging.StreamHandler()
+s_handler.setFormatter(fmt)
+db_logger.addHandler(s_handler)
 
 db_setting = config.DB
 
@@ -15,6 +20,7 @@ SQL_OPERATOR = {'eq': '=', 'ne': '!=', 'gt': '>', 'gte': '>=', 'lt': '<', 'let':
                 'in': 'IN', '!like': 'NOT LIKE', '!in': 'NOT IN', }
 
 
+# 独立方法
 def dict_to_str(data=None, joiner=','):
     """字典类型拼接成字符串
     将字典的键和值分别连成字符串放到列表中返回
@@ -83,140 +89,175 @@ def mongo_interface_to_sql(condition=None):
                 operation.append('({or_statement})'.format(or_statement=' OR '.join(temp_list)))
             else:
                 operation.append(k + '=' + repr(v))
-            print operation
+            print "执行条件为: {condition}".format(condition=operation)
     operator_str = ' AND '.join(operation) if operation else None
     return operator_str
+
+
+# TODO 添加异常数据的判断和异常处理
+class SQLite(object):
+    """数据库操作封装"""
+
+    def __init__(self, database):
+        self.proxy_db = sqlite3.connect(database=database, timeout=15)
+
+    def create(self, ddl=""):
+        self.proxy_db.execute(ddl)
+        self.proxy_db.commit()
+        return None
+
+    def get_fields(self, table, keep=False):
+        """获取字段列表
+        :param table: 选择需要获取的表名 
+        :param keep: 是否源格式输出，默认为False，仅输出表字段名，省略字段类型等信息
+        :return: 列表类型
+        """
+        result = self.proxy_db.execute('PRAGMA table_info({table_name});'.format(table_name=table))
+        return [elements[1] for elements in result] if not keep else result.fetchall()
+
+    def is_exist(self, table='', key=''):
+        """判断是否存在相同元素
+        利用id检查是否已经存在相同的元素
+        :param table: 表名 
+        :param key: id
+        :return: bool
+        """
+        cursor, result = None, None
+        if table and key:
+            sql_str = """SELECT id FROM {TABLE_NAME} WHERE id={key}""".format(TABLE_NAME=table, key=repr(key))
+            cursor = self.proxy_db.execute(sql_str)
+            result = cursor.fetchall()
+        return result
+
+    # AND 和 OR 的使用和Mongo的一致
+    def select(self, table='', fields=None, condition=None, limit=10):
+        """查询数据库
+        使用mongo查询方式来查询SQL
+        :param table: 要查询的表名
+        :param fields: 需要输出的数据域 元组或列表格式
+        :param condition: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
+                     ==>> proxy_port = '808' and proxy_high_quality = 1
+                     {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
+                     ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
+        :param limit: 需要输出的数据数目 整型
+        :return: 游标对象
+        """
+        if not table:
+            return None
+        fields = ','.join(fields) if isinstance(fields, (list, tuple)) else '*'
+        condition_str = mongo_interface_to_sql(condition) if isinstance(condition, dict) else None
+        condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
+        limit_str = """ LIMIT {LIMIT}""".format(LIMIT=limit) if limit else ''
+        sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME}{condition}{limit}""".format(
+            COLUMNS=fields,
+            TABLE_NAME=table,
+            condition=condition_str,
+            limit=limit_str)
+        cursor = self.proxy_db.execute(sql_str)
+        return cursor
+
+    def get_list(self, **kwargs):
+        cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
+                             limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+        return cursor.fetchall() if cursor else None
+
+    def get_iter(self, **kwargs):
+        cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
+                             limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
+        while True and cursor:
+            row = cursor.fetchone()
+            if not row:
+                break
+            yield row
+
+    # 字典类型或列表类型整理为sql字符串
+    # TODO 添加异常处理
+    def insert(self, table='', data=None, column=None):
+        """插入数据
+        可以直接插入字典类型或列表(元组)类型数据到指定表
+        :param table: 表名
+        :param column: 列名 列表或元组
+        :param data: dict 或 list
+        :return: 返回成功插入的数据
+        """
+        sql_str, data_str = '', ''
+        if not table or not data:
+            return None
+        if isinstance(data, dict):
+            data_str = dict_to_str(data)
+            sql_str = """INSERT INTO {TABLE_NAME} {COLUMN_NAME} VALUES {VALUES}""".format(TABLE_NAME=table,
+                                                                                          COLUMN_NAME=data_str[0],
+                                                                                          VALUES=data_str[1])
+            self.proxy_db.execute(sql_str)
+        elif isinstance(data, list) and column is not None:
+            # data = [repr(x) for x in data]
+            # data_str = '(' + ','.join(data) + ')'
+            for idx in range(len(data)):
+                if isinstance(data[idx], (tuple, list)):
+                    data[idx] = [repr(x) for x in data[idx]]
+                else:
+                    return None
+            length = len(column)
+            value_str = '?,' * length
+            column_name = '(' + ','.join(column) + ')'
+            sql_str = """INSERT INTO {TABLE_NAME} {COLUMN_NAME} VALUES ({VALUES})""".format(TABLE_NAME=table,
+                                                                                            COLUMN_NAME=column_name,
+                                                                                            VALUES=value_str[:-1])
+
+            self.proxy_db.executemany(sql_str, data)
+        self.proxy_db.commit()
+        return data_str
+
+    def delete(self, table='', condition=None, **kwargs):
+        """根据条件删除元素"""
+        if not table:
+            return None
+        # 输入id，批量删除
+        count = 0
+        id_list = kwargs.get('id', None)
+        if id_list and isinstance(id_list, list):
+            id_list = (repr(x) for x in id_list)
+            for vl in id_list:
+                sql_str = """DELETE FROM {TABLE_NAME} WHERE id={VALUE}""".format(TABLE_NAME=table, VALUE=vl)
+                self.proxy_db.execute(sql_str)
+                count += 1
+        # 没有输入删除条件，提醒确认
+        elif not condition and not kwargs.get('confirm', False):
+            db_logger.debug(u'没有condition参数将会删除整张表，请携带 confirm=True 参数确定执行')
+            return None
+        else:
+            condition_str = mongo_interface_to_sql(condition) if isinstance(condition, dict) else None
+            condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
+            sql_str = """DELETE FROM {TABLE_NAME}{condition}""".format(
+                TABLE_NAME=table,
+                condition=condition_str)
+            cour = self.proxy_db.execute(sql_str)
+            count = cour.rowcount
+
+        self.proxy_db.commit()
+        return count
+
+    def close(self):
+        self.proxy_db.close()
+
+    def __del__(self):
+        self.proxy_db.close()
 
 
 class ProxyDB(object):
     """
     单例模式
     """
-
-    # TODO 添加异常数据的判断和异常处理
-    class Proxy_SQLite(object):
-        """数据库操作封装"""
-
-        def __init__(self):
-            self.proxy_db = sqlite3.connect(database=db_setting.get('proxy_db'), timeout=15)
-
-        def display(self):
-            return id(self)
-
-        def get_fields(self, table_name):
-            """
-            获取字段列表
-            """
-            result = self.proxy_db.execute('PRAGMA table_info({table_name});'.format(table_name=table_name))
-            info = []
-            if result:
-                for val in result:
-                    if isinstance(val, dict):
-                        f = val['Field']
-                    else:
-                        f = val[0]
-                    if isinstance(f, unicode):
-                        f = f.encode('utf-8')
-                    info.append(f)
-            return info
-
-        def is_exist(self, table='', key=''):
-            """是否存在
-            检查是否已经存在相同的元素
-            :param table: 表名 
-            :param key: id
-            :return: bool
-            """
-            cursor, result = None, None
-            if table and key:
-                sql_str = """SELECT id FROM {TABLE_NAME} WHERE id={key}""".format(TABLE_NAME=table, key=repr(key))
-                cursor = self.proxy_db.execute(sql_str)
-                result = cursor.fetchall()
-            return result
-
-        # AND 和 OR 的使用和Mongo的一致
-        def select(self, table='', fields=None, condition=None, limit=10):
-            """
-            使用mongo查询方式来查询SQL
-            :param table: 表名
-            :param fields: 需要输出的数据域 元组或列表格式
-            :param condition: {'proxy_port': {'eq': '808'}, 'proxy_high_quality': 1}} 
-                         ==>> proxy_port = '808' and proxy_high_quality = 1
-                         {'proxy_ip': {'eq': '192.168.1.1'}, 'OR':[{'proxy_protocol':'HTTP'}, {'proxy_protocol':'HTTPS'}]}
-                         ==>> proxy_ip = '192.168.1.1' AND (proxy_protocol = 'HTTP' OR proxy_protocol = 'HTTPS')
-            :param limit: 需要输出的数据数目 整型
-            :return: list
-            """
-            if not table:
-                return None
-            fields = ','.join(fields) if isinstance(fields, (list, tuple)) else '*'
-            condition_str = mongo_interface_to_sql(condition) if isinstance(condition, dict) else None
-            condition_str = """ WHERE {CONDITION}""".format(CONDITION=condition_str) if condition_str else ''
-            limit_str = """ LIMIT {LIMIT}""".format(LIMIT=limit) if limit else ''
-            sql_str = """SELECT {COLUMNS} FROM {TABLE_NAME}{condition}{limit}""".format(
-                COLUMNS=fields,
-                TABLE_NAME=table,
-                condition=condition_str,
-                limit=limit_str)
-            cursor = self.proxy_db.execute(sql_str)
-            return cursor
-
-        def get_list(self, **kwargs):
-            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
-                                 limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
-            return cursor.fetchall() if cursor else None
-
-        def get_iter(self, **kwargs):
-            cursor = self.select(table=kwargs.get('table', ''), condition=kwargs.get('condition', None),
-                                 limit=kwargs.get('limit', 10), fields=kwargs.get('fields', None))
-            while True and cursor:
-                row = cursor.fetchone()
-                if not row:
-                    break
-                yield row
-
-        # 字典类型或列表类型整理为sql字符串
-        # TODO 添加插入条件功能
-        def insert(self, table='', data=None, return_insert_id=False):
-            """插入数据
-            可以直接插入字典类型或列表(元组)类型数据到指定表
-            :param table: 表名
-            :param data: dict 或 list
-            :param return_insert_id: 
-            :return: 
-            """
-            sql_str = ''
-            if not table or not data:
-                return None
-            if isinstance(data, dict):
-                data_str = dict_to_str(data)
-                sql_str = """INSERT INTO {TABLE_NAME} {COLUMN_NAME} VALUES {VALUES}""".format(TABLE_NAME=table,
-                                                                                              COLUMN_NAME=data_str[0],
-                                                                                              VALUES=data_str[1])
-            elif isinstance(data, list):
-                data = [repr(x) for x in data]
-                data_str = '(' + ','.join(data) + ')'
-                sql_str = """INSERT INTO {TABLE_NAME} VALUES {VALUES}""".format(TABLE_NAME=table, VALUES=data_str)
-
-            self.proxy_db.execute(sql_str)
-            self.proxy_db.commit()
-
-        def close(self):
-            self.proxy_db.close()
-
-        def __del__(self):
-            self.proxy_db.close()
-
     # 类变量，用于存储数据库的实例
     _instance = None
 
-    def __init__(self):
-        """ 先判断类变量中是否已经保存了 _A 的实例，如果没有则创建一个后返回"""
+    def __init__(self, database=None):
+        """ 先判断类变量中是否已经保存了 ProxySQLite 的实例，如果没有则创建一个后返回"""
         if ProxyDB._instance is None:
-            ProxyDB._instance = ProxyDB.Proxy_SQLite()
+            ProxyDB._instance = SQLite(database=database if database else db_setting.get('proxy_db'))
 
     def __getattr__(self, attr):
-        """ 所有的属性都应该直接从 Singleton._instance 获取"""
+        """ 所有的属性都应该直接从 ProxyDB.ProxySQLite 获取"""
         return getattr(self._instance, attr)
 
 
@@ -241,22 +282,29 @@ class ProxyDB(object):
 #     _instance = None
 #
 #     def __init__(self):
-#         """ 先判断类变量中是否已经保存了 _A 的实例，如果没有则创建一个后返回"""
 #         if Singleton._instance is None:
 #             Singleton._instance = Singleton._A()
 #
 #     def __getattr__(self, attr):
-#         """ 所有的属性都应该直接从 Singleton._instance 获取"""
 #         return getattr(self._instance, attr)
 
 
 if __name__ == '__main__':
-    # pd = ProxyDB()
-    # print pd.display()
+    # 测试
+    # 创建ProxyDB实例
+    pd = ProxyDB()
+    # 直接调用 ProxyDB.ProxySQLite()
+    print pd.get_fields('proxies')
+    # 测试mongo查询语句转sql查询
     d = {'key1': "hell", 'key2': 3}
     l = dict_to_str(d)
-    for x in l:
-        print repr(x)
-
     d = {"proxy_ip": {'eq': '127.0.0.1'}, 'or': [{"proxy_port": "808"}, {"proxy_alive": 1}]}
     print mongo_interface_to_sql(d)
+    # 测试查询语句
+    condition_for_https = {"proxy_protocol": "https"}
+    print pd.get_list(table="proxies", condition=condition_for_https, )
+    # 获取列名
+    print pd.get_fields(table='proxies')
+
+    # 创建新数据库
+    alive = SQLite(database=config.DB.get('alive_db'))
