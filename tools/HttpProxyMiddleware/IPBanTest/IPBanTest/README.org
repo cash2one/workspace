@@ -1,3 +1,0 @@
-* IPBanTest
-
-A django powered website for testing [[https://github.com/kohn/HttpProxyMiddleware][HttpProxyMiddleware]].

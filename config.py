@@ -12,7 +12,10 @@ APP_ROOT = getattr(sys, '__APP_ROOT__', os.path.split(os.path.realpath(__file__)
 
 # 数据库位置
 DB = {
-    'proxy_db': os.path.join(APP_ROOT, r'db\proxy.db'),
+    # 用于存储批量抓取的代理
+    'proxy_db': os.path.join(APP_ROOT, 'db', 'proxy.db'),
+    # 用于存储筛选过后的代理， 高质代理
+    'alive_db': os.path.join(APP_ROOT, 'db', 'alive.db'),
 }
 
 """
