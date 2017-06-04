@@ -121,9 +121,10 @@ def insert_into_db():
     while True:
         clear_mark = False
         # 每天零点清空当天的存活代理
-        midnight = time.time() - (time.time() % 86400) + time.timezone + 86400
+        midnight = 86400
+        now = time.time() % 86400
         # 零点前一秒
-        if midnight - time.time() <= 1:
+        if midnight - now <= 1:
             clear_mark = True
         if len(alive_proxies_list) >= 100 and not clear_mark:
             PROXY_LOCK.acquire()

@@ -178,7 +178,7 @@ class MetaItemPipeline(object):
         if not data:
             raise DropItem("item data is empty")
         data['id'] = hashlib.md5(data['proxy_protocol'] + data['proxy_ip'] + data['proxy_port']).hexdigest()
-        if self.proxy_db.is_exist(table='proxies', key=data['id']):
+        if self.proxy_db.is_exist(table='proxies', condition={'id': data['id']}):
             raise DropItem("item data is exist")
         # 默认值
         # data['proxy_check_time'] = ''
