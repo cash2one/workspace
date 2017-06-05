@@ -26,8 +26,12 @@ PROXY_QUEUE = Queue.Queue(30)
 # 线程锁
 PROXY_LOCK = threading.Lock()
 # 默认的请求头
+TARGET = 'https://www.baidu.com/'
 default_headers = config.DEFAULT_HEADERS
 alive_proxies_list = []
+
+# 代理抓取脚本
+APP_PATH = os.path.join(config.APP_ROOT, 'util', 'fetch_proxies.py')
 
 
 class ProxiesProducer(threading.Thread):
@@ -58,7 +62,7 @@ def fill_proxy_queue():
                 proxy_db.delete(table='proxies', confirm=True)
                 time.sleep(1)
                 # 开启爬虫抓取新的代理
-                exit_code = subprocess.call(['python', app_path, '-r'])
+                subprocess.call(['python', app_path, '-r'])
                 proxy_schedule.debug("Finish fetch_proxies, proxy test go on...")
                 # 等待事务提交
                 time.sleep(10)
@@ -74,7 +78,7 @@ class ProxyRequestTester(threading.Thread):
             proxy = PROXY_QUEUE.get()
             PROXY_QUEUE.task_done()
             # target = "https://www.baidu.com/"
-            target = "http://www.xicidaili.com/"
+            target = TARGET
             proxy_url = "{protocol}://{ip}:{port}".format(ip=proxy[0], port=proxy[1], protocol=proxy[2])
             proxies = {
                 'id': proxy[0],
@@ -150,9 +154,24 @@ def db_exit():
         del alive_db
 
 
+def db_data_check():
+    proxy_db_path = config.DB.get('proxy_db')
+    if os.path.exists(proxy_db_path):
+        proxy_db = tools.db.SQLite(database=proxy_db_path)
+        row_count = proxy_db.get_count(table='proxies')
+        if row_count < 500:
+            # 开启爬虫抓取新的代理
+            app_path = APP_PATH
+            subprocess.call(['python', app_path, '-r'])
+        proxy_db.close()
+        del proxy_db
+
+
 def main():
     # 检查数据库是否存在不存在则创建数据库
     db_exit()
+    # 检查数据库中代理数量
+    db_data_check()
     # 启动一个从数据库获取代理的生产者
     ProxiesProducer().start()
     # 启动十个测试代理的消费者
@@ -203,4 +222,5 @@ class Consumer(threading.Thread):
 ##################################################
 
 if __name__ == '__main__':
+    TARGET = 'http://www.xicidaili.com/'
     main()

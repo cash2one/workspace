@@ -47,7 +47,7 @@ settings = {
     'PROXY_MODE': 2,
     'CUSTOM_PROXY': 'http://127.0.0.1:1080',
     # 'PROXY_DB': config.DB.get('alive_db', None),
-    # 'PROXY_LIST': config.DB.get('proxy_list', None),
+    # 'PROXY_LIST': config.DB.get('proxy_file', None),
 
 
     'DEFAULT_REQUEST_HEADERS': {
