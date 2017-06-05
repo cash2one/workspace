@@ -45,11 +45,9 @@ sys.__APP_LOG__ = False
 try:
     import config
 except ImportError:
-    sys.path[0] = os.path.dirname(os.path.split(os.path.realpath(__file__))[0])
+    sys.path[0] = os.path.dirname(os.path.dirname(os.path.split(os.path.realpath(__file__))[0]))
+    print sys.path[0]
     import config
-import packages.Util as util
-from packages import hqchip
-from packages import rabbit as queue
 
 logger = logging.getLogger(__name__)
 
@@ -67,10 +65,10 @@ settings = {
     'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
 
     'DOWNLOADER_MIDDLEWARES': {
-        __name__ + '.IgnoreRquestMiddleware': 1,
-        __name__ + '.UniqueRequestMiddleware': 3,
+        # __name__ + '.IgnoreRquestMiddleware': 1,
+        # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
-        # __name__ + '.ProxyRequestMiddleware': 8,
+        'tools.HttpProxyMiddleware.ProxyMiddleware': 8,
     },
     'ITEM_PIPELINES': {
         __name__ + '.MetaItemPipeline': 500,
@@ -265,9 +263,6 @@ class MetaItemPipeline(object):
 
     def __init__(self, crawler):
         name = 'spider_' + crawler.spider.name + '_item'
-        self.mongo = hqchip.db.mongo[name]
-        self.mongo.ensure_index('key', unique=True)
-        self.mongo.ensure_index('goods_sn', unique=False)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -280,19 +275,12 @@ class MetaItemPipeline(object):
         data = copy.deepcopy(dict(item))
         if not data:
             raise DropItem("item data is empty")
-        data['url'] = to_bytes(data['url'].split('#')[0])
-        data['key'] = hashlib.md5(data['goods_sn']).hexdigest()
-        info = self.mongo.find_one({'goods_sn': data['goods_sn']})
-        if not info:
-            self.mongo.insert(data)
-            logger.info('success insert mongodb : %s' % data['key'])
-        else:
-            self.mongo.update({'_id': info['_id']}, {"$set": data})
-            logger.info('success update mongodb : %s' % data['key'])
-        raise DropItem('success process')
+        print("=" * 10 + "process_item" + "BEGIN" + "=" * 10)
+        print(data)
+        print("=" * 10 + "process_item" + "END" + "=" * 10)
 
     def close_spider(self, spider):
-        del self.mongo
+        pass
 
 
 class HQChipSpider(CrawlSpider):

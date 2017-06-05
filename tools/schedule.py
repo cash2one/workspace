@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 # Created by Vin on 2017/5/11
 
-import db
-import time
-import Queue
-import threading
-import subprocess
-
 import os.path
 import tools.db
 import time
@@ -46,8 +40,6 @@ def fill_proxy_queue():
     proxy_db = tools.db.ProxyDB()
     app_path = os.path.join(config.APP_ROOT, 'tools', 'fetch_proxies.py')
     try:
-        # 是否已经执行过fetch_proxy
-        exit_code = 1
         while True:
             proxies_iter = proxy_db.get_iter(
                 table='proxies',
@@ -59,18 +51,17 @@ def fill_proxy_queue():
                 PROXY_QUEUE.put(proxy)
                 proxy_schedule.debug("PROXY_QUEUE size is {qsize}".format(qsize=PROXY_QUEUE.qsize()))
             else:
-                # 一个小时全站抓取一次代理
-                if not exit_code:
-                    proxy_schedule.debug("Run fetch more proxy after 1 hours")
-                    time.sleep(60 * 60)
+                # 一个小时全站抓取一次代理(测试15分钟)
+                proxy_schedule.debug("Run fetch more proxy after 1 hours")
+                time.sleep(60 * 15)
                 # 先清空旧数据
                 proxy_db.delete(table='proxies', confirm=True)
                 time.sleep(1)
                 # 开启爬虫抓取新的代理
                 exit_code = subprocess.call(['python', app_path, '-r'])
                 proxy_schedule.debug("Finish fetch_proxies, proxy test go on...")
-                time.sleep(1)
-                # 遍历完成之后就重新抓取
+                # 等待事务提交
+                time.sleep(10)
 
     except (KeyboardInterrupt, SystemExit):
         del proxy_db
@@ -82,7 +73,8 @@ class ProxyRequestTester(threading.Thread):
         while True:
             proxy = PROXY_QUEUE.get()
             PROXY_QUEUE.task_done()
-            target = "http://www.baidu.com/index.html"
+            # target = "https://www.baidu.com/"
+            target = "http://www.xicidaili.com/"
             proxy_url = "{protocol}://{ip}:{port}".format(ip=proxy[0], port=proxy[1], protocol=proxy[2])
             proxies = {
                 'id': proxy[0],
@@ -93,7 +85,7 @@ class ProxyRequestTester(threading.Thread):
             }
             # 访问异常说明代理无效
             try:
-                response = requests.head(url=target, headers=default_headers, proxies=proxies, timeout=5)
+                response = requests.get(url=target, headers=default_headers, proxies=proxies, timeout=5)
                 # 如果能正常获取头部信息说明代理存活，放入全局变量alive_proxies_list
                 if response.status_code == 200:
                     # print response.headers
@@ -122,11 +114,11 @@ def insert_into_db():
         clear_mark = False
         # 每天零点清空当天的存活代理
         midnight = 86400
-        now = time.time() % 86400
+        now = time.time() % 86400 - time.timezone
         # 零点前一秒
         if midnight - now <= 1:
             clear_mark = True
-        if len(alive_proxies_list) >= 100 and not clear_mark:
+        if len(alive_proxies_list) >= 100:
             PROXY_LOCK.acquire()
             proxy_saver.insert(table='alive', data=alive_proxies_list,
                                column=('proxy_ip', 'proxy_port', 'proxy_protocol', 'proxy_support_https'))

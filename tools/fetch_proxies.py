@@ -42,6 +42,13 @@ settings = {
     'CONCURRENT_ITEMS': 100,
     'CONCURRENT_REQUESTS': 16,
     'DOWNLOAD_DELAY': 0.2,
+    'RETRY_TIMES': 3,
+    'RETRY_HTTP_CODES': [500, 503, 504, 400, 403, 404, 408],
+    'PROXY_MODE': 2,
+    'CUSTOM_PROXY': 'http://127.0.0.1:1080',
+    # 'PROXY_DB': config.DB.get('alive_db', None),
+    # 'PROXY_LIST': config.DB.get('proxy_list', None),
+
 
     'DEFAULT_REQUEST_HEADERS': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -53,6 +60,9 @@ settings = {
         __name__ + '.IgnoreRequestMiddleware': 1,
         # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
+        'scrapy.downloadermiddlewares.retry.RetryMiddleware': 6,
+        'tools.scrapy_proxies.RandomProxy': 8,
+        'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 12,
 
     },
     'ITEM_PIPELINES': {

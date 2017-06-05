@@ -76,7 +76,7 @@ settings = {
         # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
         # __name__ + '.RequestsDownloader': 8,
-        # 'tools.HttpProxyMiddleware.ProxyMiddleware': 8,
+        'tools.HttpProxyMiddleware.ProxyMiddleware': 8,
     },
     'ITEM_PIPELINES': {
         __name__ + '.MetaItemPipeline': 500,

@@ -16,6 +16,7 @@ DB = {
     'proxy_db': os.path.join(APP_ROOT, 'db', 'proxy.db'),
     # 用于存储筛选过后的代理， 高质代理
     'alive_db': os.path.join(APP_ROOT, 'db', 'alive.db'),
+    'proxy_list': os.path.join(APP_ROOT, 'db', 'alive.txt'),
 }
 
 """

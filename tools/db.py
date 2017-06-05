@@ -11,11 +11,11 @@ import sqlite3
 import logging
 
 db_logger = logging.getLogger("DB")
-db_logger.setLevel(logging.DEBUG)
-fmt = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
-s_handler = logging.StreamHandler()
-s_handler.setFormatter(fmt)
-db_logger.addHandler(s_handler)
+# db_logger.setLevel(logging.DEBUG)
+# fmt = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
+# s_handler = logging.StreamHandler()
+# s_handler.setFormatter(fmt)
+# db_logger.addHandler(s_handler)
 
 db_setting = config.DB
 
@@ -93,7 +93,7 @@ def mongo_interface_to_sql(condition=None):
                 operation.append('({or_statement})'.format(or_statement=' OR '.join(temp_list)))
             else:
                 operation.append(k + '=' + repr(v))
-            print "执行条件为: {condition}".format(condition=operation)
+            db_logger.debug(u"执行条件为: {condition}".format(condition=operation))
     operator_str = ' AND '.join(operation) if operation else None
     return operator_str
 
@@ -205,11 +205,11 @@ class SQLite(object):
         elif isinstance(data, list) and column is not None:
             # data = [repr(x) for x in data]
             # data_str = '(' + ','.join(data) + ')'
-            for idx in range(len(data)):
-                if isinstance(data[idx], (tuple, list)):
-                    data[idx] = [repr(x) for x in data[idx]]
-                else:
-                    return None
+            # for idx in range(len(data)):
+            #     if isinstance(data[idx], (tuple, list)):
+            #         data[idx] = [repr(x) for x in data[idx]]
+            #     else:
+            #         return None
             length = len(column)
             value_str = '?,' * length
             column_name = '(' + ','.join(column) + ')'
