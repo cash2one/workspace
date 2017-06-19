@@ -21,6 +21,7 @@ class MQConsumer(threading.Thread):
 
 
 def producer():
+
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='hello')

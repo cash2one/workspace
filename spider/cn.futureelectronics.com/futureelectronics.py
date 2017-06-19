@@ -27,14 +27,14 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import DropItem, IgnoreRequest, CloseSpider
 # from scrapy.pipelines.files import FilesPipeline
 from scrapy.http import Request, FormRequest, HtmlResponse
-from scrapy.utils.python import to_bytes
-# lmxl
-import lxml.html
-from w3lib.html import remove_tags
-
-from datetime import datetime, timedelta
-from twisted.web._newclient import ResponseNeverReceived
-from twisted.internet.error import TimeoutError, ConnectionRefusedError, ConnectError
+# from scrapy.utils.python import to_bytes
+# # lmxl
+# import lxml.html
+# from w3lib.html import remove_tags
+#
+# from datetime import datetime, timedelta
+# from twisted.web._newclient import ResponseNeverReceived
+# from twisted.internet.error import TimeoutError, ConnectionRefusedError, ConnectError
 
 sys.__APP_LOG__ = False
 try:
@@ -45,7 +45,6 @@ except ImportError:
     import config
 
 from tools import box
-from tools import fetch_free_proxyes
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +75,7 @@ settings = {
         # __name__ + '.UniqueRequestMiddleware': 3,
         __name__ + '.RandomUserAgentMiddleware': 5,
         # __name__ + '.RequestsDownloader': 8,
-        'tools.HttpProxyMiddleware.ProxyMiddleware': 8,
+        # 'tools.HttpProxyMiddleware.ProxyMiddleware': 8,
     },
     'ITEM_PIPELINES': {
         __name__ + '.MetaItemPipeline': 500,
