@@ -44,13 +44,15 @@ def cookies_to_dict(cookies_str):
 
 
 # 0x02 str convert to int
-def intval(text):
-    return Format.number_format(text, 0)
+def intval(text, **kwargs):
+    kwargs.setdefault('places', 0)
+    return Format.number_format(text, **kwargs)
 
 
 # 0x03 str convert to float, reserved 4 decimal places by default
-def floatval(text):
-    return Format.number_format(text, 4)
+def floatval(text, **kwargs):
+    kwargs.setdefault('places', 4)
+    return Format.number_format(text, **kwargs)
 
 
 # 0x04 byte str convert to unicode

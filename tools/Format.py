@@ -46,7 +46,7 @@ def clear_text(text='', keep=False):
     :return: 去除空字符后的文本或列表
     """
     pattern_blank = re.compile(r'\s+')
-    text = text if text else ''
+    text = text if len(text) else ''
     if not text:
         return text
     if isinstance(text, list):
