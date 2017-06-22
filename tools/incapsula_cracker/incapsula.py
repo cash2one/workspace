@@ -212,7 +212,6 @@ def get_obfuscated_code(html):
 
 
 def parse_obfuscated_code(code):
-    data = []
     content = code.decode('hex') if code else ''
     return content
 
@@ -459,8 +458,8 @@ if __name__ == "__main__":
         'Referer': 'https://www.ttiinc.com/content/ttiinc/en/apps/part-search.html?manufacturers=&searchTerms=&systemsCatalog=254428',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
     }
-    post_url = url = 'https://www.ttiinc.com/bin/services/processData?jsonPayloadAvailable=true&osgiService=partsearchpost'
-    post_data = data = {"searchTerms": 'lm358', "inStock": "", "rohsCompliant": "", "leadFree": "", "containsLead": ""}
+    post_url = 'https://www.ttiinc.com/bin/services/processData?jsonPayloadAvailable=true&osgiService=partsearchpost'
+    post_data = {"searchTerms": 'lm358', "inStock": "", "rohsCompliant": "", "leadFree": "", "containsLead": ""}
     session = requests.Session()
     rs = session.post(url=post_url, data=json.dumps(post_data), headers=tti_headers)
     with open(r'html/post_test_before.html', 'w') as fp:
