@@ -62,17 +62,22 @@ def crawl_brand(url=None):
     _name = root.xpath('//td[@class="supplier-description"]/h1')
     supplier_name = _name[0].text if _name else ''
     if supplier_name is None or not supplier_name.strip():
-        print "PARSE ERROR, STATUS CODE {code}, RETRY: {url}".format(code=rs.status_code, url=target)
         if rs.status_code in [500, 503, 504]:
+            print "PARSE ERROR, STATUS CODE {code}, RETRY: {url}".format(code=rs.status_code, url=target)
             CRAWL_LOCK.acquire()
             RETRY_LIST.append(target)
             CRAWL_LOCK.release()
+            return None
         elif rs.status_code == 200:
-            CRAWL_LOCK.acquire()
-            with open(r'error_{flag}.html'.format(flag=target.split('/')[-1]), 'w') as fp:
-                fp.write(rs.text.encode('utf-8'))
-            CRAWL_LOCK.release()
-        return None
+            try:
+                breadcrumbs = root.xpath('//div[@id="breadcrumbs"]')
+                supplier_name = util.cleartext(breadcrumbs[0].xpath('./text()')[-1], '\t', '\n', '>')
+                if not supplier_name.strip():
+                    return None
+                else:
+                    supplier_name = supplier_name.strip()
+            except IndexError:
+                return None
     _img = root.xpath('//td[@class="supplier-logo"]//img/@src')
     supplier_logo = util.urljoin(target, _img[0]) if _img else ''
 
@@ -141,4 +146,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    url0 = 'http://www.digikey.com.cn/zh/supplier-centers/i/infineon-technologies'
+    crawl_brand(url=url0)
