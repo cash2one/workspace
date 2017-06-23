@@ -40,7 +40,7 @@ def producer():
             data = {
                 'url': line.strip(),
                 'headers': _headers,
-                'queue_name': 'linear_queue'
+                'control': {'queue': 'linear_queue'}
             }
             channel.basic_publish(exchange='',
                                   routing_key='task_queue',

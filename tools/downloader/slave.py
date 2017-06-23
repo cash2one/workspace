@@ -3,15 +3,16 @@
 # Created by Vin on 2017/6/20
 
 
-import time
-import pika
 import json
+import pika
+import Queue
 import logging
 import requests
 import urlparse
 import threading
 
 _logger = logging.getLogger('slave')
+RESPONSE_QUEUE = Queue.Queue(30)
 
 
 class MQConsumer(threading.Thread):
@@ -25,26 +26,22 @@ def consumer():
 
     channel.queue_declare(queue='task_queue', durable=True)
 
-    channel_upload = connection.channel()
-
     def callback(ch, method, properties, body):
+        print " [x] Received %r" % (body,)
         data = json.loads(body)
-        if 'queue_name' in data:
-            queue_name = data.pop('queue_name')
-        else:
-            queue_name = 'downloaded'
-        response = fetcher(**data)
-        channel_upload.queue_declare(queue=queue_name)
-        channel_upload.basic_publish(exchange='',
-                                     routing_key=queue_name,
-                                     body=response,
-                                     properties=pika.BasicProperties(
-                                         delivery_mode=2,
-                                     ))
+        if 'control' in data:
+            control = data.pop('control')
+        rs = fetcher(**data)
+        if rs is not None:
+            RESPONSE_QUEUE.put(rs)
+            print " [x] Done"
+            ch.basic_ack(delivery_tag=method.delivery_tag)
 
+    # 每次只接收和处理一个任务
+    channel.basic_qos(prefetch_count=1)
+    # 需要发送ACK确认
     channel.basic_consume(callback,
-                          queue='task_queue',
-                          no_ack=True)
+                          queue='task_queue')
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
@@ -93,4 +90,5 @@ def fetcher(url, data=None, **kwargs):
 
 
 if __name__ == '__main__':
-    MQConsumer().start()
+    # MQConsumer().start()
+    consumer()
