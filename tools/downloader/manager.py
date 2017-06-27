@@ -57,5 +57,8 @@ def downloaded_manager():
         return render_template('downloaded.html', title='Downloaded Manager', content=json.dumps(content))
 
 
+def update_manager():
+    pass
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
