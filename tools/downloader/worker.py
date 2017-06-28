@@ -61,7 +61,7 @@ def download(task, **kwargs):
         if upload_path is not None:
             downloaded.update({'upload': upload_path, 'url': target.get('url')})
         DOWNLOADED.put(downloaded)
-        _logger.info(u"下载完成 URL: {url}".format(url=target.get('url')))
+        _logger.info(u"下载成功 URL: {url}".format(url=target.get('url')))
         return True
     except Exception as e:
         _logger.debug(u"下载失败放入重试列表 URL: {url}".format(url=target.get('url')))

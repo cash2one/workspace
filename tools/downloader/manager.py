@@ -8,6 +8,8 @@ import random
 import Queue
 
 import flask
+from flask import redirect
+from flask import url_for
 from flask import request
 from flask import render_template
 
@@ -25,10 +27,10 @@ _headers = {
 }
 
 test_list = data.TEST_DATA
-UPLOAD_API = 'http://192.168.13.53:8080/downloaded'
+UPLOAD_API = 'http://192.168.13.53:8080/downloaded/'
 
 
-@app.route('/task')
+@app.route('/task/')
 def task_manager():
     url = random.choice(test_list)
     task = {
@@ -38,7 +40,7 @@ def task_manager():
     return json.dumps(task)
 
 
-@app.route('/downloaded', methods=['GET', 'POST'])
+@app.route('/downloaded/', methods=['GET', 'POST'])
 def downloaded_manager():
     if request.method == 'POST':
         content = request.form.get('content', None)
@@ -57,8 +59,22 @@ def downloaded_manager():
         return render_template('downloaded.html', title='Downloaded Manager', content=json.dumps(content))
 
 
+@app.route('/update/')
 def update_manager():
-    pass
+    host = 'http://192.168.13.53:8080'
+    update_info = {
+        'worker.exe': {'file_path': host + url_for('static', filename='worker.exe'), 'create_time': 1498556904},
+        'kill.bat': {'file_path': host + url_for('static', filename='kill.bat'), 'create_time': 1498556961},
+    }
+    return json.dumps(update_info)
+
+
+@app.route('/update/<file_name>')
+def update(file_name=None):
+    if file_name:
+        url = url_for('static', filename=file_name)
+        return redirect(url)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
