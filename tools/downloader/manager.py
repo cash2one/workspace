@@ -2,21 +2,31 @@
 # -*- coding: utf-8 -*-
 # Created by Vin on 2017/6/23
 
+import os
 import data
 import json
 import random
 import Queue
+import os.path
+from threading import Thread
 
+# flask
 import flask
 from flask import redirect
 from flask import url_for
 from flask import request
+from flask import jsonify
 from flask import render_template
 
+# 已下载完成的内容队列
 DOWNLOADED_QUEUE = Queue.Queue(20)
+# 指定给下载器的上传地址
+UPLOAD_API = 'http://192.168.13.53:8080/downloaded/'
+UPDATE_TYPE = ['.exe', '.bat', '.config']
 
 app = flask.Flask(__name__)
 
+# # # 测试数据 # # #
 _headers = {
     'Host': 'shopping.netsuite.com',
     'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
@@ -27,7 +37,7 @@ _headers = {
 }
 
 test_list = data.TEST_DATA
-UPLOAD_API = 'http://192.168.13.53:8080/downloaded/'
+# # # 测试数据 # # #
 
 
 @app.route('/task/')
@@ -37,7 +47,7 @@ def task_manager():
         'download': {'url': url, 'headers': _headers},
         'control': {'upload': UPLOAD_API}
     }
-    return json.dumps(task)
+    return jsonify(task)
 
 
 @app.route('/downloaded/', methods=['GET', 'POST'])
@@ -59,14 +69,42 @@ def downloaded_manager():
         return render_template('downloaded.html', title='Downloaded Manager', content=json.dumps(content))
 
 
+# 长任务异步处理
+# 未使用
+def async(f):
+    def wrapper(*args, **kwargs):
+        thr = Thread(target=f, args=args, kwargs=kwargs)
+        thr.start()
+
+    return wrapper
+
+
 @app.route('/update/')
 def update_manager():
-    host = 'http://192.168.13.53:8080'
-    update_info = {
-        'worker.exe': {'file_path': host + url_for('static', filename='worker.exe'), 'create_time': 1498556904},
-        'kill.bat': {'file_path': host + url_for('static', filename='kill.bat'), 'create_time': 1498556961},
-    }
-    return json.dumps(update_info)
+    app_root = os.getcwd()
+    rsc_path = os.path.join(app_root, 'static')
+    update_info = get_file_dict(rsc_path)
+    return jsonify(update_info)
+
+
+def get_file_dict(root):
+    """获取所在目录的文件列表"""
+    if root is None:
+        return None
+    file_dict = dict()
+    for path, dirs, files in os.walk(root, True, None):
+        # 设置检索深度为3
+        depth = path.replace(root, '').split('\\')[1:]
+        if len(depth) >= 4:
+            break
+        for f in files:
+            file_name, suffix = os.path.splitext(f)
+            if suffix not in UPDATE_TYPE:
+                continue
+            file_path = os.path.join(path, f)
+            create_time = os.stat(file_path).st_mtime
+            file_dict.update({f: {'file_size': os.path.getsize(file_path), 'create_time': int(create_time)}})
+    return file_dict
 
 
 @app.route('/update/<file_name>')

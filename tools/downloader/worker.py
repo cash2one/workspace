@@ -2,12 +2,16 @@
 # -*- coding: utf-8 -*-
 
 
+import os
+import sys
 import time
 import json
 import Queue
+import os.path
 import logging
 import requests
 import threading
+import ConfigParser
 
 from requests import ConnectTimeout, ConnectionError, ReadTimeout
 
@@ -19,8 +23,19 @@ s_handler = logging.StreamHandler()
 s_handler.setFormatter(fmt)
 _logger.addHandler(s_handler)
 
-# 预设
-TASK_API = 'http://192.168.13.53:8080/task'
+# 获取当前所在文件夹路径
+APP_ROOT = os.getcwd()
+# 检查配置文件是否存在
+CONFIG_PATH = os.path.join(APP_ROOT, 'main.config')
+if os.path.exists(CONFIG_PATH) is False:
+    _logger.info(u'缺少程序主配置文件main.config, 请在服务器http://server/config下载')
+    time.sleep(1)
+    sys.exit(0)
+# 加载配置文件
+config = ConfigParser.ConfigParser()
+config.read('main.config')
+# 读取配置文件中的TASK_API
+TASK_API = config.get("worker", "TASK_API")
 TASK_QUEUE = Queue.Queue(30)
 RETRY_QUEUE = Queue.Queue(30)
 DOWNLOADED = Queue.Queue(90)
