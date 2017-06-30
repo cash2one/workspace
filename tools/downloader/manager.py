@@ -3,7 +3,7 @@
 # Created by Vin on 2017/6/23
 
 import os
-import data
+import copy
 import json
 import random
 import Queue
@@ -18,40 +18,59 @@ from flask import request
 from flask import jsonify
 from flask import render_template
 
+# config
+import config
+
 # 已下载完成的内容队列
 DOWNLOADED_QUEUE = Queue.Queue(20)
-# 指定给下载器的上传地址
-UPLOAD_API = 'http://192.168.13.53:8080/downloaded/'
-UPDATE_TYPE = ['.exe', '.bat', '.config']
 
+# 指定更新的文件类型
+UPDATE_TYPE = config.UPDATE_TYPE
+
+# 供应商下载配置
+UPLOAD_GUIDE_BOOK = config.UPLOAD_GUIDE_BOOK
+
+# 默认的下载使用的头部信息
+DEFAULT_HEADERS = config.DEFAULT_HEADERS
+
+# 默认的下载内容上传接口
+UPLOAD_API = config.UPLOAD_API
+
+# flask
 app = flask.Flask(__name__)
 
 # # # 测试数据 # # #
-_headers = {
-    'Host': 'shopping.netsuite.com',
-    'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4',
-    'Accept-Encoding': 'gzip, deflate, sdch',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
-    'Referer': 'http://shopping.netsuite.com/s.nl/c.402442/sc.2/.f'
-}
-
+import data
 test_list = data.TEST_DATA
 # # # 测试数据 # # #
 
 
+# 获取下载任务，返回json格式
 @app.route('/task/')
 def task_manager():
+    # TODO 从接口中获取下载url
     url = random.choice(test_list)
+    # TODO 识别供应商类型
+    supplier = 'linear'
+    supplier_download_config = UPLOAD_GUIDE_BOOK.get(supplier, None)
+    if supplier_download_config is None:
+        return jsonify({})
+
+    # 构造下载参数
+    _headers = copy.copy(DEFAULT_HEADERS)
+    _headers.update(supplier_download_config.get('headers'))
+    _headers.update({'User-Agent': random.choice(config.USER_AGENT_LIST)})
     task = {
         'download': {'url': url, 'headers': _headers},
-        'control': {'upload': UPLOAD_API}
+        'control': {'upload': supplier_download_config.get('upload_url')}
     }
     return jsonify(task)
 
 
+# 下载完成内容上传接口
 @app.route('/downloaded/', methods=['GET', 'POST'])
 def downloaded_manager():
+    """使用POST提交数据，使用GET访问查看最近数据"""
     if request.method == 'POST':
         content = request.form.get('content', None)
         if content is not None and content.strip():
@@ -75,12 +94,12 @@ def async(f):
     def wrapper(*args, **kwargs):
         thr = Thread(target=f, args=args, kwargs=kwargs)
         thr.start()
-
     return wrapper
 
 
 @app.route('/update/')
 def update_manager():
+    """遍历更新文件夹，返回更新列表，json格式"""
     app_root = os.getcwd()
     rsc_path = os.path.join(app_root, 'static')
     update_info = get_file_dict(rsc_path)
@@ -97,8 +116,10 @@ def get_file_dict(root):
         depth = path.replace(root, '').split('\\')[1:]
         if len(depth) >= 4:
             break
+        # 保存文件信息
         for f in files:
             file_name, suffix = os.path.splitext(f)
+            # 仅检索制定类型文件
             if suffix not in UPDATE_TYPE:
                 continue
             file_path = os.path.join(path, f)
@@ -107,6 +128,7 @@ def get_file_dict(root):
     return file_dict
 
 
+# 重定向下载链接
 @app.route('/update/<file_name>')
 def update(file_name=None):
     if file_name:
