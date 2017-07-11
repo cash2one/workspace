@@ -241,7 +241,7 @@ def _load_encapsula_resource(sess, response, **kwargs):
             time.sleep(0.02)  # simulate page refresh time
             timing.append('r:{0}'.format(now_in_seconds() - start))
             sess.get(resources + urllib.quote('complete ({0})'.format(",".join(timing))), **kwargs)
-        elif "&e=":
+        elif "&e=" in resources:
             # /_Incapsula_Resource?SWKMTFSR=1&e=\d{19} 是图片资源
             if 'headers' in kwargs:
                 kwargs['headers'].update({'Accept': 'image/webp,image/*,*/*;q=0.8'})

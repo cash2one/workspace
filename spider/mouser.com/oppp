@@ -1,0 +1,60 @@
+http://ca.mouser.com/flash/js/redirect=new/products/
+
+/m_new/products/
+returnUrl=
+
+
+
+www.mouser.at	www.mouser.be
+www.mouser.ch	www.mouser.cl
+www.mouser.co	www.mouser.de
+www.mouser.dk	www.mouser.do
+www.mouser.ec	www.mouser.ee
+www.mouser.es	www.mouser.fi
+www.mouser.fr	www.mouser.hk
+www.mouser.hn	www.mouser.ie
+www.mouser.co.il	www.mouser.in
+www.mouser.it	www.mouser.jp
+www.mouser.li	www.mouser.lu
+www.mouser.mx	user-att-107-215-248-0.e9165.b.akamaiedge.net
+www.mouser.pe	www.mouser.ph
+www.mouser.pr	www.mouser.se
+www.mouser.sg	www.mouser.sk
+www.mouser.com.tr	www.mouser.tw
+www.mouser.co.uk	www.mouser.vn
+www.mouser.co.za
+
+
+# 防止页面加载时间过长
+from selenium.common.exceptions import TimeoutException
+
+startTime = time.time()
+print "start time is: %0.3f"%startTime
+driver = webdriver.Firefox()
+driver.set_page_load_timeout(30)
+driver.maximize_window()
+
+try:
+    driver.get('http://www.autohome.com.cn/')
+except TimeoutException:  
+    print 'time out after 30 seconds when loading page'  
+    driver.execute_script('window.stop()') #当页面加载时间超过设定时间，通过执行Javascript来stop加载，即可执行后续动作
+
+
+
+# 设置selenium使用代理
+
+# 标识
+/new/
+id ctl00_ctl00_ContentMain_PKCWithLeftNav_PKCLeftNav_LeftNav_lnkNewByCategory
+
+
+http://www.mouser.hk/search/refine.aspx?Ntk=P_MarCom&Ntt=159244994
+
+
+
+# search_api = "http://www.mouser.com/service/accelerationresult.aspx?keyword={search}".format(search=keyword)
+# search_detailapi = 'http://www.mouser.com/_/?Keyword=LM358D&utm_source=accelerator&utm_medium=accator&utm_campaign=Accelerator-See-All&utm_term=LM358D'
+# new_products_api = 'http://www.mouser.com/Newest-Products/_/?Keyword=LM358D&FS=True&utm_source=acrator&utm_medium=accelerator&utm_campaign=Accelerator-See-All&utm_term=LM358D'
+# new_products_list_api = 'http://www.mouser.com/search/refine.aspx?Ntk=P_MarCom&Ntt=186774745&FS=True&uource=accelerator&utm_medium=accelerator'
+# product_detail_api = 'http://www.mouser.com/ProductDetail/STMicroelectronics/LM358D/?qs=sGAEpiMZZMtnSjNA6Cq9RDS8YdICOugshCUwCZ0%3d&FS=True&utm_source=accelerator&utm_medium=accelerator'

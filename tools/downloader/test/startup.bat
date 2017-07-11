@@ -1,1 +1,0 @@
-taskkill /f /t /IM worker.exe

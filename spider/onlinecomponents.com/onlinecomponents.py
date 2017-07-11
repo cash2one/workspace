@@ -1,9 +1,8 @@
 # coding=utf-8
 import re
-from incapsula import crack
+# from incapsula import crack, IncapSession
 import requests
-from tools.incapsula_cracker import incapsula
-from tools import util as Util
+from tools.incapsula_cracker import IncapSession
 from bs4 import BeautifulSoup, SoupStrainer
 
 _headers = {
@@ -16,12 +15,12 @@ _headers = {
 
 
 def cracker():
-    url = 'http://cn.onlinecomponents.com/productsearch/'
-    session = incapsula.IncapSession()
+    url = 'https://cn.onlinecomponents.com/molex-micro-product-5031493400.html?p=45572838'
+    session = IncapSession()
     response = session.get(url=url, headers=_headers, timeout=30)
-
-    with open(r'html/IncapSession_after.html', 'w') as fp:
-        fp.write(response.content)
+    print response.text
+    # with open(r'html/IncapSession_after.html', 'w') as fp:
+    #     fp.write(response.content)
 
 
 if __name__ == "__main__":

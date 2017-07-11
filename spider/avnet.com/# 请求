@@ -1,0 +1,7 @@
+# 请求
+http://products.avnet.com/shop/en/ema/capacitor/capacitor-niobium/3074457345625507635
+# 重定向 301
+# 很有可能是个注入漏洞或者是xss
+https://www.avnet.com/AvnUrlRedirectionWeb?SEORedirectUrl=/shop/en/ema/capacitor/capacitor-niobium/3074457345625507635
+# 重定向301
+https://www.avnet.com/shop/us/p/capacitor/capacitor-niobium/avx/noja226m002rwj-3074457345625507635/
